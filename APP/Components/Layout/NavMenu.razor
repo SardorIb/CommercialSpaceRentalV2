@@ -1,0 +1,12 @@
+﻿<MudContainer Style="height: 100%; padding: 0; background-color: Color.Inherit;">
+  <MudDrawerHeader>
+    <MudIcon Icon="@Icons.Material.Filled.AdminPanelSettings" Size="Size.Large" Color="Color.Primary" Class="mr-2" />
+    <MudText Typo="Typo.h6">Admin Panel</MudText>
+  </MudDrawerHeader>
+  <MudNavMenu>
+    <MudNavLink Href="/users" Match="NavLinkMatch.All">Users</MudNavLink>
+    <MudNavLink Href="/" Match="NavLinkMatch.All">Dashboard</MudNavLink>
+    <MudNavLink Href="/counter" Match="NavLinkMatch.Prefix">Counter</MudNavLink>
+    <MudNavLink Href="/weather" Match="NavLinkMatch.Prefix">Weather</MudNavLink>
+  </MudNavMenu>
+</MudContainer>

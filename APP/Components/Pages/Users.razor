@@ -1,0 +1,36 @@
+﻿@page "/users"
+
+@using Shared.DTOs.UserDtos
+@using MudBlazor
+
+<MudPaper Class="pa-4">
+    <MudTable Items="@pagedItems" Hover="true" Bordered="true" Elevation="1">
+        <HeaderContent>
+            <MudTh>ID</MudTh>
+            <MudTh>Name</MudTh>
+            <MudTh>Email</MudTh>
+            <MudTh>Phone</MudTh>
+            <MudTh>Type</MudTh>
+            <MudTh>Role</MudTh>
+            <MudTh>Status</MudTh>
+            <MudTh>Created</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="ID">@context.Id</MudTd>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd DataLabel="Email">@context.Email</MudTd>
+            <MudTd DataLabel="Phone">@context.Phone</MudTd>
+            <MudTd DataLabel="Type">@context.Type</MudTd>
+            <MudTd DataLabel="Role">@context.Role</MudTd>
+            <MudTd DataLabel="Status">@context.Status</MudTd>
+            <MudTd DataLabel="Created">@context.CreatedAt.ToString("yyyy-MM-dd HH:mm")</MudTd>
+        </RowTemplate>
+    </MudTable>
+
+      <PagerContent>
+    <MudPagination SelectedChanged="PageChanged"
+                   Count="totalPages"
+                   Page="@currentPage"
+                   Class="pa-4" />
+  </PagerContent>
+</MudPaper>

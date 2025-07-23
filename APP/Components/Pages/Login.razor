@@ -1,0 +1,36 @@
+﻿@page "/login"
+@using APP.BL.Authentication
+@using Microsoft.AspNetCore.Components.Authorization
+@inject NavigationManager Navigation
+@inject AuthenticationStateProvider AuthProvider
+
+<h3>Login</h3>
+
+<EditForm Model="@loginModel" OnValidSubmit="HandleLogin">
+  <DataAnnotationsValidator />
+  <ValidationSummary />
+
+  <InputText @bind-Value="loginModel.Username" placeholder="Username" />
+  <InputText @bind-Value="loginModel.Password" type="password" placeholder="Password" />
+  <button type="submit">Login</button>
+</EditForm>
+
+@code {
+  private LoginModel loginModel = new();
+
+  private async Task HandleLogin()
+  {
+    if (loginModel.Username == "admin" && loginModel.Password == "1234")
+    {
+      var customAuthProvider = (CustomAuthProvider)AuthProvider;
+      await customAuthProvider.MarkUserAsAuthenticated(loginModel.Username);
+      Navigation.NavigateTo("/");
+    }
+  }
+
+  public class LoginModel
+  {
+    public string Username { get; set; } = "";
+    public string Password { get; set; } = "";
+  }
+}

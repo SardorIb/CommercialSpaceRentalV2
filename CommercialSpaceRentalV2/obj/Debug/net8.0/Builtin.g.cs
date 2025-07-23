@@ -5,9 +5,9 @@ namespace CommercialSpaceRentalV2.Generated
   internal static partial class BuiltIn
   {
     public static readonly global::System.Version Version = global::System.Reflection.Assembly.GetAssembly(typeof (BuiltIn))?.GetName().Version ?? new global::System.Version(0, 0);
-    public static readonly global::System.DateTime CompileTimeUtc = new global::System.DateTime(638888500875273147, global::System.DateTimeKind.Utc);
+    public static readonly global::System.DateTime CompileTimeUtc = new global::System.DateTime(638888571040131422, global::System.DateTimeKind.Utc);
     public static readonly bool OfficialRelease = false;
-    public static readonly string Revision = "0000000";
+    public static readonly string Revision = "23e83583c63178c1d50b473f5d721a59fbe0fb27";
     public static readonly string ComputerName = "KR-SEL-L-100122";
     public static readonly string UserName = "SENSIRION-ZH\\sibrokhimov";
   }

@@ -13,8 +13,9 @@ using System.Reflection;
 
 [assembly: System.Reflection.AssemblyCompanyAttribute("CommercialSpaceRentalV2")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
+[assembly: System.Reflection.AssemblyDescriptionAttribute("GitSha: 23e83583c63178c1d50b473f5d721a59fbe0fb27")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+23e83583c63178c1d50b473f5d721a59fbe0fb27")]
 [assembly: System.Reflection.AssemblyProductAttribute("CommercialSpaceRentalV2")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CommercialSpaceRentalV2")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
