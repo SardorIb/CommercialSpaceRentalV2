@@ -1,0 +1,57 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Exceptions">
+      <HintPath>..\..\..\git\RD-SW\SwEl\WebApps\HummerCloudFacade\Hummer.DbAccess\Data\bin\Debug\Exceptions.dll</HintPath>
+    </Reference>
+    <Reference Include="Hummer.DbAccess">
+      <HintPath>..\..\..\git\RD-SW\SwEl\WebApps\HummerCloudFacade\Hummer.DbAccess\Data\bin\Debug\Hummer.DbAccess.dll</HintPath>
+    </Reference>
+    <Reference Include="Hummer.Interfaces">
+      <HintPath>..\..\..\git\RD-SW\SwEl\WebApps\HummerCloudFacade\Hummer.DbAccess\Data\bin\Debug\Hummer.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Sensirion.Calc">
+      <HintPath>..\..\..\git\RD-SW\SwEl\WebApps\HummerCloudFacade\Hummer.DbAccess\Data\bin\Debug\Sensirion.Calc.dll</HintPath>
+    </Reference>
+    <Reference Include="Sensirion.Configuration">
+      <HintPath>..\..\..\git\RD-SW\SwEl\WebApps\HummerCloudFacade\Hummer.DbAccess\Data\bin\Debug\Sensirion.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Sensirion.DB">
+      <HintPath>..\..\..\git\RD-SW\SwEl\WebApps\HummerCloudFacade\Hummer.DbAccess\Data\bin\Debug\Sensirion.DB.dll</HintPath>
+    </Reference>
+    <Reference Include="Sensirion.FileIO">
+      <HintPath>..\..\..\git\RD-SW\SwEl\WebApps\HummerCloudFacade\Hummer.DbAccess\Data\bin\Debug\Sensirion.FileIO.dll</HintPath>
+    </Reference>
+    <Reference Include="Sensirion.SingletonLogger">
+      <HintPath>..\..\..\git\RD-SW\SwEl\WebApps\HummerCloudFacade\Hummer.DbAccess\Data\bin\Debug\Sensirion.SingletonLogger.dll</HintPath>
+    </Reference>
+    <Reference Include="Sensirion.SmartInspect">
+      <HintPath>..\..\..\git\RD-SW\SwEl\WebApps\HummerCloudFacade\Hummer.DbAccess\Data\bin\Debug\Sensirion.SmartInspect.dll</HintPath>
+    </Reference>
+    <Reference Include="Sensirion.Utils">
+      <HintPath>..\..\..\git\RD-SW\SwEl\WebApps\HummerCloudFacade\Hummer.DbAccess\Data\bin\Debug\Sensirion.Utils.dll</HintPath>
+    </Reference>
+    <Reference Include="Sensirion.Validation">
+      <HintPath>..\..\..\git\RD-SW\SwEl\WebApps\HummerCloudFacade\Hummer.DbAccess\Data\bin\Debug\Sensirion.Validation.dll</HintPath>
+    </Reference>
+    <Reference Include="Sensirion.WindowsRegistry">
+      <HintPath>..\..\..\git\RD-SW\SwEl\WebApps\HummerCloudFacade\Hummer.DbAccess\Data\bin\Debug\Sensirion.WindowsRegistry.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Sensirion.3rdParty.SmartInspect" Version="4.1.1" />
+    <PackageReference Include="Sensirion.DefaultBuildExtensions" Version="1.2.1" />
+  </ItemGroup>
+
+</Project>

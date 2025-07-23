@@ -1,0 +1,363 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Sensirion.SingletonLogger</name>
+    </assembly>
+    <members>
+        <member name="T:Sensirion.Logging.Internal.LogEventArgs">
+            <summary>
+            Contains log specific event data for log request events.
+            </summary>
+        </member>
+        <member name="M:Sensirion.Logging.Internal.LogEventArgs.#ctor(Sensirion.Logging.Internal.LogSeverity,System.String,System.Exception,System.DateTime)">
+            <summary>
+            Constructor of LogEventArgs.
+            </summary>
+            <param name="severity">Log severity.</param>
+            <param name="message">Log message</param>
+            <param name="exception">Inner exception.</param>
+            <param name="date">Log date.</param>
+        </member>
+        <member name="P:Sensirion.Logging.Internal.LogEventArgs.Severity">
+            <summary>
+            Gets and sets the log severity.
+            </summary>        
+        </member>
+        <member name="P:Sensirion.Logging.Internal.LogEventArgs.Message">
+            <summary>
+            Gets and sets the log message.
+            </summary>        
+        </member>
+        <member name="P:Sensirion.Logging.Internal.LogEventArgs.Exception">
+            <summary>
+            Gets and sets the optional inner exception.
+            </summary>        
+        </member>
+        <member name="P:Sensirion.Logging.Internal.LogEventArgs.Date">
+            <summary>
+            Gets and sets the log date and time.
+            </summary>        
+        </member>
+        <member name="P:Sensirion.Logging.Internal.LogEventArgs.SeverityString">
+            <summary>
+            Friendly string that represents the severity.
+            </summary>
+        </member>
+        <member name="M:Sensirion.Logging.Internal.LogEventArgs.ToString">
+            <summary>
+            LogEventArgs as a string represenation.
+            </summary>
+            <returns>String representation of the LogEventArgs.</returns>
+        </member>
+        <member name="T:Sensirion.Logging.Internal.LogException">
+            <summary>
+            This exception type does automatically insert the exception message in a
+            probably beforehand definied logging target (file, email, ...).
+            If the standard consturctor (only with argument 'string') is used,
+            the logging entry will be marked by default as 'fatal'.
+            If some other logging entry shall be used, it can be definied by means
+            of an overloaded construrctor.
+            </summary>
+        </member>
+        <member name="M:Sensirion.Logging.Internal.LogException.#ctor(System.String)">
+            <summary>
+            This exception constructor uses the default logging severity level 'fatal'
+            for insertion into logging target.
+            </summary>
+            <param name="message">Exception and logging message.</param>
+        </member>
+        <member name="M:Sensirion.Logging.Internal.LogException.#ctor(System.String,System.Exception)">
+            <summary>
+            This exception constructor uses the default logging severity level 'fatal'
+            for insertion into logging target.
+            </summary>
+            <param name="message">Exception and logging message.</param>
+            <param name="aInnerException">Inner Exception for not hiding information</param>
+        </member>
+        <member name="M:Sensirion.Logging.Internal.LogException.#ctor(System.String,Sensirion.Logging.Internal.LogSeverity,System.Exception)">
+            <summary>
+            This exception constructor uses the default logging severity level 'fatal'
+            for insertion into logging target.
+            </summary>
+            <param name="aMessage">Exception and logging message.</param>
+            <param name="s">Severity of the logging message.</param>
+            <param name="aInnerException">Inner Exception for not hiding information</param>
+        </member>
+        <member name="M:Sensirion.Logging.Internal.LogException.#ctor(System.String,Sensirion.Logging.Internal.LogSeverity)">
+            <summary>
+            This exception constructor allows to specify the logging severity level
+            according to the type 'LogSeverity'.
+            </summary>
+            <param name="message"></param>
+            <param name="s">Severity of the logging message.</param>
+        </member>
+        <member name="T:Sensirion.Logging.Internal.LogSeverity">
+            <summary>
+            Enumeration of log severity levels.
+            </summary>
+        </member>
+        <member name="F:Sensirion.Logging.Internal.LogSeverity.Debug">
+            <summary>
+            Severity level of "Debug"
+            </summary>
+        </member>
+        <member name="F:Sensirion.Logging.Internal.LogSeverity.Info">
+            <summary>
+            Severity level of "Info"
+            </summary>
+        </member>
+        <member name="F:Sensirion.Logging.Internal.LogSeverity.Warning">
+            <summary>
+            Severity level of "Warning"
+            </summary>
+        </member>
+        <member name="F:Sensirion.Logging.Internal.LogSeverity.Error">
+            <summary>
+            Severity level of "Error"
+            </summary>
+        </member>
+        <member name="F:Sensirion.Logging.Internal.LogSeverity.Fatal">
+            <summary>
+            Severity level of "Fatal"
+            </summary>
+        </member>
+        <member name="T:Sensirion.Logging.Internal.SingletonLogger">
+            <summary>Singleton logger class through which all log events are processed.
+            
+            GoF Design Patterns: Singleton, Observer.
+            </summary>
+        </member>
+        <member name="M:Sensirion.Logging.Internal.SingletonLogger.OnLog(Sensirion.Logging.Internal.LogEventArgs)">
+            <summary>Invoke the Log event.</summary>
+            <param name="e">Log event parameters.</param>
+        </member>
+        <member name="M:Sensirion.Logging.Internal.SingletonLogger.WaitForAllPendingMessagesWritten">
+            <summary>Waits until the worker has processed all the messages in the queue.
+              If so, the method don't come back until the worker has been finished 
+              his work. 
+              <para>
+                With a call to this method a consumer can wait until all messages will be
+                written. But the caller will be blocked the whole time. So be careful!!!
+              </para>
+            </summary>
+        </member>
+        <member name="F:Sensirion.Logging.Internal.SingletonLogger._Instance">
+            <summary>The one and only Singleton Logger _Instance. </summary>
+        </member>
+        <member name="M:Sensirion.Logging.Internal.SingletonLogger.#ctor">
+            <summary>Private constructor. Initializes default severity to "Debug".</summary>
+        </member>
+        <member name="M:Sensirion.Logging.Internal.SingletonLogger.OnExitProcess(System.Object,System.EventArgs)">
+            <summary>Allows to free the ICE ressources on application shutdown
+            </summary>
+            <param name="sender">Sender of the event</param>
+            <param name="e">Event arguments</param>
+        </member>
+        <member name="M:Sensirion.Logging.Internal.SingletonLogger.Finalize">
+            <summary>Finalizer to stop the embedded Thread to exit properly
+            </summary>
+        </member>
+        <member name="M:Sensirion.Logging.Internal.SingletonLogger.Release">
+            <summary>Waits until all messages has been written and then stops the worker thread 
+            </summary>
+        </member>
+        <member name="P:Sensirion.Logging.Internal.SingletonLogger.Instance">
+            <summary>Gets the _Instance of the singleton logger object.</summary>
+        </member>
+        <member name="P:Sensirion.Logging.Internal.SingletonLogger.Severity">
+            <summary>Gets and sets the severity level of logging activity.</summary>
+        </member>
+        <member name="P:Sensirion.Logging.Internal.SingletonLogger.IsDebug">
+            <summary>True, if included in severity</summary>
+        </member>
+        <member name="P:Sensirion.Logging.Internal.SingletonLogger.IsInfo">
+            <summary>True, if included in severity</summary>
+        </member>
+        <member name="P:Sensirion.Logging.Internal.SingletonLogger.IsWarning">
+            <summary>True, if included in severity</summary>
+        </member>
+        <member name="P:Sensirion.Logging.Internal.SingletonLogger.IsError">
+            <summary>True, if included in severity</summary>
+        </member>
+        <member name="P:Sensirion.Logging.Internal.SingletonLogger.IsFatal">
+            <summary>True, if included in severity</summary>
+        </member>
+        <member name="P:Sensirion.Logging.Internal.SingletonLogger.IsLogDebug">
+            <summary>True, if included in severity</summary>
+        </member>
+        <member name="P:Sensirion.Logging.Internal.SingletonLogger.IsLogInfo">
+            <summary>True, if included in severity</summary>
+        </member>
+        <member name="P:Sensirion.Logging.Internal.SingletonLogger.IsLogWarning">
+            <summary>True, if included in severity</summary>
+        </member>
+        <member name="P:Sensirion.Logging.Internal.SingletonLogger.IsLogError">
+            <summary>True, if included in severity</summary>
+        </member>
+        <member name="P:Sensirion.Logging.Internal.SingletonLogger.IsLogFatal">
+            <summary>True, if included in severity</summary>
+        </member>
+        <member name="M:Sensirion.Logging.Internal.SingletonLogger.Debug(System.String)">
+            <summary>Log a message when severity level is "Debug" or higher.</summary>
+            <param name="message">Log message</param>
+        </member>
+        <member name="M:Sensirion.Logging.Internal.SingletonLogger.Debug(System.String,System.Exception)">
+            <summary>Log a message when severity level is "Debug" or higher.</summary>
+            <param name="message">Log message.</param>
+            <param name="exception">Inner exception.</param>
+        </member>
+        <member name="M:Sensirion.Logging.Internal.SingletonLogger.LogDebug(System.String)">
+            <summary>Log a message when severity level is "Debug" or higher.</summary>
+            <param name="message">Log message</param>
+        </member>
+        <member name="M:Sensirion.Logging.Internal.SingletonLogger.LogDebug(System.String,System.Exception)">
+            <summary>Log a message when severity level is "Debug" or higher.</summary>
+            <param name="message">Log message.</param>
+            <param name="exception">Inner exception.</param>
+        </member>
+        <member name="M:Sensirion.Logging.Internal.SingletonLogger.LogDebug(System.String,System.Object[])">
+            <summary>Log a message when severity level is "Debug" or higher.</summary>
+            <param name="message">Log message</param>
+            <param name="args">a System.Object array containing zero or more objects to format</param>
+        </member>
+        <member name="M:Sensirion.Logging.Internal.SingletonLogger.LogDebug(System.String,System.Exception,System.Object[])">
+            <summary>Log a message when severity level is "Debug" or higher.</summary>
+            <param name="message">Log message.</param>
+            <param name="exception">Inner exception.</param>
+            <param name="args">a System.Object array containing zero or more objects to format</param>
+        </member>
+        <member name="M:Sensirion.Logging.Internal.SingletonLogger.Info(System.String)">
+            <summary>Log a message when severity level is "Info" or higher.</summary>
+            <param name="message">Log message</param>
+        </member>
+        <member name="M:Sensirion.Logging.Internal.SingletonLogger.Info(System.String,System.Exception)">
+            <summary>Log a message when severity level is "Info" or higher.</summary>
+            <param name="message">Log message.</param>
+            <param name="exception">Inner exception.</param>
+        </member>
+        <member name="M:Sensirion.Logging.Internal.SingletonLogger.LogInfo(System.String)">
+            <summary>Log a message when severity level is "Info" or higher.</summary>
+            <param name="message">Log message</param>
+        </member>
+        <member name="M:Sensirion.Logging.Internal.SingletonLogger.LogInfo(System.String,System.Exception)">
+            <summary>Log a message when severity level is "Info" or higher.</summary>
+            <param name="message">Log message.</param>
+            <param name="exception">Inner exception.</param>
+        </member>
+        <member name="M:Sensirion.Logging.Internal.SingletonLogger.LogInfo(System.String,System.Object[])">
+            <summary>Log a message when severity level is "Info" or higher.</summary>
+            <param name="message">Log message</param>
+            <param name="args">a System.Object array containing zero or more objects to format</param>
+        </member>
+        <member name="M:Sensirion.Logging.Internal.SingletonLogger.LogInfo(System.String,System.Exception,System.Object[])">
+            <summary>Log a message when severity level is "Info" or higher.</summary>
+            <param name="message">Log message.</param>
+            <param name="exception">Inner exception.</param>
+            <param name="args">a System.Object array containing zero or more objects to format</param>
+        </member>
+        <member name="M:Sensirion.Logging.Internal.SingletonLogger.Warning(System.String)">
+            <summary>Log a message when severity level is "Warning" or higher.</summary>
+            <param name="message">Log message.</param>
+        </member>
+        <member name="M:Sensirion.Logging.Internal.SingletonLogger.Warning(System.String,System.Exception)">
+            <summary>Log a message when severity level is "Warning" or higher.</summary>
+            <param name="message">Log message.</param>
+            <param name="exception">Inner exception.</param>
+        </member>
+        <member name="M:Sensirion.Logging.Internal.SingletonLogger.LogWarning(System.String)">
+            <summary>Log a message when severity level is "Warning" or higher.</summary>
+            <param name="message">Log message</param>
+        </member>
+        <member name="M:Sensirion.Logging.Internal.SingletonLogger.LogWarning(System.String,System.Exception)">
+            <summary>Log a message when severity level is "Warning" or higher.</summary>
+            <param name="message">Log message.</param>
+            <param name="exception">Inner exception.</param>
+        </member>
+        <member name="M:Sensirion.Logging.Internal.SingletonLogger.LogWarning(System.String,System.Object[])">
+            <summary>Log a message when severity level is "Warning" or higher.</summary>
+            <param name="message">Log message</param>
+            <param name="args">a System.Object array containing zero or more objects to format</param>
+        </member>
+        <member name="M:Sensirion.Logging.Internal.SingletonLogger.LogWarning(System.String,System.Exception,System.Object[])">
+            <summary>Log a message when severity level is "Warning" or higher.</summary>
+            <param name="message">Log message.</param>
+            <param name="exception">Inner exception.</param>
+            <param name="args">a System.Object array containing zero or more objects to format</param>
+        </member>
+        <member name="M:Sensirion.Logging.Internal.SingletonLogger.Error(System.String)">
+            <summary>Log a message when severity level is "Error" or higher.</summary>
+            <param name="message">Log message</param>
+        </member>
+        <member name="M:Sensirion.Logging.Internal.SingletonLogger.Error(System.String,System.Exception)">
+            <summary>Log a message when severity level is "Error" or higher.</summary>
+            <param name="message">Log message.</param>
+            <param name="exception">Inner exception.</param>
+        </member>
+        <member name="M:Sensirion.Logging.Internal.SingletonLogger.LogError(System.String)">
+            <summary>Log a message when severity level is "Error" or higher.</summary>
+            <param name="message">Log message</param>
+        </member>
+        <member name="M:Sensirion.Logging.Internal.SingletonLogger.LogError(System.String,System.Exception)">
+            <summary>Log a message when severity level is "Error" or higher.</summary>
+            <param name="message">Log message.</param>
+            <param name="exception">Inner exception.</param>
+        </member>
+        <member name="M:Sensirion.Logging.Internal.SingletonLogger.LogError(System.String,System.Object[])">
+            <summary>Log a message when severity level is "Error" or higher.</summary>
+            <param name="message">Log message</param>
+            <param name="args">a System.Object array containing zero or more objects to format</param>
+        </member>
+        <member name="M:Sensirion.Logging.Internal.SingletonLogger.LogError(System.String,System.Exception,System.Object[])">
+            <summary>Log a message when severity level is "Error" or higher.</summary>
+            <param name="message">Log message.</param>
+            <param name="exception">Inner exception.</param>
+            <param name="args">a System.Object array containing zero or more objects to format</param>
+        </member>
+        <member name="M:Sensirion.Logging.Internal.SingletonLogger.Fatal(System.String)">
+            <summary>Log a message when severity level is "Fatal"</summary>
+            <param name="message">Log message</param>
+        </member>
+        <member name="M:Sensirion.Logging.Internal.SingletonLogger.Fatal(System.String,System.Exception)">
+            <summary>Log a message when severity level is "Fatal"</summary>
+            <param name="message">Log message.</param>
+            <param name="exception">Inner exception.</param>
+        </member>
+        <member name="M:Sensirion.Logging.Internal.SingletonLogger.LogFatal(System.String)">
+            <summary>Log a message when severity level is "Fatal" or higher.</summary>
+            <param name="message">Log message</param>
+        </member>
+        <member name="M:Sensirion.Logging.Internal.SingletonLogger.LogFatal(System.String,System.Exception)">
+            <summary>Log a message when severity level is "Fatal" or higher.</summary>
+            <param name="message">Log message.</param>
+            <param name="exception">Inner exception.</param>
+        </member>
+        <member name="M:Sensirion.Logging.Internal.SingletonLogger.LogFatal(System.String,System.Object[])">
+            <summary>Log a message when severity level is "Fatal" or higher.</summary>
+            <param name="message">Log message</param>
+            <param name="args">a System.Object array containing zero or more objects to format</param>
+        </member>
+        <member name="M:Sensirion.Logging.Internal.SingletonLogger.LogFatal(System.String,System.Exception,System.Object[])">
+            <summary>Log a message when severity level is "Fatal" or higher.</summary>
+            <param name="message">Log message.</param>
+            <param name="exception">Inner exception.</param>
+            <param name="args">a System.Object array containing zero or more objects to format</param>
+        </member>
+        <member name="M:Sensirion.Logging.Internal.SingletonLogger.LogException(System.Exception)">
+            <summary>Logs an exception.
+            </summary>
+            <param name="exc">The exception to add to the log.</param>
+        </member>
+        <member name="T:System.Runtime.CompilerServices.IsExternalInit">
+            <summary>
+            Reserved to be used by the compiler for tracking metadata.
+            This class should not be used by developers in source code.
+            </summary>
+        </member>
+        <member name="T:System.Runtime.CompilerServices.SkipLocalsInitAttribute">
+            <summary>
+            Used to indicate to the compiler that the <c>.locals init</c> flag should not be set in method headers.
+            </summary>
+            <remarks>Internal copy of the .NET 5 attribute.</remarks>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,1234 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Sensirion.Calc</name>
+    </assembly>
+    <members>
+        <member name="T:Sensirion.Calc.ArrayHelper">
+            <summary>Helps with Arrays
+            </summary>
+        </member>
+        <member name="M:Sensirion.Calc.ArrayHelper.InitArray``1(System.Int32,``0)">
+            <summary>An array is created with the given length and initial value for each entry.
+            <strong>Attention: </strong>
+            <para>Reference types <c>T</c> -> all items in the array will reference the same instance of type <c>T</c>.</para>
+            </summary>
+            <typeparam name="T">Type of the array members and init value.</typeparam>
+            <param name="aArrayLength">The length of the created array.</param>
+            <param name="aInitValue">Initial value to write</param>
+            <returns>Array with the new initial values</returns>
+        </member>
+        <member name="M:Sensirion.Calc.ArrayHelper.LogicalOrArray(System.Boolean[][])">
+            <summary>Executes the disjunctive combination of the received arrays.
+            </summary>
+            <param name="aArrays">The arrays to combine</param>
+            <returns>The disjunctive combination of the received arrays.</returns>
+        </member>
+        <member name="M:Sensirion.Calc.ArrayHelper.LogicalOrArray(System.Boolean[],System.Boolean[])">
+            <summary>Generate a Array that represents the <b>OR </b>(<c>|</c>) operation for each index.
+            <example><c>ReturnValue[index] = aArrayA[index] or aArrayB[index]</c></example>
+            </summary>
+            <param name="aArrayA">Array A</param>
+            <param name="aArrayB">Array B</param>
+            <returns>Array that represents the <b>OR </b>(<c>|</c>) operation for each index of <paramref name="aArrayA"/> and <paramref name="aArrayB"/>.</returns>
+        </member>
+        <member name="M:Sensirion.Calc.ArrayHelper.JaggedArrayTo2DArray``1(``0[][])">
+            <summary>This method allows to transform any jagged array of objects that are of the
+            type <see cref="T:System.ValueType"/> into an 2 dimensional array of the same type 
+            <typeparamref name="T"/> of objects whereby arrays that are to short are filled 
+            up with newly created instances of <typeparamref name="T"/> until all rows are of equal length.
+            </summary>
+            <typeparam name="T">The generic type.</typeparam>
+            <param name="aJaggedArray">The jagged array to convert.</param>
+            <returns>The final 2 dimensional array.</returns>
+        </member>
+        <member name="M:Sensirion.Calc.ArrayHelper.TwoDArrayToJaggedArray``1(``0[0:,0:])">
+            <summary>This method allows to transform a 2 D array of objects that are of the
+            type <see cref="T:System.ValueType"/> into an jagged array of the same type 
+            <typeparamref name="T"/>.
+            </summary>
+            <typeparam name="T">The generic type.</typeparam>
+            <param name="a2DArray">The 2d array to convert.</param>
+            <returns>The final jagged dimensional array.</returns>
+        </member>
+        <member name="M:Sensirion.Calc.ArrayHelper.ArrayValuesToString``1(``0[])">
+            <summary>
+            Return a string with the content of a Array
+            </summary>
+            <typeparam name="T">The generic Type</typeparam>
+            <param name="aArray">Array to display</param>
+            <returns>String with the array content</returns>
+        </member>
+        <member name="M:Sensirion.Calc.ArrayHelper.InvertBoolArray(System.Boolean[])">
+            <summary>Inverts the bool array by inverting each element separately.
+            </summary>
+            <param name="aBoolArray">The array whose elements shall be inverted.</param>
+            <returns>The inverted array.</returns>
+        </member>
+        <member name="M:Sensirion.Calc.ArrayHelper.ExtractColumnFromJaggedArray``1(``0[][],System.Int32)">
+            <summary>Extracts the given column number <paramref name="aColumnIndex"/>
+            from the given jagged array. If the index is outside of range for any of the subarrays
+            the default value of the type <typeparamref name="T"/> is generated and added. 
+            </summary>
+            <typeparam name="T">The type of objects in the jagged array.</typeparam>
+            <param name="aJaggedArray">The jagged array to extract the column from.</param>
+            <param name="aColumnIndex">The index of the column.</param>
+            <returns>The generated one dimensional array.</returns>
+        </member>
+        <member name="M:Sensirion.Calc.ArrayHelper.ChangeType``2(``1[])">
+            <summary>Converts an array of <see cref="!:TInput"/> elements to another array
+            of <see cref="!:TInput"/> elements.
+            </summary>
+            <typeparam name="TOutput">The type to convert to.</typeparam>
+            <typeparam name="TInput">The type that is to be converted to. This type is required to implement the <see cref="T:System.IConvertible"/> interface.</typeparam>
+            <param name="aArray">The array that is to be converted</param>
+            <returns>An array whose elements have been converted from type <see cref="!:TInput"/> of the input array <paramref name="aArray"/> to 
+            the type <see cref="!:TOutput"/>.</returns>
+            <remarks>An input array that is <c>null</c> is considered a valid argument and 
+            is returned directly. Therefore an array that has not been initialized
+            is returned as an equally un-initialized array, but of different type.</remarks>
+        </member>
+        <member name="M:Sensirion.Calc.ArrayHelper.ChangeType``2(``1[][])">
+            <summary>Converts a jagged array of <see cref="!:TInput"/> elements to another jagged array
+            of <see cref="!:TInput"/> elements using the converter on one dimensional arrays <see cref="M:Sensirion.Calc.ArrayHelper.ChangeType``2(``1[])"/>.
+            </summary>
+            <typeparam name="TOutput">The type to convert to.</typeparam>
+            <typeparam name="TInput">The type that is to be converted to. This type is required to implement the <see cref="T:System.IConvertible"/> interface.</typeparam>
+            <param name="aArray">The array that is to be converted</param>
+            <returns>An array whose sub arrays have been converted from type <see cref="!:TInput"/> arrays of the input jagged array <paramref name="aArray"/> to 
+            the type <see cref="!:TOutput"/> arrays.</returns>
+            <remarks>An input array that is <c>null</c> is considered a valid argument and 
+            is returned directly. Therefore an array that has not been initialized
+            is returned as an equally un-initialized array, but of different type.</remarks>
+        </member>
+        <member name="M:Sensirion.Calc.ArrayHelper.ArrangeToByteArray(System.UInt16[])">
+            <summary>Converts a ushort[] into a byte[]
+            </summary>
+            <param name="aWords">Ushorts to convert</param>
+            <returns>Converted bytes</returns>
+        </member>
+        <member name="M:Sensirion.Calc.ArrayHelper.ArrangeToUShortArray(System.Byte[])">
+            <summary>Converts a byte[] into a ushort[]
+            </summary>
+            <param name="aBytes">Bytes to convert</param>
+            <returns>Converted ushorts</returns>
+        </member>
+        <member name="T:Sensirion.Calc.Convolution">
+            <summary>A class computing one-dimensional convolutions and providing some common window functions.
+            </summary>
+        </member>
+        <member name="M:Sensirion.Calc.Convolution.CalculateHammingWindow(System.Int32)">
+            <summary>Calculates the Hamming window with the given width.
+            </summary>
+            <remarks>Equivalent to Python's <c>numpy.hamming(width)</c></remarks>
+            <param name="width"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Sensirion.Calc.Convolution.CalculateHannWindow(System.Int32)">
+            <summary>Calculates the Hann window with the given width.
+            </summary>
+            <remarks>Equivalent to Python's <c>numpy.hanning(width)</c></remarks>
+            <param name="width"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Sensirion.Calc.Convolution.Convolve(System.Double[],System.Double[],System.Boolean)">
+            <summary>Returns the discrete, linear convolution of the input with the filter.
+            </summary>
+            <remarks>Equivalent to Python's <c>numpy.convolve(input,filter)</c></remarks>
+            <param name="input"></param>
+            <param name="filter"></param>
+            <param name="shortenToInputLength">If set to true, the output has the same length as the input, otherwise
+            the output length is input length + filter length - 1</param>
+            <returns></returns>
+        </member>
+        <member name="T:Sensirion.Calc.GaussianRandomGenerator">
+            <summary>Generates random samples that follow a Gaussian distribution using the Box-Muller method.
+            </summary>
+        </member>
+        <member name="M:Sensirion.Calc.GaussianRandomGenerator.#ctor(System.Double,System.Double)">
+            <summary>Constructor.
+            </summary>
+            <param name="aMean">Mean value of the Gaussian distribution.</param>
+            <param name="aStandardDeviation">Standard deviation of the Gaussian distribution.</param>
+        </member>
+        <member name="M:Sensirion.Calc.GaussianRandomGenerator.GetSample">
+            <summary>Get a random sample.
+            </summary>
+        </member>
+        <member name="T:Sensirion.Calc.HashHelper">
+            <summary>Class to help generate hashes 
+            </summary>
+        </member>
+        <member name="M:Sensirion.Calc.HashHelper.GetMD5(System.String)">
+            <summary>Gets a MD5 hash (128 bit) of a string
+            </summary>
+            <param name="aContent">String to hash</param>
+            <returns>byte array with the hash</returns>
+        </member>
+        <member name="M:Sensirion.Calc.HashHelper.GetMD5(System.IO.Stream)">
+            <summary>Gets a MD5 hash (128 bit) of a string
+            </summary>
+            <param name="aContent">Stream to hash</param>
+            <returns>byte array with the hash</returns>
+        </member>
+        <member name="M:Sensirion.Calc.HashHelper.GetMD5Hex(System.String)">
+            <summary>Calculates the MD5 digest and returns the value as a 32 character hex string. </summary>
+            <param name="aContent">String to hash</param>
+            <returns>the hash as a 32 character hex string</returns>
+        </member>
+        <member name="T:Sensirion.Calc.LinearInterpolation">
+            <summary>
+            Class calculating a linear interpolation
+            </summary>
+        </member>
+        <member name="M:Sensirion.Calc.LinearInterpolation.Interpolate(System.Double[],System.Double[],System.Double)">
+            <summary>Calculates the output value corresponding to the passed input value by linear interpolation
+            on the provided set of data points.
+            </summary>
+            <param name="xInput">The input value whose output value is to be calculated</param>
+            <param name="x">Input values, monotonically increasing</param>
+            <param name="y">Output values corresponding to the input values</param>
+            <returns></returns>
+        </member>
+        <member name="T:Sensirion.Calc.LinearRegressionCalculator">
+            <summary>A static class, that delivers math methods
+            </summary>
+        </member>
+        <member name="P:Sensirion.Calc.LinearRegressionCalculator.LinearRegressionResult.Xintercept">
+            <summary>The X-intercept value
+            </summary>
+        </member>
+        <member name="P:Sensirion.Calc.LinearRegressionCalculator.LinearRegressionResult.XinterceptFloat">
+            <summary>The X-intercept value as <see cref="T:System.Single"/>
+            </summary>
+        </member>
+        <member name="P:Sensirion.Calc.LinearRegressionCalculator.LinearRegressionResult.Yintercept">
+            <summary>The Y-intercept value
+            </summary>
+        </member>
+        <member name="P:Sensirion.Calc.LinearRegressionCalculator.LinearRegressionResult.YinterceptFloat">
+            <summary>The Y-intercept value as <see cref="T:System.Single"/>
+            </summary>
+        </member>
+        <member name="P:Sensirion.Calc.LinearRegressionCalculator.LinearRegressionResult.Slope">
+            <summary>The slope value
+            </summary>
+        </member>
+        <member name="P:Sensirion.Calc.LinearRegressionCalculator.LinearRegressionResult.SlopeFloat">
+            <summary>The slope value as <see cref="T:System.Single"/>
+            </summary>
+        </member>
+        <member name="P:Sensirion.Calc.LinearRegressionCalculator.LinearRegressionResult.AverageResidualSquare">
+            <summary>
+            Residual of the Linear Fit. (Σxᵢ²)/N
+            </summary>
+        </member>
+        <member name="M:Sensirion.Calc.LinearRegressionCalculator.LinearRegressionResult.#ctor(System.Double,System.Double)">
+            <summary>Default constructor
+            </summary>
+            <param name="aYintercept">The Y-intercept value</param>
+            <param name="aSlope">The slope value</param>
+        </member>
+        <member name="M:Sensirion.Calc.LinearRegressionCalculator.CalcLinearRegression(System.Collections.Generic.IEnumerable{System.Single},System.Collections.Generic.IEnumerable{System.Single})">
+            <summary>Calculates the linear regression
+            </summary>
+            <param name="aX">A list of X-values</param>
+            <param name="aY">A list of Y-values</param>
+            <returns>Returns the result of the calculation</returns>
+        </member>
+        <member name="M:Sensirion.Calc.LinearRegressionCalculator.CalcLinearRegression(System.Collections.Generic.IEnumerable{System.Single},System.Collections.Generic.IEnumerable{System.Single},System.Int32)">
+            <summary>Calculates the linear regression
+            </summary>
+            <param name="aX">A list of X-values</param>
+            <param name="aY">A list of Y-values</param>
+            <param name="aNodeCount">The number of nodes</param>
+            <returns>Returns the result of the calculation</returns>
+        </member>
+        <member name="M:Sensirion.Calc.LinearRegressionCalculator.CalcLinearRegression(System.Collections.Generic.IEnumerable{System.Double},System.Collections.Generic.IEnumerable{System.Double})">
+            <summary>Calculates the linear regression
+            </summary>
+            <param name="aX">A list of X-values</param>
+            <param name="aY">A list of Y-values</param>
+            <returns>Returns the result of the calculation</returns>
+        </member>
+        <member name="M:Sensirion.Calc.LinearRegressionCalculator.CalcLinearRegression(System.Collections.Generic.IEnumerable{System.Double},System.Collections.Generic.IEnumerable{System.Double},System.Int32)">
+            <summary>Calculates the linear regression
+            </summary>
+            <param name="aX">A list of X-values</param>
+            <param name="aY">A list of Y-values</param>
+            <param name="aNodeCount">The number of nodes</param>
+            <returns>Returns the result of the calculation</returns>
+        </member>
+        <member name="M:Sensirion.Calc.LinearRegressionCalculator.CalcWeightedLinearRegression(System.Collections.Generic.IEnumerable{System.Single},System.Collections.Generic.IEnumerable{System.Single},System.Collections.Generic.IEnumerable{System.Single})">
+            <summary>
+            Calculate the weighted linear fit
+            </summary>
+            <param name="aX"></param>
+            <param name="aY"></param>
+            <param name="aW"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Sensirion.Calc.LinearRegressionCalculator.CalcWeightedLinearRegression(System.Collections.Generic.IEnumerable{System.Double},System.Collections.Generic.IEnumerable{System.Double},System.Collections.Generic.IEnumerable{System.Double})">
+            <summary>
+            Calculate the weighted linear fit
+            </summary>
+            <param name="aX"></param>
+            <param name="aY"></param>
+            <param name="aW"></param>
+            <returns></returns>
+            <exception cref="T:System.IO.InvalidDataException"></exception>
+        </member>
+        <member name="M:Sensirion.Calc.LinqHelper.Mean``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Double})">
+            <summary>
+            Calculate the mean of an array
+            </summary>
+            <param name="source">source array</param>
+            <param name="selector"></param>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="T:Sensirion.Calc.LookupTable`1">
+            <summary>Base abstract class for lookup tables.
+            </summary>
+            <typeparam name="TData">The type of data on which the lookup table operates.</typeparam>
+            <remarks>For maximum precision, all computation is performed using <see cref="T:System.Double"/>s.</remarks>
+        </member>
+        <member name="P:Sensirion.Calc.LookupTable`1.Culture">
+            <summary>The culture that is to be used for log messages.
+            </summary>
+        </member>
+        <member name="P:Sensirion.Calc.LookupTable`1.ConvertToDouble">
+            <summary>Converts from <typeparamref name="TData"/> to <see cref="T:System.Double"/>.
+            </summary>
+        </member>
+        <member name="P:Sensirion.Calc.LookupTable`1.ConvertFromDouble">
+            <summary>Converts from <see cref="T:System.Double"/> to <typeparamref name="TData"/>.
+            </summary>
+        </member>
+        <member name="P:Sensirion.Calc.LookupTable`1.Interpolation">
+            <summary>The polynomial interpolation used by this <see cref="T:Sensirion.Calc.LookupTable`1"/>.
+            </summary>
+        </member>
+        <member name="M:Sensirion.Calc.LookupTable`1.#ctor(System.UInt32)">
+            <summary>Default constructor. Where some default conversion functions are used for <see cref="P:Sensirion.Calc.LookupTable`1.ConvertToDouble"/> and <see cref="P:Sensirion.Calc.LookupTable`1.ConvertFromDouble"/>.
+            </summary>
+            <param name="interpolationOrder">The interpolation order that is to be used by the <see cref="P:Sensirion.Calc.LookupTable`1.Interpolation"/>.</param>
+        </member>
+        <member name="M:Sensirion.Calc.LookupTable`1.#ctor(System.UInt32,System.Func{`0,System.Double},System.Func{System.Double,`0})">
+            <summary>Default constructor. Where the two conversion functions <see cref="P:Sensirion.Calc.LookupTable`1.ConvertToDouble"/> and <see cref="P:Sensirion.Calc.LookupTable`1.ConvertFromDouble"/> can be 
+            given as parameters. In case <c>null</c> is passed as a conversion function a default conversion function is used.
+            </summary>
+            <param name="interpolationOrder">The interpolation order that is to be used by the <see cref="P:Sensirion.Calc.LookupTable`1.Interpolation"/>.</param>
+            <param name="toDoubleConverter">Some conversion function that converts from <typeparamref name="TData"/> to <see cref="T:System.Double"/>. This parameter may be <c>null</c>.</param>
+            <param name="fromDoubleConverter">Some conversion function that converts from <see cref="T:System.Double"/> to <typeparamref name="TData"/>. This parameter may be <c>null</c>.</param>
+        </member>
+        <member name="M:Sensirion.Calc.LookupTable`1.Evaluate(`0)">
+            <summary>Evaluate (lookup) a value at the data point <paramref name="valueToInterpolateAt"/>. 
+            </summary>
+            <param name="valueToInterpolateAt">The data point at which the lookup table is to be evaluated.</param>
+        </member>
+        <member name="M:Sensirion.Calc.LookupTable`1.FindLowerIndexInGrid(System.Collections.Generic.IList{System.Double},System.Double,Sensirion.Calc.PolynomialInterpolation)">
+            <summary>Finds the index from which interpolation should start.
+            </summary>
+            <param name="grid">The full base grid that spans all values at which the lookup table is defined.</param>
+            <param name="valueAtWhichToInterpolateAt">The value at which the value of the <see cref="T:Sensirion.Calc.LookupTable`1"/> is to be evaluated.</param>
+            <param name="interpolation">The interpolation method that is used to interpolate along the axis defined by <paramref name="grid"/>.</param>
+            <remarks>Given the grid [x0,x1,x2,x3,x4,x5] and quadratic (second order) interpolation, where three sampling points are required. Assume that 
+            <paramref name="valueAtWhichToInterpolateAt"/> is located between x2 and x3, then the lower index that is returned would be 2, for the
+            index at which x2 is located.<br/>
+            The same example with fourth order interpolation would return 1, for the index at which x1 is located.<br/>
+            Hence the window that can be generated using the lower index is symmetric around the <paramref name="valueAtWhichToInterpolateAt"/> with left precedence.</remarks>
+        </member>
+        <member name="T:Sensirion.Calc.OneDimensionalLut`1">
+            <summary>A one dimensional lookup table that can perform interpolation at an arbitrary order, given the number of nodes supports the chosen interpolation order.
+            </summary>
+            <typeparam name="TData">The type of data on which the lookup table operates.</typeparam>
+            <remarks>For maximum precision, all computation is performed using <see cref="T:System.Double"/>s. The number of nodes must be at least one more than the used interpolation order.</remarks>
+        </member>
+        <member name="M:Sensirion.Calc.OneDimensionalLut`1.#ctor(System.Collections.Generic.IEnumerable{`0},System.Collections.Generic.IEnumerable{`0},System.Func{`0,System.Double},System.Func{System.Double,`0},System.UInt32)">
+            <summary>Default constructor. Where data conversion functions can be specified.
+            </summary>
+            <param name="grid">The grid that spans all values on the abscissa.</param>
+            <param name="nodes">The supporting nodes on the ordinate.</param>
+            <param name="toDoubleConverter">A converter to convert from <typeparamref name="TData"/> to <see cref="T:System.Double"/>. This parameter may be <c>null</c>.</param>
+            <param name="fromDoubleConverter">A converter to convert from <see cref="T:System.Double"/> to <typeparamref name="TData"/>. This parameter may be <c>null</c>.</param>
+            <param name="interpolationOrder">The order of the polynomial interpolation that is to be used to interpolate between points in the <paramref name="nodes"/>.</param>
+        </member>
+        <member name="M:Sensirion.Calc.OneDimensionalLut`1.#ctor(System.Collections.Generic.IEnumerable{`0},System.Collections.Generic.IEnumerable{`0},System.UInt32)">
+            <summary>Default constructor.  Where default data conversion functions are used.
+            </summary>
+            <param name="grid">The grid that spans all values on the abscissa.</param>
+            <param name="nodes">The supporting nodes on the ordinate.</param>
+            <param name="interpolationOrder">The order of the polynomial interpolation that is to be used to interpolate between points in the <paramref name="nodes"/>.</param>
+        </member>
+        <member name="M:Sensirion.Calc.OneDimensionalLut`1.Evaluate(`0)">
+            <summary>Evaluate (lookup) a value at the data point <paramref name="valueToInterpolateAt"/>. 
+            </summary>
+            <param name="valueToInterpolateAt">The data point at which the lookup table is to be evaluated.</param>
+        </member>
+        <member name="T:Sensirion.Calc.TwoDimensionalLut`1">
+            <summary>A two dimensional lookup table that can perform interpolation at an arbitrary order, given the number of nodes supports the chosen interpolation order.
+            </summary>
+            <typeparam name="TData">The type of data on which the lookup table operates.</typeparam>
+            <remarks>For maximum precision, all computation is performed using <see cref="T:System.Double"/>s. The number of nodes on both dimensions must 
+            be at least one more than the used interpolation order.</remarks>
+        </member>
+        <member name="P:Sensirion.Calc.TwoDimensionalLut`1.IsOneDimensional">
+            <summary>Indicates the special case where this two dimensional lookup table is in a reduced state of a one dimensional lookup table.
+            </summary>
+        </member>
+        <member name="P:Sensirion.Calc.TwoDimensionalLut`1.IsTwoDimensional">
+            <summary>Indicates the normal use case where this lookup table is a true two dimensional lookup table.
+            </summary>
+        </member>
+        <member name="M:Sensirion.Calc.TwoDimensionalLut`1.#ctor(System.Collections.Generic.IEnumerable{`0},System.Collections.Generic.IEnumerable{`0},System.Collections.Generic.ICollection{`0[]},System.Func{`0,System.Double},System.Func{System.Double,`0},System.UInt32,System.UInt32)">
+            <summary>Default constructor. Where data conversion functions can be specified.
+            </summary>
+            <param name="gridOnFirstDimension">The grid that spans all values on the abscissa of the first dimension.</param>
+            <param name="gridOnSecondDimension">The grid that spans all values on the abscissa of the second dimension.</param>
+            <param name="nodes">The supporting nodes. Indexing is as follows: [secondDimension][firstDimension].</param>
+            <param name="toDoubleConverter">A converter to convert from <typeparamref name="TData"/> to <see cref="T:System.Double"/>. This parameter may be <c>null</c>.</param>
+            <param name="fromDoubleConverter">A converter to convert from <see cref="T:System.Double"/> to <typeparamref name="TData"/>. This parameter may be <c>null</c>.</param>
+            <param name="interpolationOrderAlongFirstDimension">The order of the polynomial interpolation that is to be used to interpolate between points in the <paramref name="nodes"/> on the first dimension.</param>
+            <param name="interpolationOrderAlongSecondDimension">The order of the polynomial interpolation that is to be used to interpolate between points in the <paramref name="nodes"/> on the second dimension.</param>
+        </member>
+        <member name="M:Sensirion.Calc.TwoDimensionalLut`1.#ctor(System.Collections.Generic.IEnumerable{`0},System.Collections.Generic.IEnumerable{`0},System.Collections.Generic.IList{`0[]},System.UInt32,System.UInt32)">
+            <summary>Default constructor. Where default data conversion functions are used.
+            </summary>
+            <param name="gridOnFirstDimension">The grid that spans all values on the abscissa of the first dimension.</param>
+            <param name="gridOnSecondDimension">The grid that spans all values on the abscissa of the second dimension.</param>
+            <param name="nodes">The supporting nodes. Indexing is as follows: [secondDimension][firstDimension].</param>
+            <param name="interpolationOrderAlongFirstDimension">The order of the polynomial interpolation that is to be used to interpolate between points in the <paramref name="nodes"/> on the first dimension.</param>
+            <param name="interpolationOrderAlongSecondDimension">The order of the polynomial interpolation that is to be used to interpolate between points in the <paramref name="nodes"/> on the second dimension.</param>
+        </member>
+        <member name="M:Sensirion.Calc.TwoDimensionalLut`1.Evaluate(`0,`0)">
+            <summary>Evaluates (looks up) the two dimensional lookup table.
+            </summary>
+            <param name="valueOnFirstDimension">The value along the first dimension at which the lookup table is to be evaluated.</param>
+            <param name="valueOnSecondDimension">The value along the second dimension at which the lookup table is to be evaluated.</param>
+            <returns>An approximation to some scalar function f(x,y) defined by supporting nodes.</returns>
+        </member>
+        <member name="M:Sensirion.Calc.TwoDimensionalLut`1.Evaluate(`0)">
+            <summary>Evaluate (lookup) a value at the data point <paramref name="valueToInterpolateAt"/> along the first dimension. 
+            </summary>
+            <param name="valueToInterpolateAt">The data point at which the lookup table is to be evaluated.</param>
+        </member>
+        <member name="T:Sensirion.Calc.Md5Helper">
+            <summary>
+            MD5 hash utilities
+            </summary>
+        </member>
+        <member name="M:Sensirion.Calc.Md5Helper.GetMd5HashByte(System.String)">
+            <summary>
+            Gives back a MD5-hash as byte[]
+            </summary>
+            <param name="textToHash">the string from which the hash must be computed</param>
+            <returns>Hash as byte[]</returns>
+        </member>
+        <member name="M:Sensirion.Calc.Md5Helper.GetMd5HashString(System.String)">
+            <summary>
+            Gives back a MD5-hash as string
+            </summary>
+            <param name="textToHash">the string from which the hash must be computed</param>
+            <returns>Hash as string</returns>
+        </member>
+        <member name="T:Sensirion.Calc.Mean">
+            <summary>This class computes the mean of a given set of measurement values.
+            </summary>
+        </member>
+        <member name="M:Sensirion.Calc.Mean.Compute``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>Computes the mean of all values in a collection.</summary>
+            <remarks>All elements of the collection are converted to double before
+            calculating the mean. Warning: this method can't handle a zero-length value set.
+            It will return infinity.</remarks>
+            <typeparam name="T">The type of the supplied data.</typeparam>
+            <param name="aValueSet">The data to compute the mean of.</param>
+            <returns>The mean of the supplied data. Type: <see cref="T:System.Double"/>.</returns>
+            <exception cref="T:System.InvalidCastException">If the passed array of value type objects could not be casted to <see cref="T:System.Double"/>.</exception>
+        </member>
+        <member name="M:Sensirion.Calc.Mean.Compute``1(``0[0:,0:],System.Int32)">
+            <summary>Computes the mean in one direction of values in a two
+            dimensional array.</summary>
+            <remarks>All elements of the collection are converted to double before
+            calculating the mean.</remarks>
+            <typeparam name="T">The type of the supplied data.</typeparam>
+            <param name="valueSet">The data to compute the mean of.</param>
+            <param name="dimension">Dimension along which the mean should be computed.
+            The return value will have the length of the other dimension.</param>
+            <returns>The mean of the supplied data. Type: <see cref="T:System.Double"/>.</returns>
+            <exception cref="T:System.InvalidCastException">If the passed array of value type
+            objects could not be casted to <see cref="T:System.Double"/>.</exception>
+            <exception cref="T:System.IndexOutOfRangeException">If the dimension argument
+            is smaller than 0 or bigger than 1.</exception>
+        </member>
+        <member name="T:Sensirion.Calc.Median">
+            <summary>This class computes the median of a given set of measurement values.
+            </summary>
+        </member>
+        <member name="M:Sensirion.Calc.Median.Compute``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>Returns the median of the given samples.
+            </summary>
+            <typeparam name="T">The type of the data items must be type values and implement the <see cref="T:System.IComparable"/> interface.</typeparam>
+            <param name="aValueSet">The set of samples.</param>
+            <returns>The median of the sample set.</returns>
+        </member>
+        <member name="T:Sensirion.Calc.MemoryAreaRange">
+            <summary>The MemoryAreaRange writes data into and reads data from memory lines. 
+            </summary>
+        </member>
+        <member name="F:Sensirion.Calc.MemoryAreaRange._MemoryWidth">
+            <summary>The width of the memory denotes the amount of available bits at one memory address
+            (memory line). 
+            </summary>
+        </member>
+        <member name="P:Sensirion.Calc.MemoryAreaRange.MemoryWidth">
+            <summary>The memory width can be set to the appropriate value (default value: 8).
+            </summary>
+        </member>
+        <member name="M:Sensirion.Calc.MemoryAreaRange.#ctor">
+            <summary>Initializes the instance. The memory width is set to the default value 8 (the memory
+            width can be changed to any other value after the initialization of the instance, if necessary).
+            </summary>
+        </member>
+        <member name="M:Sensirion.Calc.MemoryAreaRange.GetStartingAddress(System.Int32)">
+            <summary>The given bit number is converted to an address in the memory, determined by the 
+            memory width.
+            </summary>
+            <param name="aBitNumber">The bit number of which the memory address is wanted.</param>
+            <returns>The memory address of the given bit number.</returns>
+        </member>
+        <member name="M:Sensirion.Calc.MemoryAreaRange.GetNumberOfMemLines(System.Int32,System.Int32)">
+            <summary>The number of lines in the memory, that are used by the range of the two given bits, 
+            is calculated. The number of lines depend on the memory width.
+            </summary>
+            <param name="aStartBit">The start bit of the memory range.</param>
+            <param name="aEndBit">The end bit of the memory range.</param>
+            <returns>The number of lines used by the given bit range.</returns>
+        </member>
+        <member name="M:Sensirion.Calc.MemoryAreaRange.GetValueFromMemory(System.Byte[],System.Int32,System.Int32)">
+            <summary>Several lines of the memory are given, from which the data in the range between the
+            start bit number (assumed to be in the first memory byte) and the end bit number is cut out and
+            returned.
+            </summary>
+            <param name="aMemBytes">The lines of the memory, that contain the wanted data</param>
+            <param name="aStartBit">The bit number in the memory where the wanted data starts</param>
+            <param name="aEndBit">The bit number in the memory where the wanted data ends</param>
+            <returns>The data, that the memory contains between the two bit numbers</returns>
+        </member>
+        <member name="M:Sensirion.Calc.MemoryAreaRange.GetValueFromEntireMemory(System.Byte[],System.Int32,System.Int32)">
+            <summary>The data in the range between the start bit number and the end bit number is cut out of
+            the received memory and is returned. The bit number 0 is assumed to be the first bit in the first 
+            memory line.
+            </summary>
+            <param name="aMemBytes">The memory, that contains the wanted data</param>
+            <param name="aStartBit">The bit number in the memory where the wanted data starts</param>
+            <param name="aEndBit">The bit number in the memory where the wanted data ends</param>
+            <returns>The data, that the memory contains between the two bit numbers</returns>
+        </member>
+        <member name="M:Sensirion.Calc.MemoryAreaRange.GetValueFromMemory(System.Int32[],System.Int32,System.Int32)">
+            <summary>Several lines of the memory are given, from which the data in the range between the
+            start bit number (assumed to be in the first memory line) and the end bit number is cut out and
+            returned.
+            </summary>
+            <param name="aMemLines">The lines of the memory, that contain the wanted data</param>
+            <param name="aStartBit">The bit number in the memory where the wanted data starts</param>
+            <param name="aEndBit">The bit number in the memory where the wanted data ends</param>
+            <returns>The data, that the memory contains between the two bit numbers</returns>
+        </member>
+        <member name="M:Sensirion.Calc.MemoryAreaRange.GetValueFromLine(System.Int32,System.Int32,System.Int32)">
+            <summary>Some data is extracted from the received memory line. The location of the data is 
+            specified by the start and end index. 
+            </summary>
+            <param name="aMemLine">The line of the memory, from which the new data is extracted</param>
+            <param name="aStartIndex">The start index of the new data in the memory line</param>
+            <param name="aEndIndex">The end index of the new data in the memory line</param>
+            <returns>The extracted data</returns>
+        </member>
+        <member name="M:Sensirion.Calc.MemoryAreaRange.PutValueIntoLine(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>Some data is inserted in the received memory line. The location of the data is 
+            specified by the start and end index. 
+            </summary>
+            <param name="aMemLine">The line of the memory, in which the new data is inserted</param>
+            <param name="aData">The new data to write in the memory line</param>
+            <param name="aStartIndex">The start index of the new data in the memory line</param>
+            <param name="aEndIndex">The end index of the new data in the memory line</param>
+            <returns>The modified memory line</returns>
+        </member>
+        <member name="M:Sensirion.Calc.MemoryAreaRange.PutValueIntoMemory(System.Byte[],System.Int32,System.Int32,System.Int32)">
+            <summary>Some data is inserted in the received memory lines. The location of the data is
+            specified by the start bit number and the end bit number, where the start bit number is 
+            assumed to be in the first memory byte.
+            </summary>
+            <param name="aMemBytes">The memory bytes, in which the data is inserted</param>
+            <param name="aData">The new data to write into the memory bytes</param>
+            <param name="aStartBit">The bit number in the memory where the new data starts</param>
+            <param name="aEndBit">The bit number in the memory where the new data ends</param>
+            <returns>The modified memory bytes</returns>
+        </member>
+        <member name="M:Sensirion.Calc.MemoryAreaRange.PutValueIntoEntireMemory(System.Byte[],System.Int32,System.Int32,System.Int32)">
+            <summary>Some data is inserted in the received memory lines. The location of the data is
+            specified by the start bit number and the end bit number, where the bit number 0 is
+            assumed to be the first bit in the first memory line.
+            </summary>
+            <param name="aMemBytes">The memory bytes, in which the data is inserted</param>
+            <param name="aData">The new data to write into the memory bytes</param>
+            <param name="aStartBit">The bit number in the memory where the new data starts</param>
+            <param name="aEndBit">The bit number in the memory where the new data ends</param>
+            <returns>The modified memory bytes</returns>
+        </member>
+        <member name="M:Sensirion.Calc.MemoryAreaRange.PutSignedValueIntoEntireMemory(System.Byte[],System.Int32,System.Int32,System.Int32)">
+            <summary>The data is inserted in the received memory lines. The location of the data is
+            specified by the start bit number and the end bit number, where the bit number 0 is
+            assumed to be the first bit in the first memory line. The data is inserted as two's complement.
+            </summary>
+            <param name="aMemBytes">The memory bytes, in which the data is inserted</param>
+            <param name="aData">The new data to write into the memory bytes</param>
+            <param name="aStartBit">The bit number in the memory where the new data starts</param>
+            <param name="aEndBit">The bit number in the memory where the new data ends</param>
+            <returns>The modified memory bytes</returns>
+        </member>
+        <member name="M:Sensirion.Calc.MemoryAreaRange.PutSignedValueIntoMemory(System.Byte[],System.Int32,System.Int32,System.Int32)">
+            <summary>The data is inserted in the received memory lines. The location of the data is
+            specified by the start bit number and the end bit number, where the start bit number is 
+            assumed to be in the first memory byte. The data is inserted as two's complement.
+            </summary>
+            <param name="aMemBytes">The memory bytes, in which the data is inserted</param>
+            <param name="aData">The new data to write into the memory bytes</param>
+            <param name="aStartBit">The bit number in the memory where the new data starts</param>
+            <param name="aEndBit">The bit number in the memory where the new data ends</param>
+            <returns>The modified memory bytes</returns>
+        </member>
+        <member name="M:Sensirion.Calc.MemoryAreaRange.ConvertMemoryOutputToSignedValue(System.Int32,System.Int32)">
+            <summary>The signed data, as read from a memory in the two's complement, is converted to a
+            signed number. 
+            </summary>
+            <param name="aData">The data as two's complement.</param>
+            <param name="aBitSize">The amount of bits that are reserved in the memory for the data.</param>
+            <returns>The data converted to a signed number</returns>
+        </member>
+        <member name="M:Sensirion.Calc.MemoryAreaRange.ConvertSignedValueToMemoryInput(System.Int32,System.Int32)">
+            <summary>The signed data is converted to the two's complement as it would be stored in the memory.
+            </summary>
+            <param name="aData">The signed data to convert.</param>
+            <param name="aBitSize">The amount of bits that are reserved in the memory for the data.</param>
+            <returns>The data converted to the two's complement</returns>
+        </member>
+        <member name="M:Sensirion.Calc.MemoryAreaRange.PutValueIntoMemory(System.Int32[],System.Int32,System.Int32,System.Int32)">
+            <summary>Some data is inserted in the received memory lines. The location of the data is
+            specified by the start bit number and the end bit number, where the start bit number is 
+            assumed to be in the first memory line.
+            </summary>
+            <param name="aMemLines">The memory lines, in which the data is inserted</param>
+            <param name="aData">The new data to write into the memory lines</param>
+            <param name="aStartBit">The bit number in the memory where the new data starts</param>
+            <param name="aEndBit">The bit number in the memory where the new data ends</param>
+            <returns>The modified memory lines</returns>
+        </member>
+        <member name="M:Sensirion.Calc.MemoryAreaRange.GetValueFromMemory(System.Int32,System.Int32,System.Int32)">
+            <summary>A line from the memory is given, from which the data in the range between the start 
+            index and the end index is cut out and returned.
+            </summary>
+            <param name="aMemLine">The line of the memory, that contains the wanted data</param>
+            <param name="aStartIndex">The start index of the range, where the wanted data is located</param>
+            <param name="aEndIndex">The end index of the range, where the wanted data is located</param>
+            <returns>The data, that the range between the two indices contains</returns>
+        </member>
+        <member name="M:Sensirion.Calc.MemoryAreaRange.GetPartFromValue(System.Int32,System.Int32,System.Int32)">
+            <summary>The range between the start index and the end index is cut out of the block and returned.
+            For this, first the block is masked and then the remained bits are moved such that they build
+            the wanted number.
+            </summary>
+            <param name="aValue">The value from which data is extracted</param>
+            <param name="aStartIndex">The start index of the range, where the wanted data is located</param>
+            <param name="aEndIndex">The end index of the range, where the wanted data is located</param>
+            <returns>The data, that is located in the range of the two indices</returns>
+        </member>
+        <member name="M:Sensirion.Calc.MemoryAreaRange.PutValueIntoMemory(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>Some data is inserted in the received memory line. The location of the data is 
+            specified by the start and end index. 
+            </summary>
+            <param name="aMemLine">The line of the memory, in which the new data is inserted</param>
+            <param name="aData">The new data to write in the memory line</param>
+            <param name="aStartIndex">The start index of the new data in the memory line</param>
+            <param name="aEndIndex">The end index of the new data in the memory line</param>
+            <returns>The modified memory line</returns>
+        </member>
+        <member name="M:Sensirion.Calc.MemoryAreaRange.GetMaskedArea(System.Int32,System.Int32,System.Int32)">
+            <summary>The given area is manipulated such that only the range between the two indices 
+            remains, whereas the area outside is masked.
+            </summary>
+            <param name="aArea">The area to be manipulated</param>
+            <param name="aStartIndex">The start index of the remaining range</param>
+            <param name="aEndIndex">The end index of the remaining range</param>
+            <returns>The masked area</returns>
+        </member>
+        <member name="M:Sensirion.Calc.MemoryAreaRange.ConvertBitNumberToIndex(System.Int32)">
+            <summary>A bit number, assigning an address in the memory, is converted to an index (0-7), 
+            assigning a position in a memory line.
+            </summary>
+            <param name="aBitNumber">A bit number</param>
+            <returns>An index</returns>
+        </member>
+        <member name="M:Sensirion.Calc.MemoryAreaRange.CheckMemoryWidth(System.Int32)">
+            <summary>The received memory line is checked for its size, it must not be bigger than the 
+            memory width itself.
+            </summary>
+            <param name="aMemLine">A memory line</param>
+        </member>
+        <member name="M:Sensirion.Calc.MemoryAreaRange.CheckIndices(System.Int32,System.Int32)">
+            <summary>The sorting and the absolute values of the start and end index are checked. 
+            </summary>
+            <param name="aStartIndex">A start index</param>
+            <param name="aEndIndex">A end index</param>
+        </member>
+        <member name="M:Sensirion.Calc.MemoryAreaRange.CheckArraySize(System.Int32[],System.Int32)">
+            <summary>The number of memory lines must corresprond to the number of lines in which the
+            demanded data is allocated.
+            </summary>
+            <param name="aMemLines">The available memory lines</param>
+            <param name="aNbrOfLines">The number of lines in which the demanded data is allocated</param>
+        </member>
+        <member name="M:Sensirion.Calc.MemoryAreaRange.CheckDataWidth(System.Int32,System.Int32)">
+            <summary>The data, that must be written into the memory lines, cannot exceed a maximum size in
+            order not to lack space in the available range.
+            </summary>
+            <param name="aData">The data to be written</param>
+            <param name="aMaxSize">The maximum size the data is allowed to have</param>
+        </member>
+        <member name="M:Sensirion.Calc.MemoryAreaRange.CheckBitNumbers(System.Int32,System.Int32)">
+            <summary>The bit numbers, that assign the start and the end bit of the demanded data, must
+            be sorted.
+            </summary>
+            <param name="aStartBit">The bit assigning the start address of the demanded data</param>
+            <param name="aEndBit">The bit assigning the end address of the demanded data</param>
+        </member>
+        <member name="T:Sensirion.Calc.ParityHelper">
+            <summary>Helper class to calculate parity.</summary>
+        </member>
+        <member name="T:Sensirion.Calc.ParityHelper.Parity">
+            <summary>Possible values for the parity.</summary>
+        </member>
+        <member name="F:Sensirion.Calc.ParityHelper.Parity.Odd">
+            <summary>Number of ones in the value must be odd.</summary>
+        </member>
+        <member name="F:Sensirion.Calc.ParityHelper.Parity.Even">
+            <summary>Number of ones in the value must be even.</summary>
+        </member>
+        <member name="M:Sensirion.Calc.ParityHelper.CalculateParity(System.UInt16@,Sensirion.Calc.ParityHelper.Parity)">
+            <summary>Update the first bit of a 16-bit value, so the value has a
+            specific parity.</summary>
+            <param name="value"></param>
+            <param name="parity"></param>
+        </member>
+        <member name="T:Sensirion.Calc.Polynomial">
+            <summary>This class represents a polynomial function.
+            </summary>
+        </member>
+        <member name="P:Sensirion.Calc.Polynomial.Order">
+            <summary>The order of the polynomial.
+            </summary>
+            <remarks>A constant has an order of zero "0", a linear function an order of one "1", a quadratic function an order of two "2" and so on.</remarks>
+        </member>
+        <member name="P:Sensirion.Calc.Polynomial.Coefficients">
+            <summary>The coefficients of the polynomial.
+            </summary>
+            <remarks>p(x) = c[0] + c[1]*x + c[2]*x^2 + ... + c[n]*x^n.</remarks>
+        </member>
+        <member name="M:Sensirion.Calc.Polynomial.#ctor(System.Double[])">
+            <summary>Default constructor for a polynomial of the form p(x) = c[0] + c[1]*x + c[2]*x^2 + ... + c[n]*x^n. Where "c" denoted the <paramref name="coefficients"/>.
+            </summary>
+        </member>
+        <member name="M:Sensirion.Calc.Polynomial.#ctor(System.Collections.Generic.IEnumerable{System.Double})">
+            <summary>Default constructor for a polynomial of the form p(x) = c[0] + c[1]*x + c[2]*x^2 + ... + c[n]*x^n. Where "c" denoted the <paramref name="coefficients"/>.
+            </summary>
+        </member>
+        <member name="M:Sensirion.Calc.Polynomial.Evaluate(System.Double)">
+            <summary>Evaluates the polynomial at the value <paramref name="x"/>.
+            </summary>
+            <param name="x">The value at which to evaluate the polynomial.</param>
+            <returns>p(x).</returns>
+        </member>
+        <member name="T:Sensirion.Calc.PolynomialInterpolation">
+            <summary>Polynomial interpolation of arbitrary order.
+            </summary>
+        </member>
+        <member name="P:Sensirion.Calc.PolynomialInterpolation.Order">
+            <summary>The interpolation order.
+            </summary>
+        </member>
+        <member name="P:Sensirion.Calc.PolynomialInterpolation.RequiredNodeLength">
+            <summary>The required node length for successful interpolation.
+            </summary>
+        </member>
+        <member name="M:Sensirion.Calc.PolynomialInterpolation.#ctor(System.UInt32)">
+            <summary>Default constructor.
+            </summary>
+            <param name="order">The order of the polynomial interpolation.</param>
+        </member>
+        <member name="M:Sensirion.Calc.PolynomialInterpolation.Evaluate(System.Double,System.Collections.Generic.IEnumerable{System.Double},System.Collections.Generic.IEnumerable{System.Double})">
+            <summary>Interpolates some function f(x) at the given value of x using polynomial interpolation on the given 
+            nodes.
+            </summary>
+            <param name="x">The value at which the function f(x) is to be interpolated at.</param>
+            <param name="xNodes">The nodes x[i] on the abscissa.</param>
+            <param name="yNodes">The nodes y[i] on the ordinate, where y[i] = f(x[i]).</param>
+            <returns>An approximation of f(x) using a polynomial p(x) defined by the nodes x[i] and y[i].</returns>
+        </member>
+        <member name="M:Sensirion.Calc.PolynomialInterpolation.Evaluate(System.Double,System.Double[],System.Double[])">
+            <summary>Interpolates some function f(x) at the given value of x using polynomial interpolation on the given 
+            nodes.
+            </summary>
+            <param name="x">The value at which the function f(x) is to be interpolated at.</param>
+            <param name="xNodes">The nodes x[i] on the abscissa.</param>
+            <param name="yNodes">The nodes y[i] on the ordinate, where y[i] = f(x[i]).</param>
+            <returns>An approximation of f(x) using a polynomial p(x) defined by the nodes x[i] and y[i].</returns>
+        </member>
+        <member name="T:Sensirion.Calc.Quantile">
+            <summary>This class computes the p-quantile of a given set of measurement values.
+              <see link="http://de.wikipedia.org/wiki/Quantil"/>
+            </summary>
+        </member>
+        <member name="M:Sensirion.Calc.Quantile.Compute``1(System.Collections.Generic.IEnumerable{``0},System.Double)">
+            <summary>Calculates the <paramref name="aP"/>-quantile of the given data points.
+              <see link="http://de.wikipedia.org/wiki/Quantil"/>
+            </summary>
+            <typeparam name="T">The type of the data items must be type values and implement the 
+              <see cref="T:System.IComparable"/> interface.</typeparam>
+            <param name="aDataPoints">The set of data points.</param>
+            <param name="aP">This must be a number between 0 and 1. If defines the location of the 
+              p-quantile.</param>
+            <returns>The <paramref name="aP"/>-quantile of the data points.</returns>
+            <exception cref="T:System.ArgumentException">If <paramref name="aP"/> is out of range.</exception>
+        </member>
+        <member name="T:Sensirion.Calc.RandomGenerator">
+            <summary>
+            SimpleRNG is a simple random number generator based on 
+            George Marsaglia's MWC (multiply with carry) generator.
+            Although it is very simple, it passes Marsaglia's DIEHARD
+            series of random number generator tests.
+            
+            Written by John D. Cook 
+            http://www.johndcook.com
+            </summary>
+        </member>
+        <member name="M:Sensirion.Calc.RandomGenerator.#cctor">
+            <summary>
+            Constructor
+            </summary>
+        </member>
+        <member name="M:Sensirion.Calc.RandomGenerator.SetSeed(System.UInt32,System.UInt32)">
+            <summary>Set Seed Parameter.
+            specifying two unsigned integers.
+            </summary>
+            <param name="aSeedA">Parameter for random generation</param>
+            <param name="aSeedB">Parameter for random generation</param>
+        </member>
+        <member name="M:Sensirion.Calc.RandomGenerator.SetSeed(System.UInt32)">
+            <summary>Set Seed Parameter.
+            setting the seed from the system time
+            </summary>
+            <param name="aSeedA">Parameter for random generation</param>
+        </member>
+        <member name="M:Sensirion.Calc.RandomGenerator.SetSeedFromSystemTime">
+            <summary>Set Seed Parameter.
+            setting the seed from the system time
+            </summary>
+        </member>
+        <member name="M:Sensirion.Calc.RandomGenerator.GetUniform">
+            <summary>Produce a uniform random sample from the open interval (0, 1).
+            The method will not return either end point. 
+            </summary>
+            <returns>Randomvalue between 0 and 1</returns>
+        </member>
+        <member name="M:Sensirion.Calc.RandomGenerator.GetUniform(System.Int32,System.Int32)">
+            <summary>Produce a uniform random sample between boundaries aBoundA and aBoundB.
+            The method will not return either end point. 
+            </summary>
+            <param name="aBoundA">min or max boundary of the random range</param>
+            <param name="aBoundB">min or max boundary of the random range</param>
+            <returns>Randomvalue between aBoundA and aBoundA</returns>
+        </member>
+        <member name="M:Sensirion.Calc.RandomGenerator.GetUint">
+            <summary>This is the heart of the generator.
+            It uses George Marsaglia's MWC algorithm to produce an unsigned integer.
+            See http://www.bobwheeler.com/statistics/Password/MarsagliaPost.txt
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Sensirion.Calc.Range">
+            <summary>Class generating ranges of numbers. As opposed to Enumerable.Range(), it supports data types other than int
+            and allows specifying a step size.
+            </summary>
+            <remarks>Taken from <a href="http://www.c-sharpcorner.com/uploadfile/b942f9/dealing-with-ranges-of-numbers-in-C-Sharp">here</a></remarks>
+        </member>
+        <member name="M:Sensirion.Calc.Range.SByte(System.SByte,System.SByte,System.Int32)">
+            <summary>Creates a sequence from <paramref name="from"/> to <paramref name="to"/> with step size <paramref name="step"/>.
+            </summary>
+            <param name="from"></param>
+            <param name="to"></param>
+            <param name="step"/>
+            <returns></returns>
+        </member>
+        <member name="M:Sensirion.Calc.Range.Byte(System.Byte,System.Byte,System.Int32)">
+            <summary>Creates a sequence from <paramref name="from"/> to <paramref name="to"/> with step size <paramref name="step"/>.
+            </summary>
+            <param name="from"></param>
+            <param name="to"></param>
+            <param name="step"/>
+            <returns></returns>
+        </member>
+        <member name="M:Sensirion.Calc.Range.Char(System.Char,System.Char,System.Int32)">
+            <summary>Creates a sequence from <paramref name="from"/> to <paramref name="to"/> with step size <paramref name="step"/>.
+            </summary>
+            <param name="from"></param>
+            <param name="to"></param>
+            <param name="step"/>
+            <returns></returns>
+        </member>
+        <member name="M:Sensirion.Calc.Range.Int16(System.Int16,System.Int16,System.Int32)">
+            <summary>Creates a sequence from <paramref name="from"/> to <paramref name="to"/> with step size <paramref name="step"/>.
+            </summary>
+            <param name="from"></param>
+            <param name="to"></param>
+            <param name="step"/>
+            <returns></returns>
+        </member>
+        <member name="M:Sensirion.Calc.Range.UInt16(System.UInt16,System.UInt16,System.Int32)">
+            <summary>Creates a sequence from <paramref name="from"/> to <paramref name="to"/> with step size <paramref name="step"/>.
+            </summary>
+            <param name="from"></param>
+            <param name="to"></param>
+            <param name="step"/>
+            <returns></returns>
+        </member>
+        <member name="M:Sensirion.Calc.Range.Int32(System.Int32,System.Int32,System.Int32)">
+            <summary>Creates a sequence from <paramref name="from"/> to <paramref name="to"/> with step size <paramref name="step"/>.
+            </summary>
+            <param name="from"></param>
+            <param name="to"></param>
+            <param name="step"/>
+            <returns></returns>
+        </member>
+        <member name="M:Sensirion.Calc.Range.UInt32(System.UInt32,System.UInt32,System.UInt32)">
+            <summary>Creates a sequence from <paramref name="from"/> to <paramref name="to"/> with step size <paramref name="step"/>.
+            </summary>
+            <param name="from"></param>
+            <param name="to"></param>
+            <param name="step"/>
+            <returns></returns>
+        </member>
+        <member name="M:Sensirion.Calc.Range.Int64(System.Int64,System.Int64,System.Int64)">
+            <summary>Creates a sequence from <paramref name="from"/> to <paramref name="to"/> with step size <paramref name="step"/>.
+            </summary>
+            <param name="from"></param>
+            <param name="to"></param>
+            <param name="step"/>
+            <returns></returns>
+        </member>
+        <member name="M:Sensirion.Calc.Range.UInt64(System.UInt64,System.UInt64,System.UInt64)">
+            <summary>Creates a sequence from <paramref name="from"/> to <paramref name="to"/> with step size <paramref name="step"/>.
+            </summary>
+            <param name="from"></param>
+            <param name="to"></param>
+            <param name="step"/>
+            <returns></returns>
+        </member>
+        <member name="M:Sensirion.Calc.Range.Single(System.Single,System.Single,System.Single)">
+            <summary>Creates a sequence from <paramref name="from"/> to <paramref name="to"/> with step size <paramref name="step"/>.
+            </summary>
+            <param name="from"></param>
+            <param name="to"></param>
+            <param name="step"/>
+            <returns></returns>
+        </member>
+        <member name="M:Sensirion.Calc.Range.Double(System.Double,System.Double,System.Double)">
+            <summary>Creates a sequence from <paramref name="from"/> to <paramref name="to"/> with step size <paramref name="step"/>.
+            </summary>
+            <param name="from"></param>
+            <param name="to"></param>
+            <param name="step"/>
+            <returns></returns>
+        </member>
+        <member name="M:Sensirion.Calc.Range.Decimal(System.Decimal,System.Decimal,System.Decimal)">
+            <summary>Creates a sequence from <paramref name="from"/> to <paramref name="to"/> with step size <paramref name="step"/>.
+            </summary>
+            <param name="from"></param>
+            <param name="to"></param>
+            <param name="step"/>
+            <returns></returns>
+        </member>
+        <member name="M:Sensirion.Calc.Range.DateTime(System.DateTime,System.DateTime,System.Double)">
+            <summary>Creates a sequence from <paramref name="from"/> to <paramref name="to"/> with step size <paramref name="step"/>.
+            </summary>
+            <param name="from"></param>
+            <param name="to"></param>
+            <param name="step"/>
+            <returns></returns>
+        </member>
+        <member name="M:Sensirion.Calc.Range.SByte(System.SByte,System.SByte)">
+            <summary>Creates a sequence from <paramref name="from"/> to <paramref name="to"/>.
+            </summary>
+            <param name="from"></param>
+            <param name="to"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Sensirion.Calc.Range.Byte(System.Byte,System.Byte)">
+            <summary>Creates a sequence from <paramref name="from"/> to <paramref name="to"/>.
+            </summary>
+            <param name="from"></param>
+            <param name="to"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Sensirion.Calc.Range.Char(System.Char,System.Char)">
+            <summary>Creates a sequence from <paramref name="from"/> to <paramref name="to"/>.
+            </summary>
+            <param name="from"></param>
+            <param name="to"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Sensirion.Calc.Range.Int16(System.Int16,System.Int16)">
+            <summary>Creates a sequence from <paramref name="from"/> to <paramref name="to"/>.
+            </summary>
+            <param name="from"></param>
+            <param name="to"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Sensirion.Calc.Range.UInt16(System.UInt16,System.UInt16)">
+            <summary>Creates a sequence from <paramref name="from"/> to <paramref name="to"/>.
+            </summary>
+            <param name="from"></param>
+            <param name="to"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Sensirion.Calc.Range.Int32(System.Int32,System.Int32)">
+            <summary>Creates a sequence from <paramref name="from"/> to <paramref name="to"/>.
+            </summary>
+            <param name="from"></param>
+            <param name="to"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Sensirion.Calc.Range.UInt32(System.UInt32,System.UInt32)">
+            <summary>Creates a sequence from <paramref name="from"/> to <paramref name="to"/>.
+            </summary>
+            <param name="from"></param>
+            <param name="to"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Sensirion.Calc.Range.Int64(System.Int64,System.Int64)">
+            <summary>Creates a sequence from <paramref name="from"/> to <paramref name="to"/>.
+            </summary>
+            <param name="from"></param>
+            <param name="to"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Sensirion.Calc.Range.UInt64(System.UInt64,System.UInt64)">
+            <summary>Creates a sequence from <paramref name="from"/> to <paramref name="to"/>.
+            </summary>
+            <param name="from"></param>
+            <param name="to"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Sensirion.Calc.Range.Single(System.Single,System.Single)">
+            <summary>Creates a sequence from <paramref name="from"/> to <paramref name="to"/>.
+            </summary>
+            <param name="from"></param>
+            <param name="to"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Sensirion.Calc.Range.Double(System.Double,System.Double)">
+            <summary>Creates a sequence from <paramref name="from"/> to <paramref name="to"/>.
+            </summary>
+            <param name="from"></param>
+            <param name="to"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Sensirion.Calc.Range.Decimal(System.Decimal,System.Decimal)">
+            <summary>Creates a sequence from <paramref name="from"/> to <paramref name="to"/>.
+            </summary>
+            <param name="from"></param>
+            <param name="to"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Sensirion.Calc.Range.DateTime(System.DateTime,System.DateTime)">
+            <summary>Creates a sequence from <paramref name="from"/> to <paramref name="to"/>.
+            </summary>
+            <param name="from"></param>
+            <param name="to"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Sensirion.Calc.SafeDateTime">
+            <summary>Wrapper for <see cref="T:System.DateTime"/> that ensures exceptions don't occur when adding/subtracting <see cref="T:System.TimeSpan"/>s
+            </summary>
+        </member>
+        <member name="M:Sensirion.Calc.SafeDateTime.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:Sensirion.Calc.SafeDateTime.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="M:Sensirion.Calc.SafeDateTime.ToString">
+            <inheritdoc />
+        </member>
+        <member name="M:Sensirion.Calc.SafeDateTime.#ctor(System.DateTime)">
+            <summary>Constructor
+            </summary>
+        </member>
+        <member name="M:Sensirion.Calc.SafeDateTime.op_Equality(Sensirion.Calc.SafeDateTime,System.DateTime)">
+            <summary>Operator overload for equals to make it easier to compare a <see cref="T:Sensirion.Calc.SafeDateTime"/> with a <see cref="T:System.DateTime"/>
+            </summary>
+        </member>
+        <member name="M:Sensirion.Calc.SafeDateTime.op_Inequality(Sensirion.Calc.SafeDateTime,System.DateTime)">
+            <summary>Operator overload to make it easier to compare a <see cref="T:Sensirion.Calc.SafeDateTime"/> with a <see cref="T:System.DateTime"/>
+            </summary>
+        </member>
+        <member name="M:Sensirion.Calc.SafeDateTime.op_Equality(Sensirion.Calc.SafeDateTime,Sensirion.Calc.SafeDateTime)">
+            <summary>Operator overload for equals to make it easier to compare a <see cref="T:Sensirion.Calc.SafeDateTime"/> with a <see cref="T:Sensirion.Calc.SafeDateTime"/>
+            </summary>
+        </member>
+        <member name="M:Sensirion.Calc.SafeDateTime.op_Inequality(Sensirion.Calc.SafeDateTime,Sensirion.Calc.SafeDateTime)">
+            <summary>Operator overload to make it easier to compare a <see cref="T:Sensirion.Calc.SafeDateTime"/> with a <see cref="T:Sensirion.Calc.SafeDateTime"/>
+            </summary>
+        </member>
+        <member name="M:Sensirion.Calc.SafeDateTime.op_LessThan(Sensirion.Calc.SafeDateTime,Sensirion.Calc.SafeDateTime)">
+            <summary>Operator overload to make it easier to compare a <see cref="T:Sensirion.Calc.SafeDateTime"/> with a <see cref="T:Sensirion.Calc.SafeDateTime"/>
+            </summary>
+        </member>
+        <member name="M:Sensirion.Calc.SafeDateTime.op_GreaterThan(Sensirion.Calc.SafeDateTime,Sensirion.Calc.SafeDateTime)">
+            <summary>Operator overload to make it easier to compare a <see cref="T:Sensirion.Calc.SafeDateTime"/> with a <see cref="T:Sensirion.Calc.SafeDateTime"/>
+            </summary>
+        </member>
+        <member name="M:Sensirion.Calc.SafeDateTime.op_LessThan(Sensirion.Calc.SafeDateTime,System.DateTime)">
+            <summary>Operator overload to make it easier to compare a <see cref="T:Sensirion.Calc.SafeDateTime"/> with a <see cref="T:System.DateTime"/>
+            </summary>
+        </member>
+        <member name="M:Sensirion.Calc.SafeDateTime.op_GreaterThan(Sensirion.Calc.SafeDateTime,System.DateTime)">
+            <summary>Operator overload to make it easier to compare a <see cref="T:Sensirion.Calc.SafeDateTime"/> with a <see cref="T:System.DateTime"/>
+            </summary>
+        </member>
+        <member name="M:Sensirion.Calc.SafeDateTime.op_Subtraction(System.DateTime,Sensirion.Calc.SafeDateTime)">
+            <summary>Operator overload to make it easier to use a <see cref="T:Sensirion.Calc.SafeDateTime"/> with a <see cref="T:System.DateTime"/>
+            </summary>
+        </member>
+        <member name="M:Sensirion.Calc.SafeDateTime.op_Addition(Sensirion.Calc.SafeDateTime,System.TimeSpan)">
+            <summary>Operator overload to make it easier to use a <see cref="T:Sensirion.Calc.SafeDateTime"/> with a <see cref="T:System.DateTime"/>
+            </summary>
+        </member>
+        <member name="M:Sensirion.Calc.SafeDateTime.op_Subtraction(Sensirion.Calc.SafeDateTime,System.TimeSpan)">
+            <summary>Operator overload to make it easier to use a <see cref="T:Sensirion.Calc.SafeDateTime"/> with a <see cref="T:System.DateTime"/>
+            </summary>
+        </member>
+        <member name="M:Sensirion.Calc.SafeDateTime.op_Subtraction(Sensirion.Calc.SafeDateTime,Sensirion.Calc.SafeDateTime)">
+            <summary>Operator overload to make it easier to use a <see cref="T:Sensirion.Calc.SafeDateTime"/> with a <see cref="T:System.DateTime"/>
+            </summary>
+        </member>
+        <member name="M:Sensirion.Calc.SafeDateTime.RoundDown(System.TimeSpan)">
+            <summary>Round down to the next TimeSpan
+            </summary>
+            <param name="d">TimeSpan</param>
+        </member>
+        <member name="T:Sensirion.Calc.StdDeviation">
+            <summary>This class computes the standard deviation of a given set of measurement values.
+            </summary>
+        </member>
+        <member name="M:Sensirion.Calc.StdDeviation.Compute``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>This method computes the standard deviation over the given value set. It uses the empirical variance to compute the
+            variance of the samples. This is a good estimator of the variance of the underlying value distribution (of which the set passed
+            is a sample set). This is not true for the standard deviation that is returned by this function. It will generally underestimate
+            the standard deviation of the underlying value distribution. This is due to the fact that the square root is taken.
+            A short explanation is given in <a href="http://mathworld.wolfram.com/StandardDeviation.html">Wolfram Math</a>
+            </summary>
+            <typeparam name="T">The type of the arguments, must be a value type.</typeparam>
+            <param name="aValueSet">The data to calculate the standard deviation of.</param>
+            <returns>The standard deviation of the data.</returns>
+            <exception cref="T:System.InvalidCastException">If the passed array of value type objects could not be casted to <see cref="T:System.Double"/>.</exception>
+        </member>
+        <member name="M:Sensirion.Calc.StdDeviation.Compute``1(System.Collections.Generic.IEnumerable{``0},System.Double@)">
+            <summary>This method computes the standard deviation over the given value set. It uses the empirical variance to compute the
+            variance of the samples. This is a good estimator of the variance of the underlying value distribution (of which the set passed
+            is a sample set). This is not true for the standard deviation that is returned by this function. It will generally underestimate
+            the standard deviation of the underlying value distribution. This is due to the fact that the square root is taken.
+            A short explanation is given in <a href="http://mathworld.wolfram.com/StandardDeviation.html">Wolfram Math</a>
+            </summary>
+            <typeparam name="T">The type of the arguments, must be a value type.</typeparam>
+            <param name="aValueSet">The data to calculate the standard deviation of.</param>
+            <param name="aMean">calculated mean value</param>
+            <returns>The standard deviation of the data.</returns>
+            <exception cref="T:System.InvalidCastException">If the passed array of value type objects could not be casted to <see cref="T:System.Double"/>.</exception>
+        </member>
+        <member name="M:Sensirion.Calc.StdDeviation.Compute``1(System.Collections.Generic.IEnumerable{``0},System.Double)">
+            <summary>This method computes the standard deviation over the given value set. It uses the empirical variance to compute the
+            variance of the samples. This is a good estimator of the variance of the underlying value distribution (of which the set passed
+            is a sample set). This is not true for the standard deviation that is returned by this function. It will generally underestimate
+            the standard deviation of the underlying value distribution. This is due to the fact that the square root is taken.
+            A short explanation is given in <a href="http://mathworld.wolfram.com/StandardDeviation.html">Wolfram Math</a>
+            </summary>
+            <typeparam name="T">The type of the arguments, must be a value type.</typeparam>
+            <param name="aValueSet">The data to calculate the standard deviation of.</param>
+            <param name="aMean">MeanValue as Input</param>
+            <returns>The standard deviation of the data.</returns>
+            <exception cref="T:System.InvalidCastException">If the passed array of value type objects could not be casted to <see cref="T:System.Double"/>.</exception>
+        </member>
+        <member name="T:Sensirion.Calc.TwosComplementConverter">
+            <summary>This class converts signed numbers to their two's complement and back.
+            </summary>
+        </member>
+        <member name="P:Sensirion.Calc.TwosComplementConverter.BitSize">
+            <summary>The number of bits, that are reserved for the data, that is converted by the class.
+            </summary>
+        </member>
+        <member name="M:Sensirion.Calc.TwosComplementConverter.#ctor(System.Byte)">
+            <summary>Initializes the instance.
+            </summary>
+            <param name="aBitSize">The number of bits, that are reserved for the data, that is converted by 
+              the class.</param>
+        </member>
+        <member name="M:Sensirion.Calc.TwosComplementConverter.ConvertToTwosComplement(System.Int32)">
+            <summary>The signed data is converted to the two's complement. The number of bits, that are
+              reserved for the data, is expected to be <see cref="P:Sensirion.Calc.TwosComplementConverter.BitSize"/>.
+            </summary>
+            <param name="aData">The signed data to convert.</param>
+            <returns>The data converted to the two's complement.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">If the data exceeds <see cref="P:Sensirion.Calc.TwosComplementConverter.BitSize"/>
+              bits.</exception>
+        </member>
+        <member name="M:Sensirion.Calc.TwosComplementConverter.ConvertFromTwosComplement(System.UInt32)">
+            <summary>The data, represented by its two's complement, is converted to a signed value. The 
+              number of bits, that are reserved for the data, is expected to be <see cref="P:Sensirion.Calc.TwosComplementConverter.BitSize"/>.
+            </summary>
+            <param name="aData">The data as two's complement.</param>
+            <returns>The data converted to a signed number.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">If the data exceeds <see cref="P:Sensirion.Calc.TwosComplementConverter.BitSize"/>
+              bits.</exception>
+        </member>
+        <member name="M:Sensirion.Calc.TwosComplementConverter.ConvertToTwosComplement(System.Int32,System.Byte)">
+            <summary>The signed data is converted to the two's complement.
+            </summary>
+            <param name="aData">The signed data to convert.</param>
+            <param name="aBitSize">The number of bits, that are reserved for the data.</param>
+            <returns>The data converted to the two's complement.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">If the data exceeds <paramref name="aBitSize"/> 
+              bits.</exception>
+        </member>
+        <member name="M:Sensirion.Calc.TwosComplementConverter.ConvertFromTwosComplement(System.UInt32,System.Byte)">
+            <summary>The data, represented by its two's complement, is converted to a signed value.
+            </summary>
+            <param name="aData">The data as two's complement.</param>
+            <param name="aBitSize">The number of bits, that are reserved for the data.</param>
+            <returns>The data converted to a signed number.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">If the data exceeds <paramref name="aBitSize"/> 
+              bits.</exception>
+        </member>
+        <member name="T:System.Runtime.CompilerServices.IsExternalInit">
+            <summary>
+            Reserved to be used by the compiler for tracking metadata.
+            This class should not be used by developers in source code.
+            </summary>
+        </member>
+        <member name="T:System.Runtime.CompilerServices.SkipLocalsInitAttribute">
+            <summary>
+            Used to indicate to the compiler that the <c>.locals init</c> flag should not be set in method headers.
+            </summary>
+            <remarks>Internal copy of the .NET 5 attribute.</remarks>
+        </member>
+    </members>
+</doc>

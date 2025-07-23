@@ -1,0 +1,1061 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Sensirion.Utils</name>
+    </assembly>
+    <members>
+        <member name="T:Sensirion.Utils.EmbeddedResourceHelper">
+            <summary>This class provides methods that ease the usage of embedded resources for c# projects.
+            </summary>
+        </member>
+        <member name="T:Sensirion.Utils.EmbeddedResourceHelper.DllUpdateNecessaryGovernor">
+            <summary>This is the delegate definition that must be complied with by each method
+            that shall be used to determine the necessity of an update for the embedded DLL.
+            </summary>
+            <param name="aPath2EmbeddedDll">The dll that has been extracted from the resources.</param>
+            <param name="aPath2PresentDll">The currently present dll in the directory of the executing assembly.</param>
+            <returns><c>true</c> if an update is necessary. <c>false</c> otherwise.</returns>
+        </member>
+        <member name="P:Sensirion.Utils.EmbeddedResourceHelper.Governor">
+            <summary>This is the delegate that is invoked when the decision 
+            between a present DLL and the embedded one is required.
+            </summary>
+        </member>
+        <member name="M:Sensirion.Utils.EmbeddedResourceHelper.UpdateEmbeddedResourceDll(System.Resources.ResourceManager,System.String,System.String)">
+            <summary>Takes the manager instance in <paramref name="aResourceManager"/> and tries to extract a resource
+            with the name in <paramref name="aResourceName"/>. This resource is expected to be an embedded binary file
+            which will be made available with the name in <paramref name="aDllFileName"/> in the directory of the
+            executing assembly. If already a file with the given name <paramref name="aDllFileName"/> is found in this
+            directory. The governor in <see cref="P:Sensirion.Utils.EmbeddedResourceHelper.Governor"/> gets to decide if an update is necessary or not.
+            </summary>
+            <param name="aResourceManager">The instance of <see cref="T:System.Resources.ResourceManager"/> to use.</param>
+            <param name="aDllFileName">The name of the dll that shall be extracted.</param>
+            <param name="aResourceName">The name under which the resource is embedded into the dll.</param>
+        </member>
+        <member name="M:Sensirion.Utils.EmbeddedResourceHelper.UpdateEmbeddedResourceDll(System.Resources.ResourceManager,System.String,System.String,System.String)">
+            <summary>Takes the manager instance in <paramref name="aResourceManager"/> and tries to extract a resource
+            with the name in <paramref name="aResourceName"/>. This resource is expected to be an embedded binary file
+            which will be made available with the name in <paramref name="aDllFileName"/> in the directory of the
+            executing assembly. If already a file with the given name <paramref name="aDllFileName"/> is found in this
+            directory. The governor in <see cref="P:Sensirion.Utils.EmbeddedResourceHelper.Governor"/> gets to decide if an update is necessary or not.
+            </summary>
+            <param name="aResourceManager">The instance of <see cref="T:System.Resources.ResourceManager"/> to use.</param>
+            <param name="aDllFileName">The name of the dll that shall be extracted.</param>
+            <param name="aResourceName">The name under which the resource is embedded into the dll.</param>
+            <param name="aDestinationDirectory">The path to the destination directory for the DLL</param>
+        </member>
+        <member name="M:Sensirion.Utils.EmbeddedResourceHelper.ReadTextResources(System.Reflection.Assembly,System.String[])">
+            <summary>Reads the content of the embedded text resource. 
+            ATTENTION: This only works if 'default namespace' and 'assembly name' of <paramref name="owner"/> are the same.</summary>
+            <param name="owner">The owner assmbly containing the embedded ressource.</param>
+            <param name="resourceNames">The resourceNames, i.e. the relative to the resource WITHOUT the default namespace as prefix.</param>
+            <returns>the content of the embedded ressource. Never null.</returns>
+            <see href="http://stackoverflow.com/questions/3314140/how-to-read-embedded-resource-text-file"/>
+            <seealso href="http://stackoverflow.com/questions/653128/how-to-get-namespace-of-an-assembly"/>
+        </member>
+        <member name="M:Sensirion.Utils.EmbeddedResourceHelper.ReadTextResource(System.Reflection.Assembly,System.String)">
+            <summary>Reads the content of the embedded text resource. 
+            ATTENTION: This only works if 'default namespace' and 'assembly name' of <paramref name="owner"/> are the same.</summary>
+            <param name="owner">The owner assmbly containing the embedded ressource.</param>
+            <param name="resourceName">The resourceName, i.e. the relative to the resource WITHOUT the default namespace as prefix.</param>
+            <returns>the content of the embedded ressource. Never null.</returns>
+            <seealso href="http://stackoverflow.com/questions/3314140/how-to-read-embedded-resource-text-file"/>
+            <seealso href="http://stackoverflow.com/questions/653128/how-to-get-namespace-of-an-assembly"/>
+        </member>
+        <member name="T:Sensirion.Utils.Horology.ISystemClock">
+            <summary>
+              Interface for accessing system clock
+            </summary>
+        </member>
+        <member name="P:Sensirion.Utils.Horology.ISystemClock.Now">
+            <summary>
+              Now
+            </summary>
+        </member>
+        <member name="M:Sensirion.Utils.Horology.ISystemClock.ThreadSleep(System.Int32)">
+            <summary>
+              Thread.Sleep
+            </summary>
+            <param name="millisecondsTimeout"></param>
+        </member>
+        <member name="M:Sensirion.Utils.Horology.ISystemClock.TaskDelay(System.TimeSpan,System.Threading.CancellationToken)">
+            <summary>
+              Task.Delay
+            </summary>
+            <param name="delay"></param>
+            <param name="cancellationToken"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Sensirion.Utils.Horology.MockClock">
+            <summary />
+        </member>
+        <member name="F:Sensirion.Utils.Horology.MockClock.NoDelay">
+            <summary />
+        </member>
+        <member name="F:Sensirion.Utils.Horology.MockClock.YieldDelay">
+            <summary />
+        </member>
+        <member name="P:Sensirion.Utils.Horology.MockClock.NowProvider">
+            <summary />
+        </member>
+        <member name="P:Sensirion.Utils.Horology.MockClock.TaskDelayFunc">
+            <summary />
+        </member>
+        <member name="P:Sensirion.Utils.Horology.MockClock.Now">
+            <inheritdoc />
+        </member>
+        <member name="M:Sensirion.Utils.Horology.MockClock.ThreadSleep(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Sensirion.Utils.Horology.MockClock.TaskDelay(System.TimeSpan,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:Sensirion.Utils.Horology.MockClock.WithClockSteps(System.TimeSpan)">
+            <summary />
+        </member>
+        <member name="M:Sensirion.Utils.Horology.MockClock.WithNowProvider(System.Func{System.DateTimeOffset})">
+            <summary />
+        </member>
+        <member name="M:Sensirion.Utils.Horology.MockClock.WithTaskDelayFunc(System.Func{System.TimeSpan,System.Threading.CancellationToken,System.Threading.Tasks.Task})">
+            <summary />
+        </member>
+        <member name="T:Sensirion.Utils.Horology.SystemClock">
+            <summary>
+              A facade that makes clock related operations testable
+            </summary>
+        </member>
+        <member name="P:Sensirion.Utils.Horology.SystemClock.Now">
+            <inheritdoc />
+        </member>
+        <member name="M:Sensirion.Utils.Horology.SystemClock.ThreadSleep(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Sensirion.Utils.Horology.SystemClock.TaskDelay(System.TimeSpan,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:Sensirion.Utils.Log.ExtendedLoggingSingleton">
+            <summary>Singleton for storing the extended logging state
+            </summary>
+        </member>
+        <member name="P:Sensirion.Utils.Log.ExtendedLoggingSingleton.Instance">
+            <summary>Instance
+            </summary>
+        </member>
+        <member name="P:Sensirion.Utils.Log.ExtendedLoggingSingleton.ExtendedLoggingActive">
+            <summary><c>True</c> if extended logging is active (default: true)
+            </summary>
+        </member>
+        <member name="T:Sensirion.Utils.System.TimeDelay">
+            <summary>This class provides a logarithmic time delay
+            </summary>
+        </member>
+        <member name="P:Sensirion.Utils.System.TimeDelay.DelayCounter">
+            <summary>The delay counter
+            </summary>
+        </member>
+        <member name="M:Sensirion.Utils.System.TimeDelay.#ctor(System.UInt32,System.UInt32,System.Single)">
+            <summary>Default constructor
+            Range from 2 seconds to 1024 seconds (17:04 min)
+            </summary>
+            <param name="aStartDelay">After which delay number, the delay must be grow</param>
+            <param name="aMaxIncrements">The number of maximum increments</param>
+            <param name="aBaseNumber">The base value of the pow() method</param>
+        </member>
+        <member name="M:Sensirion.Utils.System.TimeDelay.GetNextTimeDelay">
+            <summary>The function returns a delay to wait after an exception
+            </summary>
+            <returns>The time delay as <see cref="T:System.TimeSpan"/></returns>
+        </member>
+        <member name="T:Sensirion.Utils.Internal.TimerFrmEventArgs">
+            <summary>Event arguments for the TimerEventHandler</summary>
+        </member>
+        <member name="P:Sensirion.Utils.Internal.TimerFrmEventArgs.Cancel">
+            <summary>Gets or sets the flag to cancel the current task</summary>
+            <value>Represents the wish of the subscriber to the cancel the current task </value>
+            <remarks>
+              If the caller want to allow the subscriber to cancel the current
+              Task, he has to set the <see cref="P:Sensirion.Utils.Internal.TimerFrmEventArgs.CancelAllowed"/> property to true. If this 
+              property is true, the caller can abort the current task. This property can be set 
+              in the constructor <see cref="T:Sensirion.Utils.Internal.TimerFrmEventArgs"/>.
+            </remarks>
+        </member>
+        <member name="P:Sensirion.Utils.Internal.TimerFrmEventArgs.CancelAllowed">
+            <summary>Gets the permission to cancel the task</summary>
+            <value>Represents the permission to cancel the current task</value>
+            <remarks>
+              If the caller want to allow the subscriber to cancel the current
+              Task, he has to take care of the <see cref="P:Sensirion.Utils.Internal.TimerFrmEventArgs.Cancel"/> property. If this 
+              property is true, the caller can abort the current task.
+            </remarks>
+        </member>
+        <member name="P:Sensirion.Utils.Internal.TimerFrmEventArgs.ElapsedTime">
+            <summary>Gets the elapsed time  [ms]</summary>
+            <value>Represents the elapsed time since the current task has begun</value>
+        </member>
+        <member name="P:Sensirion.Utils.Internal.TimerFrmEventArgs.TotalTime">
+            <summary>Gets the total time  [ms]</summary>
+            <value>Represents the total time that is available for the current task</value>
+        </member>
+        <member name="M:Sensirion.Utils.Internal.TimerFrmEventArgs.#ctor(System.Int32,System.Int32,System.Boolean)">
+            <summary>Initializes the instance. Sets the cancel Member to false</summary>
+            <param name="aElapsedTime">Time that has been elapsed since the start of the action [ms]</param>
+            <param name="aTotalTime">Total time to wait until the task goes onward [ms]</param>
+            <param name="aCancelAllowed">True if the caller cares about the cancel argument</param>
+        </member>
+        <member name="P:Sensirion.Utils.Internal.TimerWithTimeoutEventArgs.Cancel">
+            <summary>Gets or sets the flag to cancel the current task</summary>
+            <value>Represents the wish of the subscriber to the cancel the current task </value>
+            <remarks>
+              If the caller want to allow the subscriber to cancel the current
+              Task, he has to set the <see cref="P:Sensirion.Utils.Internal.TimerWithTimeoutEventArgs.CancelAllowed"/> property to true. If this 
+              property is true, the caller can abort the current task. This property can be set 
+              in the constructor <see cref="T:Sensirion.Utils.Internal.TimerWithTimeoutEventArgs"/>.
+            </remarks>
+        </member>
+        <member name="P:Sensirion.Utils.Internal.TimerWithTimeoutEventArgs.Timeout">
+            <summary>Timeout time (wall time) calculated from <see cref="P:Sensirion.Utils.Internal.TimerWithTimeoutEventArgs.ElapsedTime"/> and <see cref="P:Sensirion.Utils.Internal.TimerWithTimeoutEventArgs.TimeoutTime"/>
+            </summary>
+        </member>
+        <member name="T:Sensirion.Utils.Internal.CancelEventArgs`1">
+            <summary>This is a simple helper template so that one can cheat an create 
+              event handlers w/o explicitly defining new classes.</summary>
+            <remarks>
+              The framework defines <see cref="T:System.ComponentModel.CancelEventArgs"/>, so why not this?
+              Probably because it allows you to cheat too easily and makes
+              it so you have less flexibility if you need to add extra parameters to the event
+              down the road.  Nothing wrong with cheating, but don't use this     
+            </remarks>
+            <typeparam name="T">The type relevant to the event</typeparam>
+        </member>
+        <member name="F:Sensirion.Utils.Internal.CancelEventArgs`1.Data">
+            <summary>The event's data
+            </summary>
+        </member>
+        <member name="M:Sensirion.Utils.Internal.CancelEventArgs`1.#ctor(`0)">
+            <summary>Wrapper for the CancelEventArgs</summary>
+            <param name="data">Event data class</param>
+        </member>
+        <member name="T:Sensirion.Utils.Internal.EventArgs`1">
+            <summary>This is a simple helper template so that one can cheat an create 
+              event handlers w/o explicitly defining new classes.</summary>
+            <remarks>
+              The framework defines <see cref="T:System.EventArgs"/>, so why not this?
+              Probably because it allows you to cheat too easily and makes
+              it so you have less flexibility if you need to add extra parameters to the event
+              down the road.  Nothing wrong with cheating, but don't use this     
+            </remarks>
+            <typeparam name="T">The type relevant to the event</typeparam>
+        </member>
+        <member name="F:Sensirion.Utils.Internal.EventArgs`1.Data">
+            <summary>The event's data
+            </summary>
+        </member>
+        <member name="M:Sensirion.Utils.Internal.EventArgs`1.#ctor(`0)">
+            <summary>Wrapper for the EventArgs</summary>
+            <param name="data">Event data class</param>
+        </member>
+        <member name="T:Sensirion.Utils.Internal.EventedList`1">
+            <summary>A list that supports IEvented so the outside world
+            can tell when changes occur.</summary>
+            <typeparam name="T">The type of element being stored in the list</typeparam>
+        </member>
+        <member name="F:Sensirion.Utils.Internal.EventedList`1.Inner">
+            <summary>The underlying storage
+            </summary>
+        </member>
+        <member name="M:Sensirion.Utils.Internal.EventedList`1.#ctor">
+            <summary>Initializes the Instance
+            </summary>
+        </member>
+        <member name="M:Sensirion.Utils.Internal.EventedList`1.#ctor(System.Collections.Generic.IEnumerable{`0})">
+            <summary>Initializes the instance</summary>
+            <param name="aInitialData">Takes a list that represents the initial Data</param>
+        </member>
+        <member name="M:Sensirion.Utils.Internal.EventedList`1.IndexOf(`0)">
+            <summary>returns the index of the first instance in the list</summary>
+            <param name="aItem">Item that is searched for</param>
+            <returns>The index of the item in the list, or -1 if not exists</returns>
+        </member>
+        <member name="M:Sensirion.Utils.Internal.EventedList`1.Insert(System.Int32,`0)">
+            <summary>Inserts the item at the submitted position</summary>
+            <param name="aIndex">Index where the new Item sould be</param>
+            <param name="aItem">Item to insert</param>
+            <exception cref="T:Sensirion.Logging.Internal.LogException">Evented List (Insert) is read only</exception>
+        </member>
+        <member name="M:Sensirion.Utils.Internal.EventedList`1.RemoveAt(System.Int32)">
+            <summary>Removes the item at the submitted index</summary>
+            <param name="aIndex">Index of the item to remove</param>
+            <exception cref="T:Sensirion.Logging.Internal.LogException">Evented List (RemoveAt) is read only</exception>
+        </member>
+        <member name="P:Sensirion.Utils.Internal.EventedList`1.Item(System.Int32)">
+            <summary>Indexer for accessing the items in the list</summary>
+            <param name="aIndex">Index of the searched item</param>
+            <exception cref="T:Sensirion.Logging.Internal.LogException">Evented List (indexer) is read only</exception>
+        </member>
+        <member name="M:Sensirion.Utils.Internal.EventedList`1.Add(`0)">
+            <summary>Adds the submitted items at the end of the list</summary>
+            <param name="aItem">Item to be added</param>
+            <exception cref="T:Sensirion.Logging.Internal.LogException">Evented List (Add) is read only</exception>
+        </member>
+        <member name="M:Sensirion.Utils.Internal.EventedList`1.AddItem(`0)">
+            <summary>Adds the submitted items at the end of the list</summary>
+            <param name="aItem">Item to be added</param>
+            <returns>True, if the item could be added</returns>
+            <exception cref="T:Sensirion.Logging.Internal.LogException">Evented List (Add) is read only</exception>
+        </member>
+        <member name="M:Sensirion.Utils.Internal.EventedList`1.Clear">
+            <summary>Clears the list and deletes al items in it. </summary>
+            <exception cref="T:Sensirion.Logging.Internal.LogException">Evented List (Clear) is read only</exception>
+        </member>
+        <member name="M:Sensirion.Utils.Internal.EventedList`1.Contains(`0)">
+            <summary>True, if the item is in the list</summary>
+            <param name="aItem">Item for that will be checked</param>
+            <returns>True if the item is in the list</returns>
+        </member>
+        <member name="M:Sensirion.Utils.Internal.EventedList`1.CopyTo(`0[],System.Int32)">
+            <summary>Copies the entire List to a compatible one-dimensional array, 
+              starting at the beginning of the target array</summary>
+            <param name="aArray">Array where the items are copied to</param>
+            <param name="aArrayIndex">start index from where the items will be copied</param>
+        </member>
+        <member name="P:Sensirion.Utils.Internal.EventedList`1.Count">
+            <summary>Count of the items in the list
+            </summary>
+        </member>
+        <member name="P:Sensirion.Utils.Internal.EventedList`1.IsReadOnly">
+            <summary>True, if the list is set to read only
+            </summary>
+        </member>
+        <member name="M:Sensirion.Utils.Internal.EventedList`1.Remove(`0)">
+            <summary>Removes the submitted item from the list</summary>
+            <param name="aItem">Item to be removed</param>
+            <returns>True, if the item could be removed</returns>
+            <exception cref="T:Sensirion.Logging.Internal.LogException">Evented List (Remove) is read only</exception>
+        </member>
+        <member name="M:Sensirion.Utils.Internal.EventedList`1.GetEnumerator">
+            <summary>Copies the entire List to a compatible one-dimensional array, 
+               starting at the beginning of the target array</summary>
+            <returns>The enumerator for the list</returns>
+        </member>
+        <member name="M:Sensirion.Utils.Internal.EventedList`1.System#Collections#IEnumerable#GetEnumerator">
+            <summary>Copies the entire List to a compatible one-dimensional array, 
+               starting at the beginning of the target array</summary>
+            <returns>The enumerator for the list</returns>
+        </member>
+        <member name="M:Sensirion.Utils.Internal.EventedList`1.AsReadOnly">
+            <summary>Returns this list as a new created list with the readonly attribute set</summary>
+            <returns>new list</returns>
+            <exception cref="T:Sensirion.Logging.Internal.LogException">Evented List (AsReadOnly) is read only</exception>
+        </member>
+        <member name="M:Sensirion.Utils.Internal.EventedList`1.AddRange(System.Collections.Generic.IEnumerable{`0})">
+            <summary>Adds an array or list of items to the current list</summary>
+            <param name="aStuff">Array or list with the items to add</param>
+            <exception cref="T:Sensirion.Logging.Internal.LogException">Evented List (AddRange) is read only</exception>
+        </member>
+        <member name="M:Sensirion.Utils.Internal.EventedList`1.ToArray">
+            <summary>Copies the elements of the List to a new array</summary>
+            <returns>The new created array</returns>
+        </member>
+        <member name="M:Sensirion.Utils.Internal.EventedList`1.OnAdded(`0[])">
+            <summary>Raises the Added-Event</summary>
+            <param name="aAdded">Items that has been added</param>
+        </member>
+        <member name="M:Sensirion.Utils.Internal.EventedList`1.OnAdded(System.Collections.Generic.IEnumerable{`0})">
+            <summary>Raises the Added Event</summary>
+            <param name="aAdded">Items that has been added</param>
+        </member>
+        <member name="M:Sensirion.Utils.Internal.EventedList`1.OnRemoved(`0)">
+            <summary>Raises the Removed Event</summary>
+            <param name="aRemoved">Items that has been removed</param>
+        </member>
+        <member name="M:Sensirion.Utils.Internal.EventedList`1.OnRemoved(System.Collections.Generic.IList{`0})">
+            <summary>Raises the Removed Event</summary>
+            <param name="aRemoved">Items that has been removed</param>
+        </member>
+        <member name="M:Sensirion.Utils.Internal.EventedList`1.OnChanged">
+            <summary>Raises the Changed Event
+            </summary>
+        </member>
+        <member name="M:Sensirion.Utils.Internal.EventedList`1.OnBeforeAdd(`0)">
+            <summary>Raises before a single item is added to the list</summary>
+            <param name="aAdded">Item about to add</param>
+            <returns>True, if the item mustn't be added</returns>
+        </member>
+        <member name="E:Sensirion.Utils.Internal.EventedList`1.Added">
+            <summary>Raises if a item has been added to the list
+            </summary>
+        </member>
+        <member name="E:Sensirion.Utils.Internal.EventedList`1.Removed">
+            <summary>Raises if a item has been removed from the list
+            </summary>
+        </member>
+        <member name="E:Sensirion.Utils.Internal.EventedList`1.Changed">
+            <summary>Raises if a change happen (added or removed)
+            </summary>
+        </member>
+        <member name="E:Sensirion.Utils.Internal.EventedList`1.BeforeAdd">
+            <summary>Raises bevore a single item will be added to the list.
+            </summary>
+        </member>
+        <member name="M:Sensirion.Utils.Internal.EventedList`1.Find(System.Predicate{`0})">
+            <summary>Searches for an element that matches the conditions 
+              defined by the specified predicate, and returns the first 
+              occurrence within the entire List.  
+            </summary>
+            <param name="match">match:  The <see cref="T:System.Predicate`1"/> delegate 
+              that defines the conditions of the element to search for 
+            </param>
+            <returns>The first element that matches the conditions defined 
+              by the specified predicate, if found; otherwise, the default 
+              value for type T. 
+            </returns>
+            <exception cref="T:System.ArgumentException"><paramref name="match"/> is 
+              <see langword="null"/>
+            </exception>
+        </member>
+        <member name="T:Sensirion.Utils.Utils.BackOffAlgorithm">
+            <summary>Retry algorithm - see https://en.wikipedia.org/wiki/Exponential_backoff
+            </summary>
+        </member>
+        <member name="T:Sensirion.Utils.Utils.BackOffAlgorithm.RetryableDelegate`2">
+            <summary>Delegate to retry. Must throw on error
+            </summary>
+            <typeparam name="S">Input type</typeparam>
+            <typeparam name="T">Return type</typeparam>
+        </member>
+        <member name="T:Sensirion.Utils.Utils.BackOffAlgorithm.RetryableDelegate`1">
+            <summary>Delegate to retry. Must throw on error
+            </summary>
+        </member>
+        <member name="T:Sensirion.Utils.Utils.BackOffAlgorithm.RetryableDelegate">
+            <summary>Delegate to retry. Must throw on error
+            </summary>
+        </member>
+        <member name="M:Sensirion.Utils.Utils.BackOffAlgorithm.DoActionWithRetry``1(Sensirion.Utils.Utils.BackOffAlgorithm.RetryableDelegate,System.Int32,System.Int32,Sensirion.Utils.Utils.BackOffAlgorithm.BackOffStrategy,System.Int32@,System.Action,System.Action,System.Boolean)">
+            <summary>Retry a given <paramref name="actionToBeRetriedOnException"/> that can throw an exception
+            </summary>
+            <param name="actionToBeRetriedOnException"><see cref="T:System.Action"/> delegate to be retried</param>
+            <param name="maxAllowedRetries">Number of allowed retries after the first try before an exception is thrown. <paramref name="actionToBeRetriedOnException"/> will always be called at least once.
+              e.g. MaxRetires = 2 means up to 3 runs of the <paramref name="actionToBeRetriedOnException"/>.</param>
+            <param name="waitBetweenRetryMs">Wait time [ms] between retries</param>
+            <param name="backOffStrategy"><see cref="T:Sensirion.Utils.Utils.BackOffAlgorithm.BackOffStrategy"/></param>
+            <param name="totalRetries">[out] Total number of retries</param>
+            <param name="actionToRunOnFailureBeforeEachRetryBeforeWait">[Optional] <see cref="T:System.Action"/> to run if an exception occurs in <paramref name="actionToBeRetriedOnException"/>. Run before waiting and before retrying. This action will not be run if no exception occurs <paramref name="actionToBeRetriedOnException"/>.</param>
+            <param name="actionToRunOnFailureBeforeEachRetryAfterWait">[Optional] <see cref="T:System.Action"/> to run if an exception occurs in <paramref name="actionToBeRetriedOnException"/>.  Run after waiting and before retrying. This action will not be run if no exception occurs in <paramref name="actionToBeRetriedOnException"/>.</param>
+            <param name="logRetryFailures">[Optional] Do (<c>true</c>) or do not (<c>false</c>) log exceptions that occur for each individual retry. If there is still an exception after <paramref name="maxAllowedRetries"/> attempts, this exception will always be logged and thrown.</param>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="actionToBeRetriedOnException"/> is <c>null</c></exception>
+        </member>
+        <member name="M:Sensirion.Utils.Utils.BackOffAlgorithm.DoActionWithRetry(Sensirion.Utils.Utils.BackOffAlgorithm.RetryableDelegate,System.Int32,System.Int32,Sensirion.Utils.Utils.BackOffAlgorithm.BackOffStrategy,System.Int32@,System.Action,System.Action,System.Boolean)">
+            <summary>Retry a given <paramref name="actionToBeRetriedOnException"/> that can throw an exception
+            </summary>
+            <param name="actionToBeRetriedOnException"><see cref="T:System.Action"/> delegate to be retried</param>
+            <param name="maxAllowedRetries">Number of allowed retries after the first try before an exception is thrown. <paramref name="actionToBeRetriedOnException"/> will always be called at least once.
+              e.g. MaxRetires = 2 means up to 3 runs of the <paramref name="actionToBeRetriedOnException"/>.</param>
+            <param name="waitBetweenRetryMs">Wait time [ms] between retries</param>
+            <param name="backOffStrategy"><see cref="T:Sensirion.Utils.Utils.BackOffAlgorithm.BackOffStrategy"/></param>
+            <param name="totalRetries">[out] Total number of retries</param>
+            <param name="actionToRunOnFailureBeforeEachRetryBeforeWait">[Optional] <see cref="T:System.Action"/> to run if an exception occurs in <paramref name="actionToBeRetriedOnException"/>. Run before waiting and before retrying. This action will not be run if no exception occurs <paramref name="actionToBeRetriedOnException"/>.</param>
+            <param name="actionToRunOnFailureBeforeEachRetryAfterWait">[Optional] <see cref="T:System.Action"/> to run if an exception occurs in <paramref name="actionToBeRetriedOnException"/>.  Run after waiting and before retrying. This action will not be run if no exception occurs in <paramref name="actionToBeRetriedOnException"/>.</param>
+            <param name="logRetryFailures">[Optional] Do (<c>true</c>) or do not (<c>false</c>) log exceptions that occur for each individual retry. If there is still an exception after <paramref name="maxAllowedRetries"/> attempts, this exception will always be logged and thrown.</param>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="actionToBeRetriedOnException"/> is <c>null</c></exception>
+        </member>
+        <member name="M:Sensirion.Utils.Utils.BackOffAlgorithm.DoActionWithRetry``2(Sensirion.Utils.Utils.BackOffAlgorithm.RetryableDelegate{``0},System.Int32,System.Int32,Sensirion.Utils.Utils.BackOffAlgorithm.BackOffStrategy,System.Int32@,System.Action,System.Action,System.Boolean)">
+            <summary>Retry a given <paramref name="actionToBeRetriedOnException"/> that can throw an exception
+            </summary>
+            <param name="actionToBeRetriedOnException"><see cref="T:System.Action"/> delegate to be retried</param>
+            <param name="maxAllowedRetries">Number of allowed retries after the first try before an exception is thrown. <paramref name="actionToBeRetriedOnException"/> will always be called at least once.
+              e.g. MaxRetires = 2 means up to 3 runs of the <paramref name="actionToBeRetriedOnException"/>.</param>
+            <param name="waitBetweenRetryMs">Wait time [ms] between retries</param>
+            <param name="backOffStrategy"><see cref="T:Sensirion.Utils.Utils.BackOffAlgorithm.BackOffStrategy"/></param>
+            <param name="totalRetries">[out] Total number of retries</param>
+            <param name="actionToRunOnFailureBeforeEachRetryBeforeWait">[Optional] <see cref="T:System.Action"/> to run if an exception occurs in <paramref name="actionToBeRetriedOnException"/>. Run before waiting and before retrying. This action will not be run if no exception occurs <paramref name="actionToBeRetriedOnException"/>.</param>
+            <param name="actionToRunOnFailureBeforeEachRetryAfterWait">[Optional] <see cref="T:System.Action"/> to run if an exception occurs in <paramref name="actionToBeRetriedOnException"/>.  Run after waiting and before retrying. This action will not be run if no exception occurs in <paramref name="actionToBeRetriedOnException"/>.</param>
+            <param name="logRetryFailures">[Optional] Do (<c>true</c>) or do not (<c>false</c>) log exceptions that occur for each individual retry. If there is still an exception after <paramref name="maxAllowedRetries"/> attempts, this exception will always be logged and thrown.</param>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="actionToBeRetriedOnException"/> is <c>null</c></exception>
+        </member>
+        <member name="M:Sensirion.Utils.Utils.BackOffAlgorithm.DoActionWithRetry``1(Sensirion.Utils.Utils.BackOffAlgorithm.RetryableDelegate{``0},System.Int32,System.Int32,Sensirion.Utils.Utils.BackOffAlgorithm.BackOffStrategy,System.Int32@,System.Action,System.Action,System.Boolean)">
+            <summary>Retry a given <paramref name="actionToBeRetriedOnException"/> that can throw an exception
+            </summary>
+            <param name="actionToBeRetriedOnException"><see cref="T:System.Action"/> delegate to be retried</param>
+            <param name="maxAllowedRetries">Number of allowed retries after the first try before an exception is thrown. <paramref name="actionToBeRetriedOnException"/> will always be called at least once.
+              e.g. MaxRetires = 2 means up to 3 runs of the <paramref name="actionToBeRetriedOnException"/>.</param>
+            <param name="waitBetweenRetryMs">Wait time [ms] between retries</param>
+            <param name="backOffStrategy"><see cref="T:Sensirion.Utils.Utils.BackOffAlgorithm.BackOffStrategy"/></param>
+            <param name="totalRetries">[out] Total number of retries</param>
+            <param name="actionToRunOnFailureBeforeEachRetryBeforeWait">[Optional] <see cref="T:System.Action"/> to run if an exception occurs in <paramref name="actionToBeRetriedOnException"/>. Run before waiting and before retrying. This action will not be run if no exception occurs <paramref name="actionToBeRetriedOnException"/>.</param>
+            <param name="actionToRunOnFailureBeforeEachRetryAfterWait">[Optional] <see cref="T:System.Action"/> to run if an exception occurs in <paramref name="actionToBeRetriedOnException"/>.  Run after waiting and before retrying. This action will not be run if no exception occurs in <paramref name="actionToBeRetriedOnException"/>.</param>
+            <param name="logRetryFailures">[Optional] Do (<c>true</c>) or do not (<c>false</c>) log exceptions that occur for each individual retry. If there is still an exception after <paramref name="maxAllowedRetries"/> attempts, this exception will always be logged and thrown.</param>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="actionToBeRetriedOnException"/> is <c>null</c></exception>
+        </member>
+        <member name="M:Sensirion.Utils.Utils.BackOffAlgorithm.DoActionWithRetry``2(Sensirion.Utils.Utils.BackOffAlgorithm.RetryableDelegate{``0,``1},``0,System.Int32,System.Int32,Sensirion.Utils.Utils.BackOffAlgorithm.BackOffStrategy,System.Int32@,System.Action,System.Action,System.Boolean)">
+            <summary>Retry a given <paramref name="actionToBeRetriedOnException"/> that can throw an exception
+            </summary>
+            <param name="actionToBeRetriedOnException"><see cref="T:System.Action"/> delegate to be retried</param>
+            <param name="actionInput">Input object for the <paramref name="actionToBeRetriedOnException"/></param>
+            <param name="maxAllowedRetries">Number of allowed retries after the first try before an exception is thrown. <paramref name="actionToBeRetriedOnException"/> will always be called at least once.
+              e.g. MaxRetires = 2 means up to 3 runs of the <paramref name="actionToBeRetriedOnException"/>.</param>
+            <param name="waitBetweenRetryMs">Wait time [ms] between retries</param>
+            <param name="backOffStrategy"><see cref="T:Sensirion.Utils.Utils.BackOffAlgorithm.BackOffStrategy"/></param>
+            <param name="totalRetries">[out] Total number of retries</param>
+            <param name="actionToRunOnFailureBeforeEachRetryBeforeWait">[Optional] <see cref="T:System.Action"/> to run if an exception occurs in <paramref name="actionToBeRetriedOnException"/>. Run before waiting and before retrying. This action will not be run if no exception occurs <paramref name="actionToBeRetriedOnException"/>.</param>
+            <param name="actionToRunOnFailureBeforeEachRetryAfterWait">[Optional] <see cref="T:System.Action"/> to run if an exception occurs in <paramref name="actionToBeRetriedOnException"/>.  Run after waiting and before retrying. This action will not be run if no exception occurs in <paramref name="actionToBeRetriedOnException"/>.</param>
+            <param name="logRetryFailures">[Optional] Do (<c>true</c>) or do not (<c>false</c>) log exceptions that occur for each individual retry. If there is still an exception after <see cref="!:maxAllowedRetries"/> attempts, this exception will always be logged and thrown.</param>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="actionToBeRetriedOnException"/> is <c>null</c></exception>
+        </member>
+        <member name="T:Sensirion.Utils.Utils.BackOffAlgorithm.BackOffStrategy">
+            <summary>Available back off strategies
+            </summary>
+        </member>
+        <member name="F:Sensirion.Utils.Utils.BackOffAlgorithm.BackOffStrategy.Linear">
+            <summary>Linear back off strategy
+            </summary>
+        </member>
+        <member name="F:Sensirion.Utils.Utils.BackOffAlgorithm.BackOffStrategy.Exponential">
+            <summary>Exponential back off strategy
+            </summary>
+        </member>
+        <member name="F:Sensirion.Utils.Utils.BackOffAlgorithm.BackOffStrategy.Doubling">
+            <summary>Doubling sequence back off strategy
+            </summary>
+        </member>
+        <member name="T:Sensirion.Utils.Utils.Comparer`1">
+            <summary>The base test data item
+            </summary>
+        </member>
+        <member name="P:Sensirion.Utils.Utils.Comparer`1.ComparerObject">
+            <summary>Delivers an object to compare
+            </summary>
+            <returns>Returns an object to compare</returns>
+        </member>
+        <member name="M:Sensirion.Utils.Utils.Comparer`1.#ctor">
+            <summary>Default constructor
+            </summary>
+        </member>
+        <member name="M:Sensirion.Utils.Utils.Comparer`1.op_Equality(Sensirion.Utils.Utils.Comparer{`0},Sensirion.Utils.Utils.Comparer{`0})">
+            <summary>equal operator
+            </summary>
+            <param name="aTestData1">First item</param>
+            <param name="aTestData2">Second item</param>
+            <returns>If the files are equal, the return value is <p>true</p>, otherwise <p>false</p>.</returns>
+        </member>
+        <member name="M:Sensirion.Utils.Utils.Comparer`1.op_Inequality(Sensirion.Utils.Utils.Comparer{`0},Sensirion.Utils.Utils.Comparer{`0})">
+            <summary>non equal operator
+            </summary>
+            <param name="aTestData1">First item</param>
+            <param name="aTestData2">Second item</param>
+            <returns>If the files are not equal, the return value is <p>true</p>, otherwise <p>false</p>.</returns>
+        </member>
+        <member name="M:Sensirion.Utils.Utils.Comparer`1.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:Sensirion.Utils.Utils.Comparer`1.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="M:Sensirion.Utils.Utils.Comparer`1.Equals(`0)">
+            <inheritdoc />
+        </member>
+        <member name="T:Sensirion.Utils.Utils.InstanceRunningDetector">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Sensirion.Utils.Utils.InstanceRunningDetector.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Sensirion.Utils.Utils.InstanceRunningDetector.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Sensirion.Utils.Utils.InstanceRunningDetector.GenericError">
+            <summary>
+              Looks up a localized string similar to Error checking for application instances!.
+            </summary>
+        </member>
+        <member name="P:Sensirion.Utils.Utils.InstanceRunningDetector.InstanceAlreadyRunning">
+            <summary>
+              Looks up a localized string similar to Program instance is running already! Only one instance is allowed to run simultaneously!.
+            </summary>
+        </member>
+        <member name="P:Sensirion.Utils.Utils.InstanceRunningDetector.InternalError">
+            <summary>
+              Looks up a localized string similar to Internal error checking for application instances!.
+            </summary>
+        </member>
+        <member name="T:Sensirion.Utils.Utils.IntervalExecuter">
+            <summary>This class contains a method to execute a method during a waiting time
+            </summary>
+        </member>
+        <member name="F:Sensirion.Utils.Utils.IntervalExecuter._maxWaitTimeForCancellationToken">
+            <summary>The maximum wait time guarantees, that the <see cref="T:System.Threading.CancellationToken"/> are checked within this time.
+            </summary>
+        </member>
+        <member name="M:Sensirion.Utils.Utils.IntervalExecuter.#ctor">
+            <summary>Default constructor
+            </summary>
+        </member>
+        <member name="M:Sensirion.Utils.Utils.IntervalExecuter.#ctor(Gurock.SmartInspect.Session)">
+            <summary>Default constructor
+            </summary>
+            <param name="aSiSession">A smartinspect session</param>
+        </member>
+        <member name="M:Sensirion.Utils.Utils.IntervalExecuter.#ctor(System.TimeSpan,System.Action{System.DateTime},Gurock.SmartInspect.Session)">
+            <summary>Default constructor
+            </summary>
+            <param name="aIntervalDuration">The interval duration</param>
+            <param name="aExecutionMethod">An action to execute in every interval with the end time as parameter.</param>
+            <param name="aSiSession">A smartinspect session</param>
+        </member>
+        <member name="M:Sensirion.Utils.Utils.IntervalExecuter.ExecuteTimeDelay(System.DateTime,System.Threading.CancellationToken)">
+            <summary>A method to execute a method during a waiting time
+            </summary>
+            <param name="aEndTime">The end time to wait</param>
+            <param name="aCancellationToken">A cancellation token</param>
+            <returns>Returns the number of executions</returns>
+        </member>
+        <member name="M:Sensirion.Utils.Utils.IntervalExecuter.Wait(System.TimeSpan,System.Threading.CancellationToken,Gurock.SmartInspect.Session)">
+            <summary>Waits for a given time
+            </summary>
+            <param name="aWaitTime">The wait time</param>
+            <param name="aCancellationToken">a cancellation token</param>
+            <param name="aSiSession">The log session</param>
+        </member>
+        <member name="M:Sensirion.Utils.Utils.IntervalExecuter.Wait(System.DateTime,System.Threading.CancellationToken,Gurock.SmartInspect.Session)">
+            <summary>Waits for a given time
+            </summary>
+            <param name="aEndTime">The end of waiting</param>
+            <param name="aCancellationToken">a cancellation token</param>
+            <param name="aSiSession">The log session</param>
+        </member>
+        <member name="T:Sensirion.Utils.ChipRevisionFinder">
+            <summary>This class finds the matching enum for a given chip revision (e.g. "A2"). Not all existing
+            chip revision are defined in the corresponding ChipRevision-enum, 
+            therefore the matching, meaning the same or the next smaller chip revision must be found.
+            </summary>
+        </member>
+        <member name="F:Sensirion.Utils.ChipRevisionFinder.INIT_REVISION_NUMBER">
+            <summary>The initial value of the number of the chip revision
+            </summary>
+        </member>
+        <member name="M:Sensirion.Utils.ChipRevisionFinder.GetMatchingEnumFromName``1(System.String)">
+            <summary>Finds the matching enum for the given chip revision, meaning the same or the next smaller chip 
+            revision that is defined in the enum specified by the type T.
+            </summary>
+            <typeparam name="T">The enum type in which the revision is requested.</typeparam>
+            <param name="aRevision">The actual chip revision (one character followed by a number, e.g. "A2")</param>
+            <returns>The matching enumeration entry or <c>T.None</c> if no matching enum exists</returns>
+            <exception cref="T:System.Exception">If the provided type is not an enum.</exception>
+        </member>
+        <member name="M:Sensirion.Utils.ChipRevisionFinder.GetMatchingRevisionString(System.String,System.Collections.Generic.List{System.String})">
+            <summary>Chooses the revision string that matches the given revision, meaning the given revision,
+            if it is included in the given choices, or the next smaller revision in the given choices.
+            </summary>
+            <param name="aRevision">The actual chip revision</param>
+            <param name="aRevisionChoices">The available chip revisions</param>
+            <returns>The matching chip revision</returns>
+            <exception cref="T:System.Data.VersionNotFoundException">If the choices contain no matching revision.</exception>
+        </member>
+        <member name="M:Sensirion.Utils.ChipRevisionFinder.GetChipRevisionFromName(System.String)">
+            <summary>Splits the string in two information. The chip revision and the number 
+            </summary>
+            <param name="aName">String to split</param>
+            <returns>A struct that holds the data</returns>
+        </member>
+        <member name="T:Sensirion.Utils.ChipRevisionFinder.ChipRevisionStruct">
+            <summary>Internal struct to seperate the revision and the number 
+            </summary>
+        </member>
+        <member name="M:Sensirion.Utils.ChipRevisionFinder.ChipRevisionStruct.IsLowerThan(Sensirion.Utils.ChipRevisionFinder.ChipRevisionStruct)">
+            <summary>Determines if the this is lower than the submitted 
+            </summary>
+            <param name="aRevision">Revision to check</param>
+            <returns>true, if this is lower</returns>
+        </member>
+        <member name="M:Sensirion.Utils.ChipRevisionFinder.ChipRevisionStruct.IsSame(Sensirion.Utils.ChipRevisionFinder.ChipRevisionStruct)">
+            <summary>Determines if the this is the same revision as the submitted one 
+            </summary>
+            <param name="aRevision">Revision to check</param>
+            <returns>True, if both are the same</returns>
+        </member>
+        <member name="T:Sensirion.Utils.CommandLineHelper">
+            <summary>Class to Help with command line programs 
+            </summary>
+        </member>
+        <member name="M:Sensirion.Utils.CommandLineHelper.GetCommandLineArgumentAsBool(System.String[],System.String,System.Boolean,System.Boolean)">
+            <summary>Gets the Argument out of an argument array (see <paramref name="aArgs"/>). 
+              A default can be used if the argument is not inside. The argument name is 
+              not case sensitive. White spaces are removed
+              <para>This method is useful if one use named parameter (e.g. 
+                <c>Test.exe /DB:TestDB /MeasureDBServer:HERA</c> an so on). In this case
+                the arguments names are "/DB:" and "/DBServer" (not case sensitive)</para>
+            </summary>
+            <param name="aArgs">Array with arguments. If <c>null</c> the 
+              <paramref name="aDefault"/> is returned</param>
+            <param name="aArgName">Name of the argument to be searched (e.g. "/DB:").
+              If <c>null</c> the <paramref name="aDefault"/> is returned</param>
+            <param name="aDefault">Default value to be returned if the argument not exists</param>
+            <param name="aShowWarning">If <c>true</c> a warning will be sent to <c>SmartInspect</c>, 
+              if the Argument does not exist.</param>
+            <returns>The value of the argument or the default value if the argument does not exists</returns>
+        </member>
+        <member name="M:Sensirion.Utils.CommandLineHelper.GetCommandLineArgumentAsInt(System.String[],System.String,System.Int32,System.Boolean)">
+            <summary>Gets the Argument out of an argument array (see <paramref name="aArgs"/>). 
+              A default can be used if the argument is not inside. The argument name is 
+              not case sensitive. White spaces are removed
+              <para>This method is useful if one use named parameter (e.g. 
+                <c>Test.exe /DB:TestDB /MeasureDBServer:HERA</c> an so on). In this case
+                the arguments names are "/DB:" and "/DBServer" (not case sensitive)</para>
+            </summary>
+            <param name="aArgs">Array with arguments. If <c>null</c> the 
+              <paramref name="aDefault"/> is returned</param>
+            <param name="aArgName">Name of the argument to be searched (e.g. "/DB:").
+              If <c>null</c> the <paramref name="aDefault"/> is returned</param>
+            <param name="aDefault">Default value to be returned if the argument not exists</param>
+            <param name="aShowWarning">If <c>true</c> a warning will be sent to <c>SmartInspect</c>, 
+              if the Argument does not exist.</param>
+            <returns>The value of the argument or the default value if the argument does not exists</returns>
+        </member>
+        <member name="M:Sensirion.Utils.CommandLineHelper.GetCommandLineArgumentAsFloatInvariant(System.String[],System.String,System.Single,System.Boolean)">
+            <summary>Gets the Argument out of an argument array (see <paramref name="aArgs"/>). 
+              A default can be used if the argument is not inside. The argument name is 
+              not case sensitive. White spaces are removed
+              <para>This method is useful if one use named parameter (e.g. 
+                <c>Test.exe /Factor:2.5</c> an so on). In this case
+                the arguments names are "/Factor:"(not case sensitive)</para>
+            </summary>
+            <remarks>The conversion to a float is culture invariant. So always a period
+              must be used as a decimal separator.
+            </remarks>
+            <param name="aArgs">Array with arguments. If <c>null</c> the 
+              <paramref name="aDefault"/> is returned</param>
+            <param name="aArgName">Name of the argument to be searched (e.g. "/Factor:").
+              If <c>null</c> the <paramref name="aDefault"/> is returned</param>
+            <param name="aDefault">Default value to be returned if the argument not exists</param>
+            <param name="aShowWarning">If <c>true</c> a warning will be sent to <c>SmartInspect</c>, 
+              if the Argument does not exist.</param>
+            <returns>The value of the argument or the default value if the argument does not exists</returns>
+        </member>
+        <member name="M:Sensirion.Utils.CommandLineHelper.GetCommandLineArgumentAsString(System.String[],System.String,System.String,System.Boolean)">
+            <summary>Gets the Argument out of an argument array (see <paramref name="aArgs"/>). 
+              A default can be used if the argument is not inside. The argument name is 
+              not case sensitive. White spaces are removed
+              <para>This method is useful if one use named parameter (e.g. 
+                <c>Test.exe /DB:TestDB /MeasureDBServer:HERA</c> an so on). In this case
+                the arguments names are "/DB:" and "/DBServer" (not case sensitive)</para>
+            </summary>
+            <param name="aArgs">Array with arguments. If <c>null</c> the 
+              <paramref name="aDefault"/> is returned</param>
+            <param name="aArgName">Name of the argument to be searched (e.g. "/DB:").
+              If <c>null</c> the <paramref name="aDefault"/> is returned</param>
+            <param name="aDefault">Default value to be returned if the argument not exists</param>
+            <param name="aShowWarning">If <c>true</c> a warning will be sent to <c>SmartInspect</c>, 
+              if the Argument does not exist.</param>
+            <returns>The value of the argument or the default value if the argument does not exists</returns>
+        </member>
+        <member name="F:Sensirion.Utils.CommandLineHelper.HELP_COMMAND_LINE_SWITCHES">
+            <summary>Possible command line switches to get help 
+            </summary>
+        </member>
+        <member name="M:Sensirion.Utils.CommandLineHelper.CheckIfHelpWanted(System.String[])">
+            <summary>Checks if one of the help command line switches has been submitted 
+            </summary>
+            <param name="aArgs">Arguments from command line</param>
+            <returns><c>true</c> if one of the help command line switches contained</returns>
+        </member>
+        <member name="M:Sensirion.Utils.CommandLineHelper.CallProgram(System.String,System.String,System.Int32,System.Boolean,System.String@)">
+            <summary>Calls an external program or batch file. The file will be executed and then
+              checked for the return result. The return value is returned as int. If the result
+              is not 0, a <see cref="T:System.Runtime.InteropServices.ExternalException"/> is thrown. If the executable does not
+              exit within the defined <paramref name="aTimeoutMs"/> a <see cref="T:System.TimeoutException"/>
+              will be thrown.
+            </summary>
+            <param name="aProgramfile">File to be executed</param>
+            <param name="aArguments">Arguments that must be passed to the executable</param>
+            <param name="aTimeoutMs">Timeout in ms. If this value is 0 or less, an 
+              infinite timeout will be applied. Warning: This should be set to 0 because the external 
+            application gets not exited after the timeout and thus may called twice when retrying the call. </param>
+            <param name="aWaitUntilFinished">If <c>true</c>, the method does not return until the 
+              program to call (<paramref name="aProgramfile"/>) has been finished. If
+              a <paramref name="aTimeoutMs"/> is defined and this argument is set to 
+              <c>false</c> this timeout will be ignored. If the argument is set to 
+              <c>false</c> the return value will always be 0.
+            </param>
+            <param name="aConsoleOutput">Output of the program after execution for logging issues.</param>
+            <returns>Return value of the external executable. If <paramref name="aWaitUntilFinished"/>
+              is set to <c>false</c> the return value will always be 0.</returns>
+            <exception cref="T:System.TimeoutException">Thrown if a timeout (see <paramref name="aTimeoutMs"/>) 
+              occurs. If the <paramref name="aTimeoutMs"/> is 0 or less or the <paramref name="aWaitUntilFinished"/>
+              is set to <c>false</c>, this exception
+              will never be thrown.</exception>
+            <exception cref="T:System.Runtime.InteropServices.ExternalException">Thrown, if the return value of the executable is not 0.</exception>
+        </member>
+        <member name="M:Sensirion.Utils.CommandLineHelper.CallProgram(System.String,System.String,System.Int32,System.Boolean,System.Boolean,System.String@)">
+            <summary>Calls an external program or batch file. The file will be executed and then
+              checked for the return result. The return value is returned as int. If the result
+              is not 0, a <see cref="T:System.Runtime.InteropServices.ExternalException"/> is thrown. If the executable does not
+              exit within the defined <paramref name="aTimeoutMs"/> a <see cref="T:System.TimeoutException"/>
+              will be thrown.
+            </summary>
+            <param name="aProgramfile">File to be executed</param>
+            <param name="aArguments">Arguments that must be passed to the executable</param>
+            <param name="aTimeoutMs">Timeout in ms. If this value is 0 or less, an 
+              infinite timeout will be applied.</param>
+            <param name="aWaitUntilFinished">If <c>true</c>, the method does not return until the 
+              program to call (<paramref name="aProgramfile"/>) has been finished. If
+              a <paramref name="aTimeoutMs"/> is defined and this argument is set to 
+              <c>false</c> this timeout will be ignored. If the argument is set to 
+              <c>false</c> the return value will always be 0.
+            </param>
+            <param name="aCheckFileExists">if <see langword="false"/>, the method does not check if the
+              file to call exists or not.
+            </param>
+            <param name="aConsoleOutput">Output of the program after execution for logging issues.</param>
+            <returns>Return value of the external executable. If <paramref name="aWaitUntilFinished"/>
+              is set to <c>false</c> the return value will always be 0.</returns>
+            <exception cref="T:System.TimeoutException">Thrown if a timeout (see <paramref name="aTimeoutMs"/>) 
+              occurs. If the <paramref name="aTimeoutMs"/> is 0 or less or the <paramref name="aWaitUntilFinished"/>
+              is set to <c>false</c>, this exception
+              will never be thrown.</exception>
+            <exception cref="T:System.Runtime.InteropServices.ExternalException">Thrown, if the return value of the executable is not 0.</exception>
+        </member>
+        <member name="T:Sensirion.Utils.FrameworkException">
+            <summary>This is the exception that should be thrown by all Framework classes when they encounter errors. </summary>
+        </member>
+        <member name="F:Sensirion.Utils.FrameworkException.HRESULT_REMOTING_EXCEPTION">
+            <summary>HRESULT value (error code) of System.Runtime.Remoting.RemotingException.
+            Source: https://referencesource.microsoft.com/#mscorlib/system/runtime/remoting/remotingexception.cs
+            Hard-coded here to avoid inheriting from a Windows-specific Exception class. </summary>
+        </member>
+        <member name="M:Sensirion.Utils.FrameworkException.#ctor(System.String)">
+            <summary>Constructor for the <see cref="T:Sensirion.Utils.FrameworkException"/> class. </summary>
+            <param name="aErrorString">The error string associated with the error.</param>
+        </member>
+        <member name="M:Sensirion.Utils.FrameworkException.#ctor(System.String,System.Exception)">
+            <summary>Constructor for the <see cref="T:Sensirion.Utils.FrameworkException"/> class. </summary>
+            <param name="aErrorString">The error string associated with the error.</param>
+            <param name="aInnerException">The inner exception associated with the error.</param>
+        </member>
+        <member name="M:Sensirion.Utils.FrameworkException.LogAndThrow(System.Exception)">
+            <summary>Log an inner exception and throw it in a <see cref="T:Sensirion.Utils.FrameworkException"/>. </summary>
+            <param name="aInnerException">inner exception</param>
+            <exception cref="T:Sensirion.Utils.FrameworkException">Rethrow the exception. If the inner exception
+              is a <see cref="T:Sensirion.Logging.Internal.LogException"/> then the inner exception is disabled because of not
+              leaking framework objects.</exception>
+        </member>
+        <member name="M:Sensirion.Utils.FrameworkException.LogAndThrow(System.String,System.Exception)">
+            <summary>Log an inner exception and throw it in a <see cref="T:Sensirion.Utils.FrameworkException"/>. </summary>
+            <param name="aMsg">message</param>
+            <param name="aInnerException">inner exception</param>
+            <exception cref="T:Sensirion.Utils.FrameworkException">Rethrow the exception. If the inner exception
+              is a <see cref="T:Sensirion.Logging.Internal.LogException"/> then the inner exception is disabled because of not
+              leaking framework objects.</exception>
+        </member>
+        <member name="M:Sensirion.Utils.FrameworkException.LogAndThrow(System.String)">
+            <summary>Log a message throw it in a <see cref="T:Sensirion.Utils.FrameworkException"/>. </summary>
+            <param name="aMsg">message</param>
+            <exception cref="T:Sensirion.Utils.FrameworkException">Rethrow the exception. If the inner exception
+              is a <see cref="T:Sensirion.Logging.Internal.LogException"/> then the inner exception is disabled because of not
+              leaking framework objects.</exception>
+        </member>
+        <member name="M:Sensirion.Utils.FrameworkException.SetErrorCode">
+            <summary>Sets HRESULT, a coded numerical value that is assigned to each exception. </summary>
+        </member>
+        <member name="T:Sensirion.Utils.ICheckSystemConnection">
+            <summary>Used to check if a connection to an external system is active.
+            </summary>
+        </member>
+        <member name="M:Sensirion.Utils.ICheckSystemConnection.CheckConnection">
+            <summary>Should check the connection and responsibility of the system 
+            </summary>
+            <returns><c>true</c>, if the database is available</returns>
+        </member>
+        <member name="T:Sensirion.Utils.InstanceRunningDetector">
+            <summary>Verifies that only a single instance is running
+            </summary>
+        </member>
+        <member name="F:Sensirion.Utils.InstanceRunningDetector.INTERNAL_MUTEX_NAME">
+            <summary>Name of the mutex used internally</summary>
+        </member>
+        <member name="F:Sensirion.Utils.InstanceRunningDetector.MUTEX_PREFIX">
+            <summary>Prefix added to the mutex used for the program instance running check
+            </summary>
+        </member>
+        <member name="F:Sensirion.Utils.InstanceRunningDetector.MUTEX_DICTIONARY">
+            <summary>Dictionary to keep track of the mutexes 
+            </summary>
+        </member>
+        <member name="M:Sensirion.Utils.InstanceRunningDetector.RemoveMutex(System.String)">
+            <summary>Removes the mutex object from the internal list such that the garbage collector can clean it up sooner or later.
+            </summary>
+            <param name="uniqueInstanceName">Name of the instance, if null, empty or the name is not in the dictionary, nothing happens</param>
+            <exception cref="T:System.ApplicationException">Internal mutex could not be fetched within given time.</exception>
+        </member>
+        <member name="M:Sensirion.Utils.InstanceRunningDetector.IsInstanceRunning(System.String,System.String@)">
+            <summary>Determines if this is the only running instance
+            </summary>
+            <remarks>Internally a dictionary tracks each call of this function, holding also a mutex object. 
+            If working with app domains and want to remove the mutex object,
+            then you have to call <see cref="M:Sensirion.Utils.InstanceRunningDetector.RemoveMutex(System.String)"/></remarks>
+            <param name="uniqueInstanceName">Name of the instance</param>
+            <param name="errorMessage">Contains a detailed error message if the return value is <c>false</c></param>
+            <exception cref="T:System.ArgumentNullException">thrown if <paramref name="uniqueInstanceName"/> is null</exception>
+            <returns><c>true</c> if this is the only running instance.</returns>
+        </member>
+        <member name="T:Sensirion.Utils.MutexSynchronizationHelper">
+            <summary>Helps synchronizing the access to a shared ressource DB out of
+            multiple threads.
+            </summary>
+            <remarks>Usage:
+            <br/>
+            <c>
+              using (MutexSynchronizationHelper_fw xSync = new MutexSynchronizationHelper_fw(xSqlHelper))
+              {
+               // Do your stuff here.
+              }
+            </c>
+            </remarks>
+        </member>
+        <member name="M:Sensirion.Utils.MutexSynchronizationHelper.#ctor(System.String)">
+            <summary>The constructor will only return if the access to the
+            ressource (identified by <paramref name="aRessourceName"/>)
+            has been exclusively granted.
+            </summary>
+            <param name="aRessourceName">The name of the shared ressource must be equal between all 
+            threads that are accessing the particular ressource.</param>
+        </member>
+        <member name="M:Sensirion.Utils.MutexSynchronizationHelper.Dispose">
+            <summary>Allows other threads using the same
+            ressource to continue. If not called no other
+            thread can continue using the ressource.
+            </summary>
+        </member>
+        <member name="T:Sensirion.Utils.SensMsgEventArgs">
+            <summary>Event arguments for application logging 
+            </summary>
+        </member>
+        <member name="M:Sensirion.Utils.SensMsgEventArgs.#ctor(System.String)">
+            <summary>Initializes the instance 
+            </summary>
+            <param name="aMessage">Message to log</param>
+        </member>
+        <member name="P:Sensirion.Utils.SensMsgEventArgs.Message">
+            <summary>Message to log
+            </summary>
+        </member>
+        <member name="T:Sensirion.Utils.StringUtils">
+            <summary>
+            This class provides utility methods around general string handling
+            </summary>
+        </member>
+        <member name="M:Sensirion.Utils.StringUtils.GetRandomHexadecimalString(System.Int32)">
+            <summary>
+            Creates a random hexadecimal string with a certain length
+            </summary>
+            <param name="stringLength">The lendth of the hex string to create</param>
+            <returns>A string containing the hexadecimal string</returns>
+        </member>
+        <member name="M:Sensirion.Utils.StringUtils.FormatStringWithInvariantCulture(System.String,System.Object[])">
+            <summary>
+            This method formats a string with the InvariantCulture.
+            </summary>
+            <param name="formatString">The format string</param>
+            <param name="objects">The Parameters</param>
+            <returns>The formatted string</returns>
+        </member>
+        <member name="M:Sensirion.Utils.StringUtils.FormatStringWithInvariantCultureAndNullReplacement(System.String,System.String,System.Object[])">
+            <summary>
+            This method formats a string with the InvariantCulture and replaces null parameter values with the specified string.
+            </summary>
+            <param name="formatString">The format string</param>
+            <param name="nullReplacementString">The string which is used to replace the null values in the objects paramter array</param>
+            <param name="objects">The Parameters</param>
+            <returns>The formatted string</returns>
+        </member>
+        <member name="M:Sensirion.Utils.StringUtils.IsAnyNullOrWhitespace(System.String[])">
+            <summary> returns true if any of the given string is blank
+             e.g.  { "foo", "bar" }    --> false
+                   { "foo", "" }       --> true
+                   { "foo", "   " }    --> true
+                   { "foo", null }     --> true
+                   { "   ", "" }       --> true
+            </summary>
+            <param name="stringsToCheck">to check, elements may be null</param>
+            <returns>true if any of the given string is blank</returns>
+        </member>
+        <member name="M:Sensirion.Utils.StringUtils.JoinNonBlank(System.String,System.String[])">
+            <summary>Uses only non-blank strings from the given parts and joins them.
+            <see cref="M:System.String.Join(System.String,System.String[])"/>
+            </summary>
+            <param name="separator">The string to use as a separator.separator is included in the returned string only if values has more than one element.</param>
+            <param name="parts">A collection that contains the strings to concatenate.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Sensirion.Utils.StringUtils.JoinNonBlank(System.String,System.Collections.Generic.IEnumerable{System.String})">
+            <summary>Uses only non-blank strings from the given parts and joins them.
+            <see cref="M:System.String.Join(System.String,System.String[])"/>
+            </summary>
+            <param name="separator">The string to use as a separator.separator is included in the returned string only if values has more than one element.</param>
+            <param name="parts">A collection that contains the strings to concatenate.</param>
+            <returns></returns>
+        </member>
+        <member name="T:System.Text.StringBuilderExtensions">
+            <summary>
+              StringBuilderExtensions
+            </summary>
+        </member>
+        <member name="M:System.Text.StringBuilderExtensions.Append``1(System.Text.StringBuilder,System.Int32,System.Collections.Generic.IReadOnlyList{``0})">
+            <summary>
+              Append
+            </summary>
+            <param name="sb"></param>
+            <param name="count"></param>
+            <param name="items"></param>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:System.Text.StringBuilderExtensions.Append``1(System.Text.StringBuilder,System.Int32,System.Collections.Generic.IReadOnlyList{``0},System.String)">
+            <summary>
+            </summary>
+            <param name="sb"></param>
+            <param name="count"></param>
+            <param name="items"></param>
+            <param name="format"></param>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:System.Text.StringBuilderExtensions.Append``1(System.Text.StringBuilder,System.Int32,System.Collections.Generic.IReadOnlyList{``0},System.Func{``0,System.String})">
+            <summary>
+            </summary>
+            <param name="sb"></param>
+            <param name="count"></param>
+            <param name="items"></param>
+            <param name="format"></param>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:System.Text.StringBuilderExtensions.AppendJoin``1(System.Text.StringBuilder,System.String,System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            </summary>
+            <param name="sb"></param>
+            <param name="separator"></param>
+            <param name="values"></param>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="T:System.Runtime.CompilerServices.IsExternalInit">
+            <summary>
+            Reserved to be used by the compiler for tracking metadata.
+            This class should not be used by developers in source code.
+            </summary>
+        </member>
+        <member name="T:System.Runtime.CompilerServices.SkipLocalsInitAttribute">
+            <summary>
+            Used to indicate to the compiler that the <c>.locals init</c> flag should not be set in method headers.
+            </summary>
+            <remarks>Internal copy of the .NET 5 attribute.</remarks>
+        </member>
+    </members>
+</doc>

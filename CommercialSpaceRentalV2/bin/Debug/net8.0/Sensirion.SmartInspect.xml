@@ -1,0 +1,1555 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Sensirion.SmartInspect</name>
+    </assembly>
+    <members>
+        <member name="T:Sensirion.SmartInspect.BaseLogDefinition">
+            <summary>Base class for logging definition of a destination (File, pipe, tcp)  
+            </summary>
+        </member>
+        <member name="M:Sensirion.SmartInspect.BaseLogDefinition.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Object"/> class.
+            </summary>
+        </member>
+        <member name="M:Sensirion.SmartInspect.BaseLogDefinition.FillConnectionBuilder(Gurock.SmartInspect.ConnectionsBuilder)">
+            <summary>Adds the protocol to the submitted connection builder 
+            </summary>
+            <param name="aBuilder">Connection builder to be filled with protocols</param>
+        </member>
+        <member name="M:Sensirion.SmartInspect.BaseLogDefinition.AddPropertiesToConnection(Gurock.SmartInspect.ConnectionsBuilder)">
+            <summary>Adds all properties to the connection string 
+            </summary>
+            <param name="aBuilder">Builder to build the connection string</param>
+        </member>
+        <member name="P:Sensirion.SmartInspect.BaseLogDefinition.AsyncThrottle">
+            <summary>Throttle enable/disable for async mode
+            </summary>
+        </member>
+        <member name="P:Sensirion.SmartInspect.BaseLogDefinition.LogType">
+            <summary>Type of the log file 
+            </summary>
+        </member>
+        <member name="P:Sensirion.SmartInspect.BaseLogDefinition.Caption">
+            <summary>Identifies the logfile in the Console 
+            </summary>
+        </member>
+        <member name="P:Sensirion.SmartInspect.BaseLogDefinition.LogLevel">
+            <summary>Level to be considered for messages to be logged
+            </summary>
+        </member>
+        <member name="P:Sensirion.SmartInspect.BaseLogDefinition.UseBacklog">
+            <summary><c>True</c>, if the backlog option is used 
+            </summary>
+        </member>
+        <member name="P:Sensirion.SmartInspect.BaseLogDefinition.BacklogBufferSize">
+            <summary>Size of the backlog buffer
+            </summary>
+        </member>
+        <member name="P:Sensirion.SmartInspect.BaseLogDefinition.BacklogTrigger">
+            <summary>Trigger level for the backlog 
+            </summary>
+        </member>
+        <member name="P:Sensirion.SmartInspect.BaseLogDefinition.Async">
+            <summary><c>true</c>, if the file should be written asynchronously
+            </summary>
+        </member>
+        <member name="P:Sensirion.SmartInspect.BaseLogDefinition.AsyncBufferSize">
+            <summary>Buffer Size to write async. If the buffer is full, the writes are synchronous
+              until all messages are small enough to be placed into the buffer 
+            </summary>
+        </member>
+        <member name="P:Sensirion.SmartInspect.BaseLogDefinition.Reconnect">
+            <summary>if <c>true</c> SI tries to reconnect to the protocol if something happens
+            </summary>
+        </member>
+        <member name="M:Sensirion.SmartInspect.BaseLogDefinition.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+            </summary>
+            <returns>
+            A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+            </returns>
+            <filterpriority>2</filterpriority>
+        </member>
+        <member name="M:Sensirion.SmartInspect.BaseLogDefinition.GetStringRepresentation">
+            <summary>Gets a string representation of the configured logging. This is
+              not done in the <see cref="M:Sensirion.SmartInspect.BaseLogDefinition.ToString"/> method directly, to force
+              successor to implement this method.
+             <para>This method will be called after configuration of the logger, just
+               to log the current configuration (e.g. Log file location)
+              </para>
+            </summary>
+            <returns>String representation of the protocol</returns>
+        </member>
+        <member name="T:Sensirion.SmartInspect.ConsoleMode">
+            <summary>Mode for the console. Defines to which console the output will be sent 
+            </summary>
+        </member>
+        <member name="F:Sensirion.SmartInspect.ConsoleMode.None">
+            <summary>For initialization issues 
+            </summary>
+        </member>
+        <member name="F:Sensirion.SmartInspect.ConsoleMode.Debug">
+            <summary>send to debug console  
+            </summary>
+        </member>
+        <member name="F:Sensirion.SmartInspect.ConsoleMode.Trace">
+            <summary>Send to trace console 
+            </summary>
+        </member>
+        <member name="F:Sensirion.SmartInspect.ConsoleMode.Console">
+            <summary>Send to console window 
+            </summary>
+        </member>
+        <member name="T:Sensirion.SmartInspect.ConsoleLogDefinition">
+            <summary>Defines the definition for logging to the console. Few options are available.
+              see remarks section for details. 
+            </summary>
+            <remarks>
+            <para>The <see cref="P:Sensirion.SmartInspect.BaseLogDefinition.Caption"/> is the title of the log (can be used for filtering issues)</para>
+            <para>The <see cref="T:Gurock.SmartInspect.Level"/> is the level for messages to be logged. If the Backlog feature is 
+              used, this is the level of messages to be logged in Memory. As recently as a message with
+              the <see cref="P:Sensirion.SmartInspect.BaseLogDefinition.BacklogTrigger"/> has been detected, the backlog memory will be flushed
+              to the file.</para>
+            <para>The <see cref="P:Sensirion.SmartInspect.BaseLogDefinition.BacklogTrigger"/> is the minimum level of a message to fire the trigger to write the backlog to the file.
+              This is only used if <see cref ="P:Sensirion.SmartInspect.BaseLogDefinition.UseBacklog"/> set to <c>true</c>. Backlogging 
+              described in details late in this section.</para>
+            <para>The <see cref="P:Sensirion.SmartInspect.BaseLogDefinition.BacklogBufferSize"/> is the maximum size of the in Memory buffer for all messages below the 
+              <see cref="P:Sensirion.SmartInspect.BaseLogDefinition.BacklogTrigger"/>. If messages below this level are detected, the
+              buffer will be filled with all this messages. As recently as the trigger is fired the buffer will be This is only used if 
+              <see cref="P:Sensirion.SmartInspect.BaseLogDefinition.UseBacklog"/> set to <c>true</c>. Backlogging 
+              described in details in the remarks section.</para>
+              <para>The <strong>Backlog</strong> feature means, that each message that should be logged will be hold in the memory if the
+              level of the message is between the <see cref="T:Gurock.SmartInspect.Level"/> and the <see cref="P:Sensirion.SmartInspect.BaseLogDefinition.BacklogTrigger"/>. The
+              messages will be collected until either the buffer is full (old messages will be discarded to clear a space for the
+              new messages) or a message with the <see cref="P:Sensirion.SmartInspect.BaseLogDefinition.BacklogTrigger"/> or higher is detected. In the second case the whole
+              buffer is written and after that the new message is written to. This enables the person who interprets the log to
+              see all messages before the error occured in a more detailed manner.</para>
+            </remarks>
+        </member>
+        <member name="F:Sensirion.SmartInspect.ConsoleLogDefinition.CONSOLE_PROTOCOL_NAME">
+            <summary>Name of the protocol for register and configuration
+            </summary>
+        </member>
+        <member name="F:Sensirion.SmartInspect.ConsoleLogDefinition.CONSOLE_MODE_PARAMETER_NAME">
+            <summary>Name of the mode argument 
+            </summary>
+        </member>
+        <member name="M:Sensirion.SmartInspect.ConsoleLogDefinition.#ctor">
+            <summary> Initializes a new instance of the <see cref="T:System.Object"/> class.
+            </summary>
+        </member>
+        <member name="P:Sensirion.SmartInspect.ConsoleLogDefinition.Mode">
+            <summary>Mode for the console. Defines to which console the output will be sent 
+            </summary>
+        </member>
+        <member name="M:Sensirion.SmartInspect.ConsoleLogDefinition.FillConnectionBuilder(Gurock.SmartInspect.ConnectionsBuilder)">
+            <summary>Adds the protocol to the submitted connection builder 
+            </summary>
+            <param name="aBuilder">Connection builder to be filled with protocols</param>
+        </member>
+        <member name="M:Sensirion.SmartInspect.ConsoleLogDefinition.NewLogFile(System.String,Sensirion.SmartInspect.ConsoleMode,Gurock.SmartInspect.Level,System.Boolean,Gurock.SmartInspect.Level,System.Boolean)">
+            <summary>Configures a new console output to the protocol list. Each output will be configured 
+              for the smart inspect if the Configuration is applied with the 
+              <see cref="M:Sensirion.SmartInspect.SmartInspectConfigurator.Configure(System.String,Sensirion.SmartInspect.LogDefinitionList)"/> 
+              method is called.
+            </summary>
+            <param name="aCaption">Title of the log (can be used for filtering issues)</param>
+            <param name="aConsoleMode">>Mode for the console. Defines to which console the output will be sent </param>
+            <param name="aDebugLevel">Level for messages to be logged. If the Backlog feature is 
+              used, this is the level of messages to be logged in Memory. As recently as a message with
+              the <paramref name="aBacklogFlushLevel"/> has been detected, the backlog memory will be flushed
+              to the file.</param>
+            <param name="aUseBacklog"><c>true</c> if backlogging should be used (see remarks)</param>
+            <param name="aBacklogFlushLevel">Minimum level of a message to fire the trigger to write the backlog to the file.
+              This is only used if <paramref name="aUseBacklog"/> set to <c>true</c>. Backlogging 
+              described in details in the remarks section.</param>
+            <param name="aAsyncThrottle"><c>true</c> if throttling should be used</param>
+            <remarks>
+              The <strong>Backlog</strong> feature means, that each message that should be logged will be hold in the memory if the
+              level of the message is between the <paramref name="aDebugLevel"/> and the <paramref name="aBacklogFlushLevel"/>. The
+              messages will be collected until either the buffer is full (old messages will be discarded to clear a space for the
+              new messages) or a message with the <paramref name="aBacklogFlushLevel"/> or higher is detected. In the second case the whole
+              buffer is written and after that the new message is written to. This enables the person who interprets the log to
+              see all messages before the error occured in a more detailed manner.
+            </remarks>
+            <returns>A new instance of a <see cref="T:Sensirion.SmartInspect.ConsoleLogDefinition"/> class configured with the submitted parameters.</returns>
+        </member>
+        <member name="M:Sensirion.SmartInspect.ConsoleLogDefinition.Register">
+            <summary>Registers the protocol with SmartInspect (if not already registered) 
+            </summary>
+        </member>
+        <member name="M:Sensirion.SmartInspect.ConsoleLogDefinition.GetStringRepresentation">
+            <summary>Gets a string representation of the configured logging. This is
+              not done in the <see cref="M:Sensirion.SmartInspect.BaseLogDefinition.ToString"/> method directly, to force
+              successor to implement this method.
+             <para>This method will be called after configuration of the logger, just
+               to log the current configuration (e.g. Log file location)
+              </para>
+            </summary>
+            <returns>String representation of the protocol</returns>
+        </member>
+        <member name="T:Sensirion.SmartInspect.ConsoleProtocol_fw">
+            <summary>Handles the protocol to write log messages to the console
+            </summary>
+        </member>
+        <member name="F:Sensirion.SmartInspect.ConsoleProtocol_fw._Mode">
+            <summary>The console mode. </summary>
+        </member>
+        <member name="M:Sensirion.SmartInspect.ConsoleProtocol_fw.InternalConnect">
+            <summary>No connection needed to write to the console (debug, trace, console) 
+            </summary>
+        </member>
+        <member name="M:Sensirion.SmartInspect.ConsoleProtocol_fw.InternalDisconnect">
+            <summary>No connection needed to write to the console (debug, trace, console) 
+            </summary>
+        </member>
+        <member name="M:Sensirion.SmartInspect.ConsoleProtocol_fw.FormatLogEntry(Gurock.SmartInspect.LogEntry)">
+            <summary>Formats a log entry depending on the old SingletonLegger format. Also the ProcessId and the ThreadId
+              will be submitted. 
+            </summary>
+            <param name="aLogEntry">Message to log</param>
+            <returns>Fully formated string to writer to the console</returns>
+        </member>
+        <member name="M:Sensirion.SmartInspect.ConsoleProtocol_fw.InternalWritePacket(Gurock.SmartInspect.Packet)">
+            <summary>Writes the message to the console (debug, trace or console) 
+            </summary>
+            <param name="aPacket">Packet to write</param>
+        </member>
+        <member name="P:Sensirion.SmartInspect.ConsoleProtocol_fw.Name">
+            <summary>Returns the identification for the protocol 
+            </summary>
+        </member>
+        <member name="M:Sensirion.SmartInspect.ConsoleProtocol_fw.IsValidOption(System.String)">
+            <summary>Checks if all parameter are well named 
+            </summary>
+            <param name="aName">Name of the argument</param>
+            <returns><c>true</c> if the name is well known for the protocol</returns>
+        </member>
+        <member name="M:Sensirion.SmartInspect.ConsoleProtocol_fw.LoadOptions">
+            <summary>Loads the option(s) from the configuration string 
+            </summary>
+        </member>
+        <member name="T:Sensirion.SmartInspect.FileLogDefinition">
+            <summary>Defines the definition for the log file to be created. Few options are available.
+              see remarks section for details. 
+            </summary>
+            <remarks>
+            <para>The <see cref="P:Sensirion.SmartInspect.BaseLogDefinition.Caption"/> is the title of the log (can be used for filtering issues)</para>
+            <para>The <see cref="T:Gurock.SmartInspect.Level"/> is the level for messages to be logged. If the Backlog feature is 
+              used, this is the level of messages to be logged in Memory. As recently as a message with
+              the <see cref="P:Sensirion.SmartInspect.BaseLogDefinition.BacklogTrigger"/> has been detected, the backlog memory will be flushed
+              to the file.</para>
+            <para>The <see cref="P:Sensirion.SmartInspect.BaseLogDefinition.BacklogTrigger"/> is the minimum level of a message to fire the trigger to write the backlog to the file.
+              This is only used if <see cref ="P:Sensirion.SmartInspect.BaseLogDefinition.UseBacklog"/> set to <c>true</c>. Backlogging 
+              described in details late in this section.</para>
+            <para>The <see cref="P:Sensirion.SmartInspect.BaseLogDefinition.BacklogBufferSize"/> is the maximum size of the in Memory buffer for all messages below the 
+              <see cref="P:Sensirion.SmartInspect.BaseLogDefinition.BacklogTrigger"/>. If messages below this level are detected, the
+              buffer will be filled with all this messages. As recently as the trigger is fired the buffer will be This is only used if 
+              <see cref="P:Sensirion.SmartInspect.BaseLogDefinition.UseBacklog"/> set to <c>true</c>. Backlogging 
+              described in details in the remarks section.</para>
+              <para>The <strong>Backlog</strong> feature means, that each message that should be logged will be hold in the memory if the
+              level of the message is between the <see cref="T:Gurock.SmartInspect.Level"/> and the <see cref="P:Sensirion.SmartInspect.BaseLogDefinition.BacklogTrigger"/>. The
+              messages will be collected until either the buffer is full (old messages will be discarded to clear a space for the
+              new messages) or a message with the <see cref="P:Sensirion.SmartInspect.BaseLogDefinition.BacklogTrigger"/> or higher is detected. In the second case the whole
+              buffer is written and after that the new message is written to. This enables the person who interprets the log to
+              see all messages before the error occured in a more detailed manner.</para>
+            </remarks>
+        </member>
+        <member name="M:Sensirion.SmartInspect.FileLogDefinition.#ctor">
+            <summary>Initialize the Instance with default values
+              <para>
+                <list type="bullet">
+                  <item>
+                    <description>Level = Debug</description>
+                  </item><item>
+                    <description>UseBacklog = true</description>
+                  </item><item>
+                    <description>BacklogBufferSize = 4096</description>
+                  </item><item>
+                    <description>BacklogTrigger = Warning</description>
+                  </item><item>
+                    <description>Async = true</description>
+                  </item><item>
+                    <description>AsyncBufferSize = 4096</description>
+                  </item><item>
+                    <description>Filename = log.sil</description>
+                  </item><item>
+                    <description>Append items</description>
+                  </item><item>
+                    <description>One log file</description>
+                  </item><item>
+                    <description>No File rotation</description>
+                  </item>
+                </list>
+              </para>
+            </summary>
+        </member>
+        <member name="P:Sensirion.SmartInspect.FileLogDefinition.Filename">
+            <summary>Name of the file to be created. The resulting name can vary, if rotate option is set 
+            </summary>
+        </member>
+        <member name="P:Sensirion.SmartInspect.FileLogDefinition.Append">
+            <summary>True, if the messages should be appended to a file, if the file allready exists 
+            </summary>
+        </member>
+        <member name="P:Sensirion.SmartInspect.FileLogDefinition.LogFileCount">
+            <summary>Count of files to be kept, if the file is rotated 
+            </summary>
+        </member>
+        <member name="P:Sensirion.SmartInspect.FileLogDefinition.RotateMode">
+            <summary>Type of file rotation 
+            </summary>
+        </member>
+        <member name="P:Sensirion.SmartInspect.FileLogDefinition.MaxFileSizeInKb">
+            <summary>Defines the maxium logfile size in kb. Is this defined size reached. a new log file will be created.
+            This is a feature of SmartInspect version 3.x. See http://www.gurock.com/smartinspect/whatsnew/3.0/
+            </summary>
+        </member>
+        <member name="M:Sensirion.SmartInspect.FileLogDefinition.FillConnectionBuilder(Gurock.SmartInspect.ConnectionsBuilder)">
+            <summary>Adds the protocol to the submitted connection builder 
+            </summary>
+            <param name="aBuilder">Connection builder to be filled with protocols</param>
+        </member>
+        <member name="M:Sensirion.SmartInspect.FileLogDefinition.AddFileProperties(Gurock.SmartInspect.ConnectionsBuilder)">
+            <summary>Adds the file properties to the connection string 
+            </summary>
+            <param name="aBuilder">Builder to build the connection string</param>
+        </member>
+        <member name="M:Sensirion.SmartInspect.FileLogDefinition.NewLogFile(System.String,System.String,Gurock.SmartInspect.Level,System.Boolean,Gurock.SmartInspect.Level)">
+            <summary>Adds a new File output to the protocol list. Each output will be configured 
+              for the smart inspect if the Configuration is applied with the 
+              <see cref="M:Sensirion.SmartInspect.SmartInspectConfigurator.Configure(System.String,Sensirion.SmartInspect.LogDefinitionList)"/> 
+              method is called.
+            </summary>
+            <param name="aCaption">Title of the log (can be used for filtering issues)</param>
+            <param name="aFilename">Name of the file. If the filename consist of a name and date, this 
+              is just the name. SmartInspect will add the date automatically.</param>
+            <param name="aDebugLevel">Level for messages to be logged. If the Backlog feature is 
+              used, this is the level of messages to be logged in Memory. As recently as a message with
+              the <paramref name="aBacklogFlushLevel"/> has been detected, the backlog memory will be flushed
+              to the file.</param>
+            <param name="aUseBacklog"><c>true</c> if backlogging should be used (see remarks)</param>
+            <param name="aBacklogFlushLevel">Minimum level of a message to fire the trigger to write the backlog to the file.
+              This is only used if <paramref name="aUseBacklog"/> set to <c>true</c>. Backlogging 
+              described in details in the remarks section.</param>
+            <remarks>
+              The <strong>Backlog</strong> feature means, that each message that should be logged will be hold in the memory if the
+              level of the message is between the <paramref name="aDebugLevel"/> and the <paramref name="aBacklogFlushLevel"/>. The
+              messages will be collected until either the buffer is full (old messages will be discarded to clear a space for the
+              new messages) or a message with the <paramref name="aBacklogFlushLevel"/> or higher is detected. In the second case the whole
+              buffer is written and after that the new message is written to. This enables the person who interprets the log to
+              see all messages before the error occured in a more detailed manner.
+            </remarks>
+            <returns>A new instance of a <see cref="T:Sensirion.SmartInspect.FileLogDefinition"/> class configured with the submitted parameters.</returns>
+        </member>
+        <member name="M:Sensirion.SmartInspect.FileLogDefinition.GetStringRepresentation">
+            <summary>Gets a string representation of the configured logging. this is
+              not done in the <see cref="M:Sensirion.SmartInspect.BaseLogDefinition.ToString"/> method directly, to force
+              successor to implement this method.
+             <para>This method will be called after configuration of the logger, just
+               to log the current configuration (e.g. Log file location)
+              </para>
+            </summary>
+            <returns>String representation of the protocol</returns>
+        </member>
+        <member name="T:Sensirion.SmartInspect.FileTools">
+            <summary>Handles the path expansion from relative path's to absolute path's.
+            The expansion is done starting from the location of the assembly Basics.</summary>
+        </member>
+        <member name="M:Sensirion.SmartInspect.FileTools.GetAbsolutePath(System.String)">
+            <summary>Get the absolute path from a relative one or one with environment variables
+            in it. Does not work for paths that contain "#". Unfortunately that is a valid
+            character for paths but cannot be handled by this class.
+            </summary>
+            <param name="aPath">The relative path that shall be resolved.</param>
+            <returns>The absolute path of <paramref name="aPath"/></returns>
+        </member>
+        <member name="M:Sensirion.SmartInspect.FileTools.GetAbsolutePath(System.String,System.String)">
+            <summary>Get the absolute path from a relative one or one with environment variables
+              in it. Does not work for paths that contain "#". Unfortunately that is a valid
+              character for paths but cannot be handled by this class.
+            </summary>
+            <param name="aPath">The relative path that shall be resolved.</param>
+            <param name="aRelativeToDirectory">If <paramref name="aPath"/> is a relative
+              path, just make it relative to this directory name.</param>
+            <returns>The absolute path of <paramref name="aPath"/></returns>
+        </member>
+        <member name="T:Sensirion.SmartInspect.LogDefinitionList">
+            <summary>List of protocols to be established (files, pipes, tcp, ...) 
+            </summary>
+        </member>
+        <member name="M:Sensirion.SmartInspect.LogDefinitionList.GetFromCaption(System.String)">
+            <summary>Searches the first log definition that matches the caption. 
+              The search is case insensitive 
+            </summary>
+            <param name="aCaption"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Sensirion.SmartInspect.LogEnter">
+             <summary>This class can be used in a using block to log instrumentation messages.
+               At the begining of the using block a EnterMethod() message will be sent to  
+               SmartInspect. At the end of the using block, a LeaveMethod() Message will be sent.
+             </summary>
+             <example>
+               This example shows the usage of the class.
+               <code>
+                 using (new LogEnter("My Method"))
+                 {
+                   DoSomething();
+                 }
+                 
+                 using (new LogEnter(Level.Debug, "My Method"))
+                 {
+                   DoSomething();
+                 }
+            
+                 using (new LogEnter(Level.Debug, this, "My Method"))
+                 {
+                   DoSomething();
+                 }
+             
+                 using (new LogEnter(specialSession, Level.Debug, this, "My Method"))
+                 {
+                   DoSomething();
+                 }
+               </code>
+             </example>
+        </member>
+        <member name="M:Sensirion.SmartInspect.LogEnter.#ctor(System.String)">
+            <summary>Initializes the instance and logs a EnterMethod() call to the SmartInspect.
+            </summary>
+            <param name="aMethodName">Name of a method.</param>
+        </member>
+        <member name="M:Sensirion.SmartInspect.LogEnter.#ctor(Gurock.SmartInspect.Session,System.String)">
+            <summary>Initializes the instance and logs a EnterMethod() call to the SmartInspect.
+            </summary>
+            <param name="session">The session.</param>
+            <param name="aMethodName">Name of a method.</param>
+        </member>
+        <member name="M:Sensirion.SmartInspect.LogEnter.#ctor(Gurock.SmartInspect.Level,System.Object,System.String)">
+            <summary>Initializes a new instance of the <see cref="T:Sensirion.SmartInspect.LogEnter"/> class.</summary>
+            <param name="level"><see cref="T:Gurock.SmartInspect.Level"/></param>
+            <param name="instance">The instance that is calling this method</param>
+            <param name="aMethodName">Name of a method.</param>
+        </member>
+        <member name="M:Sensirion.SmartInspect.LogEnter.#ctor(Gurock.SmartInspect.Level,System.String)">
+            <summary>Initializes the instance and logs a EnterMethod() call to the SmartInspect.</summary>
+            <param name="level">The level.</param>
+            <param name="aMethodName">Name of a method.</param>
+        </member>
+        <member name="M:Sensirion.SmartInspect.LogEnter.#ctor(Gurock.SmartInspect.Session,System.Object,System.String)">
+            <summary>Initializes a new instance of the <see cref="T:Sensirion.SmartInspect.LogEnter" /> class.</summary>
+            <param name="session">The session.</param>
+            <param name="instance">The instance that is calling this method</param>
+            <param name="aMethodName">Name of a method.</param>
+        </member>
+        <member name="M:Sensirion.SmartInspect.LogEnter.#ctor(Gurock.SmartInspect.Session,Gurock.SmartInspect.Level,System.Object,System.String)">
+            <summary>Initializes the instance and logs a EnterMethod() call to the SmartInspect.</summary>
+            <param name="session">The session.</param>
+            <param name="level">The level.</param>
+            <param name="instance">The instance that is calling this method</param>
+            <param name="aMethodName">Name of a method.</param>
+        </member>
+        <member name="M:Sensirion.SmartInspect.LogEnter.#ctor(Gurock.SmartInspect.Session,Gurock.SmartInspect.Level,System.String)">
+            <summary>Initializes the instance and logs a EnterMethod() call to the SmartInspect.</summary>
+            <param name="session">The session.</param>
+            <param name="level">The level.</param>
+            <param name="aMethodName">Name of a method.</param>
+        </member>
+        <member name="M:Sensirion.SmartInspect.LogEnter.#ctor(System.String,System.String)">
+            <summary>Initializes the instance and logs a EnterMethod() call to the SmartInspect.
+            </summary>
+            <param name="aMethodName">ATTENTION: Dont expect this to be used. It is overwritten by the compiler with the CallerMemberName.</param>
+            <param name="sourceFilePath">ATTENTION: Dont expect this to be used. It is overwritten by the compiler with the CallerMemberName.</param>
+        </member>
+        <member name="M:Sensirion.SmartInspect.LogEnter.Dispose">
+            <summary>Release the instance and logs a LeaveMethod() call to the SmartInspect. 
+            </summary>
+        </member>
+        <member name="T:Sensirion.SmartInspect.LogFileConfig">
+            <summary>The definition of the log file
+            </summary>
+        </member>
+        <member name="F:Sensirion.SmartInspect.LogFileConfig.NO_FILE">
+            <summary>No file given
+            </summary>
+        </member>
+        <member name="P:Sensirion.SmartInspect.LogFileConfig.Name">
+            <summary>Name of the file.
+            </summary>
+        </member>
+        <member name="P:Sensirion.SmartInspect.LogFileConfig.Directory">
+            <summary>Name of the directory
+            </summary>
+        </member>
+        <member name="P:Sensirion.SmartInspect.LogFileConfig.FullPath">
+            <summary>The full path of the log file
+            </summary>
+        </member>
+        <member name="P:Sensirion.SmartInspect.LogFileConfig.LogLevel">
+            <summary>Level to be considered for messages to be logged
+            </summary>
+        </member>
+        <member name="P:Sensirion.SmartInspect.LogFileConfig.RotateMode">
+            <summary>Type of file rotation 
+            </summary>
+        </member>
+        <member name="M:Sensirion.SmartInspect.LogFileConfig.#ctor(System.String,Gurock.SmartInspect.FileRotate)">
+            <summary>Default constructor
+            </summary>
+            <param name="aFileName">The file name</param>
+            <param name="aRotateMode">Type of file rotation</param>
+        </member>
+        <member name="M:Sensirion.SmartInspect.LogFileConfig.#ctor">
+            <summary>A constructor for no files
+            </summary>
+        </member>
+        <member name="M:Sensirion.SmartInspect.LogFileConfig.GetLogLevel">
+            <summary>The defined log level of the file
+            </summary>
+            <returns>The defined log level of the file</returns>
+        </member>
+        <member name="M:Sensirion.SmartInspect.LogFileConfig.ToString">
+            <inheritdoc />
+        </member>
+        <member name="T:Sensirion.SmartInspect.LogFileType">
+            <summary>Type of the log file 
+            </summary>
+        </member>
+        <member name="F:Sensirion.SmartInspect.LogFileType.None">
+            <summary>Not for use. Use only for the initialization 
+            </summary>
+        </member>
+        <member name="F:Sensirion.SmartInspect.LogFileType.BinaryFile">
+            <summary>The file is binary formated 
+            </summary>
+        </member>
+        <member name="F:Sensirion.SmartInspect.LogFileType.TextFile">
+            <summary>The file is a text file in sensirion format 
+            </summary>
+        </member>
+        <member name="F:Sensirion.SmartInspect.LogFileType.Pipe">
+            <summary>The connection is a pipe 
+            </summary>
+        </member>
+        <member name="F:Sensirion.SmartInspect.LogFileType.TCP">
+            <summary>The log messages will be transported over TCP/IP 
+            </summary>
+        </member>
+        <member name="F:Sensirion.SmartInspect.LogFileType.Console">
+            <summary>The log messages will be submitted to the console
+            </summary>
+        </member>
+        <member name="T:Sensirion.SmartInspect.PipeLogDefinition">
+            <summary>Defines the definition for the log file to be created. 
+            </summary>
+        </member>
+        <member name="M:Sensirion.SmartInspect.PipeLogDefinition.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Object"/> class.
+            </summary>
+        </member>
+        <member name="M:Sensirion.SmartInspect.PipeLogDefinition.FillConnectionBuilder(Gurock.SmartInspect.ConnectionsBuilder)">
+            <summary>Adds the protocol to the submitted connection builder 
+            </summary>
+            <param name="aBuilder">Connection builder to be filled with protocols</param>
+        </member>
+        <member name="M:Sensirion.SmartInspect.PipeLogDefinition.NewLogPipe(System.String,Gurock.SmartInspect.Level,System.Boolean,Gurock.SmartInspect.Level)">
+            <summary>Adds a new File output to the protocol list. Each output will be configured 
+              for the smart inspect if the Configuration is applied with the 
+              <see cref="M:Sensirion.SmartInspect.SmartInspectConfigurator.Configure(System.String,Sensirion.SmartInspect.LogDefinitionList)"/> 
+              method is called.
+            </summary>
+            <param name="aCaption">Title of the log (can be used for filtering issues)</param>
+            <param name="aDebugLevel">Level for messages to be logged. If the Backlog feature is 
+              used, this is the level of messages to be logged in Memory. As recently as a message with
+              the <paramref name="aBacklogFlushLevel"/> has been detected, the backlog memory will be flushed
+              to the file.</param>
+            <param name="aUseBacklog"><c>true</c> if backlogging should be used (see remarks)</param>
+            <param name="aBacklogFlushLevel">Minimum level of a message to fire the trigger to write the backlog to the file.
+              This is only used if <paramref name="aUseBacklog"/> set to <c>true</c>. Backlogging 
+              described in details in the remarks section.</param>
+            <remarks>
+              The <strong>Backlog</strong> feature means, that each message that should be logged will be hold in the memory if the
+              level of the message is between the <paramref name="aDebugLevel"/> and the <paramref name="aBacklogFlushLevel"/>. The
+              messages will be collected until either the buffer is full (old messages will be discarded to clear a space for the
+              new messages) or a message with the <paramref name="aBacklogFlushLevel"/> or higher is detected. In the second case the whole
+              buffer is written and after that the new message is written to. This enables the person who interprets the log to
+              see all messages before the error occured in a more detailed manner.
+            </remarks>
+            <returns>A new instance of a <see cref="T:Sensirion.SmartInspect.PipeLogDefinition"/> class configured with the submitted parameters.</returns>
+        </member>
+        <member name="M:Sensirion.SmartInspect.PipeLogDefinition.GetStringRepresentation">
+            <summary>Gets a string representation of the configured logging. this is
+              not done in the <see cref="M:Sensirion.SmartInspect.BaseLogDefinition.ToString"/> method directly, to force
+              successor to implement this method.
+             <para>This method will be called after configuration of the logger, just
+               to log the current configuration (e.g. Log file location)
+              </para>
+            </summary>
+            <returns>String representation of the protocol</returns>
+        </member>
+        <member name="T:Sensirion.SmartInspect.SiILoggerAdapter`1">
+            <summary>Adapter to log from a <see cref="T:Microsoft.Extensions.Logging.ILogger"/> to a SmartInspect <see cref="T:Gurock.SmartInspect.Session"/>>
+            </summary>
+            <typeparam name="TCategory"></typeparam>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SiILoggerAdapter`1.#ctor(Gurock.SmartInspect.Session)">
+            <summary>Constructor
+            </summary>
+            <param name="aSiSession">Smart inspect session</param>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SiILoggerAdapter`1.Log``1(Microsoft.Extensions.Logging.LogLevel,Microsoft.Extensions.Logging.EventId,``0,System.Exception,System.Func{``0,System.Exception,System.String})">
+            <summary>Writes a log entry.</summary>
+            <param name="logLevel">Entry will be written on this level.</param>
+            <param name="eventId">Id of the event.</param>
+            <param name="state">The entry to be written. Can be also an object.</param>
+            <param name="exception">The exception related to this entry.</param>
+            <param name="formatter">Function to create a <see cref="T:System.String" /> message of the <paramref name="state" /> and <paramref name="exception" />.</param>
+            <typeparam name="TState">The type of the object to be written.</typeparam>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SiILoggerAdapter`1.IsEnabled(Microsoft.Extensions.Logging.LogLevel)">
+            <summary>
+            Checks if the given <paramref name="logLevel" /> is enabled.
+            </summary>
+            <param name="logLevel">Level to be checked.</param>
+            <returns><c>true</c> if enabled.</returns>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SiILoggerAdapter`1.BeginScope``1(``0)">
+            <summary>Begins a logical operation scope.</summary>
+            <param name="state">The identifier for the scope.</param>
+            <typeparam name="TState">The type of the state to begin scope for.</typeparam>
+            <returns>An <see cref="T:System.IDisposable" /> that ends the logical operation scope on dispose.</returns>
+        </member>
+        <member name="T:Sensirion.SmartInspect.SmartInspectConfigurator">
+            <summary>Class to do the configuration with a default set of settings  
+            </summary>
+        </member>
+        <member name="F:Sensirion.SmartInspect.SmartInspectConfigurator.DEFAULT_MAX_FILE_SIZE_IN_KB">
+            <summary>The default maximum file size in kb</summary>
+        </member>
+        <member name="F:Sensirion.SmartInspect.SmartInspectConfigurator.DEFAULT_FILE_COUNT_FOR_DEBUG_FILE">
+            <summary>The default file count for debug file</summary>
+        </member>
+        <member name="F:Sensirion.SmartInspect.SmartInspectConfigurator.DEFAULT_LOG_LEVEL">
+            <summary>The lowest level to be written into the backlog</summary>
+        </member>
+        <member name="F:Sensirion.SmartInspect.SmartInspectConfigurator.DEFAULT_FLUSH_LEVEL">
+            <summary>Lowest Level where the whole backlog will be written to the log stream</summary>
+        </member>
+        <member name="F:Sensirion.SmartInspect.SmartInspectConfigurator.DEFAULT_FILE_IDENTIFIER">
+            <summary>Default identifier for the binary file protocol. Used to get the configuration class</summary>
+        </member>
+        <member name="F:Sensirion.SmartInspect.SmartInspectConfigurator.DEFAULT_PIPE_IDENTIFIER">
+            <summary>Default identifier for the pipe protocol. Used to get the configuration class</summary>
+        </member>
+        <member name="F:Sensirion.SmartInspect.SmartInspectConfigurator.DEFAULT_TCP_IDENTIFIER">
+            <summary>Default identifier for the TCP protocol. Used to get the configuration class</summary>
+        </member>
+        <member name="F:Sensirion.SmartInspect.SmartInspectConfigurator.DEFAULT_TEXT_IDENTIFIER">
+            <summary>Default identifier for the text file protocol. Used to get the configuration class</summary>
+        </member>
+        <member name="F:Sensirion.SmartInspect.SmartInspectConfigurator.DEFAULT_CONSOLE_IDENTIFIER">
+            <summary>Default identifier for the text console protocol. Used to get the configuration class</summary>
+        </member>
+        <member name="F:Sensirion.SmartInspect.SmartInspectConfigurator.DEFAULT_DEBUG_FILE_IDENTIFIER">
+            <summary>Default identifier for the binary file protocol. Used to get the configuration class</summary>
+        </member>
+        <member name="F:Sensirion.SmartInspect.SmartInspectConfigurator.EXPENSIVE_SESSION_NAME">
+            <summary>Name of the expensive session to log expensive messages (will be created always but inactive)</summary>
+        </member>
+        <member name="P:Sensirion.SmartInspect.SmartInspectConfigurator.AsyncThrottle">
+            <summary><c>true</c> if throttling should be enabled for async mode
+            </summary>
+        </member>
+        <member name="P:Sensirion.SmartInspect.SmartInspectConfigurator.UseTextFile">
+            <summary>Uses text file for default configuration</summary>
+            <value><c>true</c> if is to use text file; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:Sensirion.SmartInspect.SmartInspectConfigurator.UseSilFile">
+            <summary>Uses the binary sil file for default configuration</summary>
+            <value><c>true</c> if is to use sil file; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:Sensirion.SmartInspect.SmartInspectConfigurator.UseTcp">
+            <summary>Uses TCP for the default configuration (must be configured)</summary>
+            <value><c>true</c> if is to use TCP; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:Sensirion.SmartInspect.SmartInspectConfigurator.UsePipe">
+            <summary>Use the pipe (smartinspect) for the default configuration</summary>
+            <value><c>true</c> if is to use pipe; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:Sensirion.SmartInspect.SmartInspectConfigurator.UseConsole">
+            <summary>Use the debug console (smartinspect) for the default configuration</summary>
+            <value><c>true</c> if is to use console; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:Sensirion.SmartInspect.SmartInspectConfigurator.UseDebugFileLog">
+            <summary>
+            if <c>true</c> a log file with debug level will be written to the program directory.
+            The file is written asynchronous and contains all messages. This file should not be
+            written into the database and will stay only a few days (5 different days will be supported).
+            <para>
+            For each day the application generates log messages a new file will be created. After 5 files has been
+            created, the old ones will be deleted. So only 5 files stays permanently into the directory.
+            </para>
+            </summary>
+            <value><c>true</c> if [use debug file log]; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectConfigurator.#ctor">
+            <summary>Initializes the instance</summary>
+        </member>
+        <member name="P:Sensirion.SmartInspect.SmartInspectConfigurator.LogDefinitions">
+            <summary>List with all protocols (File, Pipe, Tcp) that should be generated from the logging framework</summary>
+            <value><see cref="T:Sensirion.SmartInspect.LogDefinitionList"/></value>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectConfigurator.NewLogFile(System.String,System.String,Gurock.SmartInspect.Level,System.Boolean,Gurock.SmartInspect.Level)">
+            <summary>
+            Adds a new File output to the protocol list. Each output will be configured
+            for the smart inspect if the Configuration is applied with the
+            <see cref="M:Sensirion.SmartInspect.SmartInspectConfigurator.Configure(System.String,Sensirion.SmartInspect.LogDefinitionList)" />
+            method is called.
+            </summary>
+            <param name="aCaption">Title of the log (can be used for filtering issues)</param>
+            <param name="aFilename">Name of the file. If the filename consist of a name and date, this
+            is just the name. SmartInspect will add the date automatically.</param>
+            <param name="aDebugLevel">Level for messages to be logged. If the Backlog feature is
+            used, this is the level of messages to be logged in Memory. As recently as a message with
+            the <paramref name="aBacklogFlushLevel" /> has been detected, the backlog memory will be flushed
+            to the file.</param>
+            <param name="aUseBacklog"><c>true</c> if backlogging should be used (see remarks)</param>
+            <param name="aBacklogFlushLevel">Minimum level of a message to fire the trigger to write the backlog to the file.
+            This is only used if <paramref name="aUseBacklog" /> set to <c>true</c>. Backlogging
+            described in details in the remarks section.</param>
+            <returns>A new instance of a <see cref="T:Sensirion.SmartInspect.FileLogDefinition" /> class configured with the submitted parameters.</returns>
+            <remarks>
+            The <strong>Backlog</strong> feature means, that each message that should be logged will be hold in the memory if the
+            level of the message is between the <paramref name="aDebugLevel" /> and the <paramref name="aBacklogFlushLevel" />. The
+            messages will be collected until either the buffer is full (old messages will be discarded to clear a space for the
+            new messages) or a message with the <paramref name="aBacklogFlushLevel" /> or higher is detected. In the second case the whole
+            buffer is written and after that the new message is written to. This enables the person who interprets the log to
+            see all messages before the error occured in a more detailed manner.
+            </remarks>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectConfigurator.NewLogPipe(System.String,Gurock.SmartInspect.Level,System.Boolean,Gurock.SmartInspect.Level)">
+            <summary>
+            Adds a new File output to the protocol list. Each output will be configured
+            for the smart inspect if the Configuration is applied with the
+            <see cref="M:Sensirion.SmartInspect.SmartInspectConfigurator.Configure(System.String,Sensirion.SmartInspect.LogDefinitionList)" />
+            method is called.
+            </summary>
+            <param name="aCaption">Title of the log (can be used for filtering issues)</param>
+            <param name="aDebugLevel">Level for messages to be logged. If the Backlog feature is
+            used, this is the level of messages to be logged in Memory. As recently as a message with
+            the <paramref name="aBacklogFlushLevel" /> has been detected, the backlog memory will be flushed
+            to the file.</param>
+            <param name="aUseBacklog"><c>true</c> if backlogging should be used (see remarks)</param>
+            <param name="aBacklogFlushLevel">Minimum level of a message to fire the trigger to write the backlog to the file.
+            This is only used if <paramref name="aUseBacklog" /> set to <c>true</c>. Backlogging
+            described in details in the remarks section.</param>
+            <returns>A new instance of a <see cref="T:Sensirion.SmartInspect.PipeLogDefinition" /> class configured with the submitted parameters.</returns>
+            <remarks>
+            The <strong>Backlog</strong> feature means, that each message that should be logged will be hold in the memory if the
+            level of the message is between the <paramref name="aDebugLevel" /> and the <paramref name="aBacklogFlushLevel" />. The
+            messages will be collected until either the buffer is full (old messages will be discarded to clear a space for the
+            new messages) or a message with the <paramref name="aBacklogFlushLevel" /> or higher is detected. In the second case the whole
+            buffer is written and after that the new message is written to. This enables the person who interprets the log to
+            see all messages before the error occured in a more detailed manner.
+            </remarks>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectConfigurator.NewLogTCP(System.String,Gurock.SmartInspect.Level,System.Boolean,Gurock.SmartInspect.Level,System.String,System.Int32,System.Int32)">
+            <summary>
+            Adds a new File output to the protocol list. Each output will be configured
+            for the smart inspect if the Configuration is applied with the
+            <see cref="M:Sensirion.SmartInspect.SmartInspectConfigurator.Configure(System.String,Sensirion.SmartInspect.LogDefinitionList)" />
+            method is called.
+            </summary>
+            <param name="aCaption">Title of the log (can be used for filtering issues)</param>
+            <param name="aDebugLevel">Level for messages to be logged. If the Backlog feature is
+            used, this is the level of messages to be logged in Memory. As recently as a message with
+            the <paramref name="aBacklogFlushLevel" /> has been detected, the backlog memory will be flushed
+            to the file.</param>
+            <param name="aUseBacklog"><c>true</c> if backlogging should be used (see remarks)</param>
+            <param name="aBacklogFlushLevel">Minimum level of a message to fire the trigger to write the backlog to the file.
+            This is only used if <paramref name="aUseBacklog" /> set to <c>true</c>. Backlogging
+            described in details in the remarks section.</param>
+            <param name="aHost">Host where the log messages goes to</param>
+            <param name="aPort">Target port on the <paramref name="aHost" />.</param>
+            <param name="aTimeoutMs">Timeout in milliseconds for connect and reconnect</param>
+            <returns>A new instance of a <see cref="T:Sensirion.SmartInspect.TCPLogDefinition" /> class configured with the submitted parameters.</returns>
+            <remarks>
+            The <strong>Backlog</strong> feature means, that each message that should be logged will be hold in the memory if the
+            level of the message is between the <paramref name="aDebugLevel" /> and the <paramref name="aBacklogFlushLevel" />. The
+            messages will be collected until either the buffer is full (old messages will be discarded to clear a space for the
+            new messages) or a message with the <paramref name="aBacklogFlushLevel" /> or higher is detected. In the second case the whole
+            buffer is written and after that the new message is written to. This enables the person who interprets the log to
+            see all messages before the error occurred in a more detailed manner.
+            </remarks>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectConfigurator.NewLogText(System.String,System.String,Gurock.SmartInspect.Level,System.Boolean,Gurock.SmartInspect.Level,System.Boolean,System.String)">
+            <summary>
+            Adds a new File output to the protocol list. Each output will be configured
+            for the smart inspect if the Configuration is applied with the
+            <see cref="M:Sensirion.SmartInspect.SmartInspectConfigurator.Configure(System.String,Sensirion.SmartInspect.LogDefinitionList)" />
+            method is called.
+            </summary>
+            <param name="aCaption">Title of the log (can be used for filtering issues)</param>
+            <param name="aFilename">Name of the file. If the filename consist of a name and date, this
+            is just the name. SmartInspect will add the date automatically.</param>
+            <param name="aDebugLevel">Level for messages to be logged. If the Backlog feature is
+            used, this is the level of messages to be logged in Memory. As recently as a message with
+            the <paramref name="aBacklogFlushLevel" /> has been detected, the backlog memory will be flushed
+            to the file.</param>
+            <param name="aUseBacklog"><c>true</c> if backlogging should be used (see remarks)</param>
+            <param name="aBacklogFlushLevel">Minimum level of a message to fire the trigger to write the backlog to the file.
+            This is only used if <paramref name="aUseBacklog" /> set to <c>true</c>. Backlogging
+            described in details in the remarks section.</param>
+            <param name="aIdent">Indicates if the logging output should automatically be indented like in the Console.</param>
+            <param name="aPattern">Specifiers the pattern used to create a text representation of a log entry
+            <example>"[%timestamp%] %level%: %title%"</example></param>
+            <returns>A new instance of a <see cref="T:Sensirion.SmartInspect.TextLogDefinition" /> class configured with the submitted parameters.</returns>
+            <remarks>
+            The <strong>Backlog</strong> feature means, that each message that should be logged will be hold in the memory if the
+            level of the message is between the <paramref name="aDebugLevel" /> and the <paramref name="aBacklogFlushLevel" />. The
+            messages will be collected until either the buffer is full (old messages will be discarded to clear a space for the
+            new messages) or a message with the <paramref name="aBacklogFlushLevel" /> or higher is detected. In the second case the whole
+            buffer is written and after that the new message is written to. This enables the person who interprets the log to
+            see all messages before the error occurred in a more detailed manner.
+            </remarks>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectConfigurator.NewLogConsole(System.String,Sensirion.SmartInspect.ConsoleMode,Gurock.SmartInspect.Level,System.Boolean,Gurock.SmartInspect.Level,System.Boolean)">
+            <summary>
+            Configures a new console output to the protocol list. Each output will be configured
+            for the smart inspect if the Configuration is applied with the
+            <see cref="M:Sensirion.SmartInspect.SmartInspectConfigurator.Configure(System.String,Sensirion.SmartInspect.LogDefinitionList)" />
+            method is called.
+            </summary>
+            <param name="aCaption">Title of the log (can be used for filtering issues)</param>
+            <param name="aConsoleMode">&gt;Mode for the console. Defines to which console the output will be sent</param>
+            <param name="aDebugLevel">Level for messages to be logged. If the Backlog feature is
+              used, this is the level of messages to be logged in Memory. As recently as a message with
+              the <paramref name="aBacklogFlushLevel" /> has been detected, the backlog memory will be flushed
+              to the file.</param>
+            <param name="aUseBacklog"><c>true</c> if backlogging should be used (see remarks)</param>
+            <param name="aBacklogFlushLevel">Minimum level of a message to fire the trigger to write the backlog to the file.
+              This is only used if <paramref name="aUseBacklog" /> set to <c>true</c>. Backlogging
+              described in details in the remarks section.</param>
+            <param name="aAsyncThrottle"><c>true</c> if throttling should be used</param>
+            <returns>A new instance of a <see cref="T:Sensirion.SmartInspect.ConsoleLogDefinition" /> class configured with the submitted parameters.</returns>
+            <remarks>
+            The <strong>Backlog</strong> feature means, that each message that should be logged will be hold in the memory if the
+            level of the message is between the <paramref name="aDebugLevel" /> and the <paramref name="aBacklogFlushLevel" />. The
+            messages will be collected until either the buffer is full (old messages will be discarded to clear a space for the
+            new messages) or a message with the <paramref name="aBacklogFlushLevel" /> or higher is detected. In the second case the whole
+            buffer is written and after that the new message is written to. This enables the person who interprets the log to
+            see all messages before the error occured in a more detailed manner.
+            </remarks>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectConfigurator.Configure(Gurock.SmartInspect.Level,Gurock.SmartInspect.Level,System.String)">
+            <summary>Configures the framework with the default configuration</summary>
+            <param name="aDefaultLogLevel">Lowest level to be written into the backlog</param>
+            <param name="aFlushLevel">Lowest Level where the whole backlog will be written to the log stream</param>
+            <param name="aApplicationName">Name of the logging application (can be used for filtering issues)</param>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectConfigurator.Configure(Sensirion.SmartInspect.LogDefinitionList)">
+            <summary>Configures the framework with the default configuration</summary>
+            <param name="aDefinitions">Contains all definitions for log targets</param>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectConfigurator.Configure(System.String,Sensirion.SmartInspect.LogDefinitionList)">
+            <summary>Configures the framework with the default configuration</summary>
+            <param name="aApplicationName">Name of the logging application (can be used for filtering issues)</param>
+            <param name="aDefinitions">Contains all definitions for log targets</param>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectConfigurator.Configure(Gurock.SmartInspect.SmartInspect,System.String,Sensirion.SmartInspect.LogDefinitionList)">
+            <summary>Configures the framework with the default configuration</summary>
+            <param name="aSmartInspect">A smart inspect object</param>
+            <param name="aApplicationName">Name of the logging application (can be used for filtering issues)</param>
+            <param name="aDefinitions">Contains all definitions for log targets</param>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectConfigurator.GetDefaultConfiguration">
+            <summary>Gets the default configuration.</summary>
+            <returns><see cref="T:Sensirion.SmartInspect.LogDefinitionList"/></returns>
+            <exception cref="T:System.ArgumentNullException">The directory to save the files may not be null or empty.</exception>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectConfigurator.GetDefaultConfiguration(System.String)">
+            <summary>Gets the default configuration.</summary>
+            <param name="directoryPathToSaveLogFiles">The directory path to save log files.</param>
+            <returns><see cref="T:Sensirion.SmartInspect.LogDefinitionList"/></returns>
+            <exception cref="T:System.ArgumentNullException">The directory to save the files may not be null or empty.</exception>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectConfigurator.GetDefaultConfiguration(Gurock.SmartInspect.Level,Gurock.SmartInspect.Level)">
+            <summary>Gets the default configuration of the logging framework</summary>
+            <param name="aDefaultLogLevel">Lowest level to be written into the backlog</param>
+            <param name="aFlushLevel">Lowest Level where the whole backlog will be written to the log stream</param>
+            <returns>List with fully configured protocols (file, pipe, tcp, ...)</returns>
+            <exception cref="T:System.ArgumentNullException">The directory to save the files may not be null or empty.</exception>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectConfigurator.GetDefaultConfiguration(System.Int32)">
+            <summary>Gets the default configuration.</summary>
+            <param name="aMaxFileSizeInKb">a maximum file size in kb.</param>
+            <returns><see cref="T:Sensirion.SmartInspect.LogDefinitionList"/></returns>
+            <exception cref="T:System.ArgumentNullException">The directory to save the files may not be null or empty.</exception>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectConfigurator.GetDefaultConfiguration(System.Int32,System.Int32)">
+            <summary>Gets the default configuration.</summary>
+            <param name="aMaxFileSizeInKb">Defines the maxium logfile size in kb, when size reached. a new log file will be created.</param>
+            <param name="aLogFileCount">Count of files to be kept, if the file is rotated</param>
+            <returns><see cref="T:Sensirion.SmartInspect.LogDefinitionList"/></returns>
+            <exception cref="T:System.ArgumentNullException">The directory to save the files may not be null or empty.</exception>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectConfigurator.GetDefaultConfiguration(System.Nullable{System.Int32},System.Int32,Gurock.SmartInspect.Level,Gurock.SmartInspect.Level)">
+            <summary>Gets the default configuration of the logging framework</summary>
+            <param name="aMaxFileSizeInKb">Defines the maximum logfile size in kb. If this defined size reached. a new log file will be created. If null, the value will be <see cref="F:Sensirion.SmartInspect.SmartInspectConfigurator.DEFAULT_MAX_FILE_SIZE_IN_KB"/></param>
+            <param name="aLogFileCount">Count of files to be kept, if the file is rotated.</param>
+            <param name="aDefaultLogLevel">Lowest level to be written into the backlog</param>
+            <param name="aFlushLevel">Lowest Level where the whole backlog will be written to the log stream</param>
+            <returns>List with fully configured protocols (file, pipe, tcp, ...) <see cref="T:Sensirion.SmartInspect.LogDefinitionList"/></returns>
+            <exception cref="T:System.ArgumentNullException">The directory to save the files may not be null or empty.</exception>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectConfigurator.GetDefaultConfiguration(System.Nullable{System.Int32},System.Int32,Gurock.SmartInspect.Level,Gurock.SmartInspect.Level,System.String,System.Boolean)">
+            <summary>Gets the default configuration of the logging framework</summary>
+            <param name="aMaxFileSizeInKb">Defines the maximum logfile size in kb. If this defined size reached. a new log file will be created. If null, the value will be <see cref="F:Sensirion.SmartInspect.SmartInspectConfigurator.DEFAULT_MAX_FILE_SIZE_IN_KB"/></param>
+            <param name="aLogFileCount">Count of files to be kept, if the file is rotated.</param>
+            <param name="aDefaultLogLevel">Lowest level to be written into the backlog</param>
+            <param name="aFlushLevel">Lowest Level where the whole backlog will be written to the log stream</param>
+            <param name="directoryPathToSaveLogFiles">The directory path to save the log files.</param>
+            <param name="aAsyncThrottle"><c>true</c> if throttling should be used</param>
+            <returns>List with fully configured protocols (file, pipe, tcp, ...) <see cref="T:Sensirion.SmartInspect.LogDefinitionList"/></returns>
+            <exception cref="T:System.ArgumentNullException">The directory to save the files may not be null or empty.</exception>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectConfigurator.GetDefaultConfigurationForWebServices(System.String)">
+            <summary>Gets the default configuration for web services.</summary>
+            <param name="directoryPathToSaveLogFiles">The directory path to save the log files.</param>
+            <returns>List with fully configured protocols (file, pipe, tcp, ...) <see cref="T:Sensirion.SmartInspect.LogDefinitionList"/></returns>
+            <exception cref="T:System.ArgumentNullException">The directory to save the files may not be null or empty.</exception>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectConfigurator.GetDefaultConfigurationWithFileSizeRotation(System.Int32,Gurock.SmartInspect.Level,Gurock.SmartInspect.Level)">
+            <summary>Gets the default configuration with File Size rotation (<see cref="F:Sensirion.SmartInspect.SmartInspectConfigurator.DEFAULT_MAX_FILE_SIZE_IN_KB"/>) for debug, sil and text log file.</summary>
+            <param name="aLogFileCount">Count of files to be kept</param>
+            <param name="aDefaultLogLevel">Lowest level to be written into the backlog</param>
+            <param name="aFlushLevel">Lowest Level where the whole backlog will be written to the log stream</param>
+            <returns>List with fully configured protocols (file, pipe, tcp, ...) <see cref="T:Sensirion.SmartInspect.LogDefinitionList"/></returns>
+            <exception cref="T:System.ArgumentNullException">The directory to save the files may not be null or empty.</exception>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectConfigurator.GetDefaultConfigurationWithFileSizeRotation(System.Int32,Gurock.SmartInspect.Level,Gurock.SmartInspect.Level,System.String)">
+            <summary>Gets the default configuration with File Size rotation (<see cref="F:Sensirion.SmartInspect.SmartInspectConfigurator.DEFAULT_MAX_FILE_SIZE_IN_KB"/>) for debug, sil and text log file.</summary>
+            <param name="aLogFileCount">Count of files to be kept</param>
+            <param name="aDefaultLogLevel">Lowest level to be written into the backlog</param>
+            <param name="aFlushLevel">Lowest Level where the whole backlog will be written to the log stream</param>
+            <param name="directoryPathToSaveLogFiles">The directory path to save the log files.</param>
+            <returns>List with fully configured protocols (file, pipe, tcp, ...) <see cref="T:Sensirion.SmartInspect.LogDefinitionList"/></returns>
+            <exception cref="T:System.ArgumentNullException">The directory to save the files may not be null or empty.</exception>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectConfigurator.GetDefaultConfigurationWithDailyRotation">
+            <summary>Gets the default configuration with daily rotation.</summary>
+            <returns><see cref="T:Sensirion.SmartInspect.LogDefinitionList"/></returns>
+            <exception cref="T:System.ArgumentNullException">The directory to save the files may not be null or empty.</exception>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectConfigurator.GetDefaultConfigurationWithDailyRotation(System.Int32,System.Int32,Gurock.SmartInspect.Level,Gurock.SmartInspect.Level,System.String)">
+            <summary>Gets the default configuration with daily rotation for debug, sil and text log file.</summary>
+            <param name="aMaxFileSizeInKb">The maximum file size in KB</param>
+            <param name="aLogFileCount">Count of files to be kept</param>
+            <param name="aDefaultLogLevel">Lowest level to be written into the backlog</param>
+            <param name="aFlushLevel">Lowest Level where the whole backlog will be written to the log stream</param>
+            <param name="directoryPathToSaveLogFiles">The directory path to save the log files.</param>
+            <returns>List with fully configured protocols (file, pipe, tcp, ...) <see cref="T:Sensirion.SmartInspect.LogDefinitionList"/></returns>
+            <exception cref="T:System.ArgumentNullException">The directory to save the files may not be null or empty.</exception>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectConfigurator.ConfigureDefaults(System.String)">
+            <summary>Configures the SmartInspect in a default way without a file</summary>
+            <param name="aApplicationName">Name of the application that generates log entries</param>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectConfigurator.ConfigureDefaults(Gurock.SmartInspect.Level,Gurock.SmartInspect.Level,System.String,System.Boolean)">
+            <summary>Configures the SmartInspect in a default way without a file</summary>
+            <param name="aDefaultLogLevel">Lowest level to be written into the backlog</param>
+            <param name="aFlushLevel">Lowest Level where the whole backlog will be written to the log stream</param>
+            <param name="aApplicationName">Name of the application that generates log entries</param>
+            <param name="asyncThrottle"></param>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectConfigurator.ConfigureWebServiceDefaults(System.String,System.String)">
+            <summary>Configures the SmartInspect for web services with default values.</summary>
+            <param name="aApplicationName">Name of a application.</param>
+            <param name="directoryPathToSaveLogFiles">The directory path to save log files.</param>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectConfigurator.GetCurrentConfiguration">
+            <summary>Returns the set of currently active configurations.</summary>
+            <returns>The current set of configurations.</returns>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectConfigurator.GetDefaultConfiguration(Sensirion.SmartInspect.SmartInspectConfiguratorConfig,System.Boolean)">
+            <summary>Gets the default configuration.</summary>
+            <param name="configurationModel"><see cref="T:Sensirion.SmartInspect.SmartInspectConfiguratorConfig"/></param>
+            <param name="aAsyncThrottle">[Optional]<c>true</c>, if asynchronous throttling should be activated. Default: true</param>
+            <returns>List with fully configured protocols (file, pipe, tcp, ...) <see cref="T:Sensirion.SmartInspect.LogDefinitionList"/></returns>
+            <exception cref="T:System.ArgumentNullException">The directory to save the files may not be null or empty.</exception>
+            <exception cref="T:System.ArgumentException">The directory to save the files may not be null or empty.</exception>
+        </member>
+        <member name="T:Sensirion.SmartInspect.SmartInspectConfiguratorConfig">
+            <summary>The configuration of <see cref="T:Sensirion.SmartInspect.SmartInspectConfigurator"/>
+            </summary>
+        </member>
+        <member name="F:Sensirion.SmartInspect.SmartInspectConfiguratorConfig.DEFAULT_MAX_FILE_SIZE_IN_KB">
+            <summary>The default maximum file size in kb</summary>
+        </member>
+        <member name="F:Sensirion.SmartInspect.SmartInspectConfiguratorConfig.DEFAULT_FILE_COUNT_FOR_DEBUG_FILE">
+            <summary>The default file count for debug file</summary>
+        </member>
+        <member name="F:Sensirion.SmartInspect.SmartInspectConfiguratorConfig.DAILY_LOG_MAX_FILE_SIZE_IN_KB">
+            <summary>The default maximum file size in kb</summary>
+        </member>
+        <member name="F:Sensirion.SmartInspect.SmartInspectConfiguratorConfig.DAILY_LOG_LOGFILE_COUNT">
+            <summary>The default file count for debug file</summary>
+        </member>
+        <member name="F:Sensirion.SmartInspect.SmartInspectConfiguratorConfig.DEFAULT_RIGI_LOG">
+            <summary>The default name of the .RigiLog log file
+            </summary>
+        </member>
+        <member name="F:Sensirion.SmartInspect.SmartInspectConfiguratorConfig.DEFAULT_LOG_SIL">
+            <summary>The default name of the .sil log file
+            </summary>
+        </member>
+        <member name="P:Sensirion.SmartInspect.SmartInspectConfiguratorConfig.MaxFileSizeInKb">
+            <summary>Defines the maximum logfile size in kb. If this defined size reached. a new log file will be created. If null, the value will be <see cref="F:Sensirion.SmartInspect.SmartInspectConfiguratorConfig.DEFAULT_MAX_FILE_SIZE_IN_KB"/>
+            </summary>
+        </member>
+        <member name="P:Sensirion.SmartInspect.SmartInspectConfiguratorConfig.LogFileCount">
+            <summary>Count of files to be kept
+            </summary>
+        </member>
+        <member name="P:Sensirion.SmartInspect.SmartInspectConfiguratorConfig.DefaultLogLevel">
+            <summary>Lowest level to be written into the backlog
+            </summary>
+        </member>
+        <member name="P:Sensirion.SmartInspect.SmartInspectConfiguratorConfig.FlushLevel">
+            <summary>Lowest Level where the whole backlog will be written to the log stream
+            </summary>
+        </member>
+        <member name="P:Sensirion.SmartInspect.SmartInspectConfiguratorConfig.DirectoryPathToSaveLogFiles">
+            <summary>The directory path to save the log files.
+            </summary>
+        </member>
+        <member name="P:Sensirion.SmartInspect.SmartInspectConfiguratorConfig.SilFile">
+            <summary>The .sil file definition.
+            </summary>
+        </member>
+        <member name="P:Sensirion.SmartInspect.SmartInspectConfiguratorConfig.TextFile">
+            <summary>The .log text file definition.
+            </summary>
+        </member>
+        <member name="P:Sensirion.SmartInspect.SmartInspectConfiguratorConfig.RigiLogFile">
+            <summary>The .RigiLog file definition.
+            </summary>
+        </member>
+        <member name="P:Sensirion.SmartInspect.SmartInspectConfiguratorConfig.UseTcp">
+            <summary>Uses TCP for the default configuration (must be configured)</summary>
+            <value><c>true</c> if is to use TCP; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:Sensirion.SmartInspect.SmartInspectConfiguratorConfig.UsePipe">
+            <summary>Use the pipe (smartinspect) for the default configuration</summary>
+            <value><c>true</c> if is to use pipe; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:Sensirion.SmartInspect.SmartInspectConfiguratorConfig.UseConsole">
+            <summary>Use the debug console (smartinspect) for the default configuration</summary>
+            <value><c>true</c> if is to use console; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectConfiguratorConfig.#ctor">
+            <summary>Default constructor
+            </summary>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectConfiguratorConfig.IsFile(Sensirion.SmartInspect.LogFileConfig)">
+            <summary>Check if a log file configuration is represents a file
+            </summary>
+            <param name="aLogFileConfig">A log file configuration</param>
+            <returns>If a file is represented, then <p>true</p>, otherwise <p>false</p>.</returns>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectConfiguratorConfig.GetAbsolutePath(Sensirion.SmartInspect.LogFileConfig)">
+            <summary>Delivers the absolute path of a log file configuration
+            </summary>
+            <param name="aLogFileConfig">A log file configuration</param>
+            <returns>Returns the absolute path of a log file configuration</returns>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectConfiguratorConfig.GetDefaultLogLevel(Sensirion.SmartInspect.LogFileConfig)">
+            <summary>Delivers the log level of a log file configuration
+            </summary>
+            <param name="aLogFileConfig">A log file configuration</param>
+            <returns>Returns the log level of a log file configuration</returns>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectConfiguratorConfig.CreateDefaultConfiguration">
+            <summary>Creates a default configuration for <see cref="T:Sensirion.SmartInspect.SmartInspectConfigurator"/>
+            </summary>
+             <remarks>For .sil log files the default level is Warning !!!</remarks>
+            <returns>Returns a configuration for <see cref="T:Sensirion.SmartInspect.SmartInspectConfigurator"/></returns>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectConfiguratorConfig.CreateDailyLogConfiguration">
+            <summary>Creates a configuration for <see cref="T:Sensirion.SmartInspect.SmartInspectConfigurator"/> with daily rotating log files
+            </summary>
+             <remarks>For .sil log files the default level is Warning !!!</remarks>
+            <returns>Returns a configuration for <see cref="T:Sensirion.SmartInspect.SmartInspectConfigurator"/></returns>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectConfiguratorConfig.CreateDailyLogWithoutSilLogConfiguration">
+            <summary>Creates a configuration for <see cref="T:Sensirion.SmartInspect.SmartInspectConfigurator"/> with daily rotating log files and no .sil file
+            </summary>
+            <returns>Returns a configuration for <see cref="T:Sensirion.SmartInspect.SmartInspectConfigurator"/></returns>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectConfiguratorConfig.CreateWithoutFileConfiguration">
+            <summary>Creates a configuration for <see cref="T:Sensirion.SmartInspect.SmartInspectConfigurator"/> without file
+            </summary>
+            <returns>Returns a configuration for <see cref="T:Sensirion.SmartInspect.SmartInspectConfigurator"/></returns>
+        </member>
+        <member name="T:Sensirion.SmartInspect.SmartInspectHandler">
+            <summary>Class for handle SmartInspect configuration and disposal
+            </summary>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectHandler.#ctor(Sensirion.SmartInspect.SmartInspectConfiguratorConfig)">
+            <summary>Default constructor
+            </summary>
+            <param name="config">The configuration for the <see cref="T:Sensirion.SmartInspect.SmartInspectConfigurator"/></param>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectHandler.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectHandler.CreateWithDefaultConfiguration">
+            <summary>Creates an <see cref="T:Sensirion.SmartInspect.SmartInspectHandler"/>, configure and initialize SmartInspect with default configuration.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectHandler.CreateWithDailyLogConfiguration">
+            <summary>Creates an <see cref="T:Sensirion.SmartInspect.SmartInspectHandler"/>, configure and initialize SmartInspect with daily log configuration.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectHandler.CreateWithDailyLogWithoutSilLogConfiguration">
+            <summary>Creates an <see cref="T:Sensirion.SmartInspect.SmartInspectHandler"/>, configure and initialize SmartInspect with daily log and without .sil log configuration.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectHandler.CreateWithoutFileConfiguration">
+            <summary>Creates an <see cref="T:Sensirion.SmartInspect.SmartInspectHandler"/>, configure and initialize SmartInspect without file configuration.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Sensirion.SmartInspect.SmartInspectHelper">
+            <summary>Helper class to ease the use of the <c>SmartInspect</c> logging framework 
+            </summary>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectHelper.ConfigureSi(System.String)">
+            <summary>Configures the <c>SmartInspect</c> logging Framework</summary>
+            <param name="aApplicationName">Name of the application that logs (can be used to filter
+            the entries in the logging console)</param>
+            <returns>List with all configurations that has been done.</returns>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectHelper.ConfigureSi(System.String,System.String)">
+            <summary>Configures the <c>SmartInspect</c> logging Framework</summary>
+            <param name="aApplicationName">Name of the application that logs (can be used to filter
+            the entries in the logging console)</param>
+            <param name="directoryPathToSaveLogFiles">The directory path to save log files.</param>
+            <returns>List with all configurations that has been done.</returns>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectHelper.ConfigureSi(System.String,Sensirion.SmartInspect.LogDefinitionList)">
+            <summary>Configures the <c>SmartInspect</c> logging Framework 
+            </summary>
+            <param name="aApplicationName">Name of the application that logs (can be used to filter 
+              the entries in the logging console)</param>
+            <param name="aConfiguration">List with the configurations (file names, protocols, etc.)</param>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectHelper.GetDefaultConfiguration">
+            <summary>Get the List with the default configuration of the <c>SmartInspect</c> logging Framework</summary>
+            <returns>List with all configurations that has been done.</returns>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectHelper.GetDefaultConfiguration(System.String)">
+            <summary>Gets the default configuration.</summary>
+            <param name="directoryPathToSaveLogFiles">The directory path to save log files.</param>
+            <returns>List with all configurations that has been done.</returns>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectHelper.GetDefaultConfigurationForWebServices(System.String)">
+            <summary>Gets the list of default log definitions for for web services.</summary>
+            <param name="directoryPathToSaveLogFiles">The directory path to save log files.</param>
+            <returns>List with all configurations that has been done. <see cref="T:Sensirion.SmartInspect.LogDefinitionList" /></returns>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectHelper.GetDefaultConfigurationWithFileSizeRotation(System.Int32,Gurock.SmartInspect.Level,Gurock.SmartInspect.Level,System.String)">
+            <summary>Gets the default configuration with File Size rotation for debug, sil and text log file.</summary>
+            <param name="aLogFileCount">Count of files to be kept</param>
+            <param name="aDefaultLogLevel">Lowest level to be written into the backlog</param>
+            <param name="aFlushLevel">Lowest Level where the whole backlog will be written to the log stream</param>
+            <param name="directoryPathToSaveLogFiles">The directory path to save the log files.</param>
+            <returns>List with fully configured protocols (file, pipe, tcp, ...) <see cref="T:Sensirion.SmartInspect.LogDefinitionList"/></returns>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectHelper.GetDefaultConfigurationWithFileSizeRotation(System.Int32,Gurock.SmartInspect.Level,Gurock.SmartInspect.Level)">
+            <summary>Gets the default configuration with File Size rotation for debug, sil and text log file.</summary>
+            <param name="aLogFileCount">Count of files to be kept</param>
+            <param name="aDefaultLogLevel">Lowest level to be written into the backlog</param>
+            <param name="aFlushLevel">Lowest Level where the whole backlog will be written to the log stream</param>
+            <returns>List with fully configured protocols (file, pipe, tcp, ...) <see cref="T:Sensirion.SmartInspect.LogDefinitionList"/></returns>
+        </member>
+        <member name="F:Sensirion.SmartInspect.SmartInspectHelper._Expensive">
+            <summary>The underlying field for <see cref="P:Sensirion.SmartInspect.SmartInspectHelper.Expensive"/>. </summary>
+        </member>
+        <member name="P:Sensirion.SmartInspect.SmartInspectHelper.Expensive">
+            <summary>Static access to the debug session added in the default configuration. If the session 
+              does not exists <see langword="null"/> will be returned
+            </summary>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectHelper.GetSession(System.String)">
+            <summary>Gets a Session with a given name 
+            </summary>
+            <param name="aName">Name of the session.</param>
+            <returns>Session with the given name <paramref name="aName"/>, or <see langword="null"/> if the session 
+              does not exists or <see langword="null"/> is provided as name
+            </returns>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectHelper.AddSession(System.String,System.Drawing.Color)">
+            <summary>Adds a new session to the logging. If the session with the
+              name (see <paramref name="aName"/>) already exists no session will be added, and
+              the existing session will be returned. In this case the color will stay unchanged.
+            </summary>
+            <param name="aName">Name of the new session</param>
+            <param name="aColor">Color for the new session</param>
+            <returns>The new session ready to use, or an existing session</returns>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectHelper.AddActiveSession(System.String)">
+            <summary>Adds a new session to the logging. If the session with the name (see <paramref name="aName"/>) already exists no session will be added, and the existing session will be returned.</summary>
+            <param name="aName">Name of the new session</param>
+            <returns>The new session ready to use, or an existing session</returns>
+            <remarks>The session will be active by default</remarks>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectHelper.GetOrCreateSession(System.Drawing.Color)">
+            <summary>Adds a new session to the logging. If the session with the
+              name (see <paramref name="aColor"/>) already exists no session will be added, and
+              the existing session will be returned.
+            </summary>
+            <param name="aColor">Color for the new session. The name of the session will be the
+              name of the color converted to string <c><paramref name="aColor"/>.ToString()</c></param>
+            <returns>The new session ready to use, or an existing session</returns>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectHelper.GetOrCreateActiveSession(System.String)">
+            <summary>Adds a new session to the logging. If the session with the name (see <paramref name="name" />) already exists no session will be added, and the existing session will be returned.</summary>
+            <param name="name">The name.</param>
+            <returns>The new session ready to use, or an existing session</returns>
+            <remarks>The session will be active by default</remarks>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectHelper.ConfigureUnitTest(System.String)">
+            <summary>
+            Configures the <c>SmartInspect</c> logging Framework with the settings
+            that we use for unit tests. 
+            </summary>
+            <param name="classUnderTestName">The name of the class that will be tested
+            in the unit test.</param>
+            <returns>The Session object that should be stored
+            for the lifetime of the unit test.</returns>
+            The following code snippet shows how ConfigureUnitTest is normally
+            used:
+            <code> [TestFixtureSetUp]
+            public void FixtureSetup()
+            {
+              _ExpensiveSession = SmartInspectHelper.ConfigureUnitTest(this.GetType().ToString());
+            }</code>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectHelper.ConfigureUnitTest``1">
+            <summary>
+            Configures the <c>SmartInspect</c> logging Framework with the settings
+            that we use for unit tests. 
+            </summary>
+            <typeparam name="TTypeUnderTest">The type of class that will be tested
+            in the unit test fixture.</typeparam>
+            <returns>The Session object that should be stored
+            for the lifetime of the unit test.</returns>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectHelper.Flush">
+            <summary>Flushes the SiAuto.Main to ensurure all data is written to the targets.</summary>
+        </member>
+        <member name="T:Sensirion.SmartInspect.SmartInspectHelper.FilePath">
+            <summary>Handles the path expansion from relative path's to absolute path's.
+            The expansion is done starting from the location of the assembly Basics.</summary>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectHelper.FilePath.GetAbsolutePath(System.String)">
+            <summary>Get the absolute path from a relative one or one with environment variables
+            in it. Does not work for paths that contain "#". Unfortunately that is a valid
+            character for paths but cannot be handled by this class.
+            </summary>
+            <param name="aPath">The relative path that shall be resolved.</param>
+            <returns>The absolute path of <paramref name="aPath"/></returns>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectHelper.FilePath.GetAssemblyPath">
+            <summary>Gets the path of the executing assembly 
+            </summary>
+            <returns>Path of the executing assembly</returns>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectHelper.FilePath.GetAbsolutePath(System.String,System.String)">
+            <summary>Get the absolute path from a relative one or one with environment variables
+              in it. Does not work for paths that contain "#". Unfortunately that is a valid
+              character for paths but cannot be handled by this class.
+            </summary>
+            <param name="aPath">The relative path that shall be resolved.</param>
+            <param name="aRelativeToDirectory">If <paramref name="aPath"/> is a relative
+              path, just make it relative to this directory name.</param>
+            <returns>The absolute path of <paramref name="aPath"/></returns>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectHelper.FilePath.#ctor(System.String)">
+            <summary>FilePath object, which holds the rooted path of the constructor argument
+            </summary>
+            <param name="aFilePath">Filepath, relative or absolute</param>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectHelper.FilePath.ToString">
+            <summary>Converts the path object into its string representation.
+            </summary>
+            <returns>rooted path</returns>
+        </member>
+        <member name="T:Sensirion.SmartInspect.SmartInspectLogger">
+            <summary>Logger for SmartInspect.</summary>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectLogger.#ctor(System.String)">
+            <summary>Initializes a new instance of the <see cref="T:Sensirion.SmartInspect.SmartInspectLogger" /> class.</summary>
+            <param name="name">The session name</param>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectLogger.#ctor(Gurock.SmartInspect.Session)">
+            <summary>Initializes a new instance of the <see cref="T:Sensirion.SmartInspect.SmartInspectLogger" /> class.</summary>
+            <param name="aSiSession"><see cref="T:Gurock.SmartInspect.Session"/></param>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectLogger.Log``1(Microsoft.Extensions.Logging.LogLevel,Microsoft.Extensions.Logging.EventId,``0,System.Exception,System.Func{``0,System.Exception,System.String})">
+            <summary>Writes a log entry.</summary>
+            <param name="logLevel">Entry will be written on this level.</param>
+            <param name="eventId">Id of the event.</param>
+            <param name="state">The entry to be written. Can be also an object.</param>
+            <param name="exception">The exception related to this entry.</param>
+            <param name="formatter">Function to create a <see cref="T:System.String" /> message of the <paramref name="state" /> and <paramref name="exception" />.</param>
+            <typeparam name="TState">The type of the object to be written.</typeparam>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectLogger.IsEnabled(Microsoft.Extensions.Logging.LogLevel)">
+            <summary>
+            Checks if the given <paramref name="logLevel" /> is enabled.
+            </summary>
+            <param name="logLevel">Level to be checked.</param>
+            <returns><c>true</c> if enabled.</returns>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectLogger.BeginScope``1(``0)">
+            <summary>Begins a logical operation scope.</summary>
+            <param name="state">The identifier for the scope.</param>
+            <typeparam name="TState">The type of the state to begin scope for.</typeparam>
+            <returns>An <see cref="T:System.IDisposable" /> that ends the logical operation scope on dispose.</returns>
+        </member>
+        <member name="T:Sensirion.SmartInspect.SmartInspectLoggerExtensions">
+            <summary>Extensions to help building a smart inspect logger.</summary>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectLoggerExtensions.AddSmartInspect(Microsoft.Extensions.Logging.ILoggingBuilder,System.String)">
+            <summary>Adds a SmartInspect logger to the logging builder.</summary>
+        </member>
+        <member name="T:Sensirion.SmartInspect.SmartInspectLoggerProvider">
+            <summary>Logger provider for SmartInspect.</summary>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectLoggerProvider.CreateLogger(System.String)">
+            <summary>Creates a new <see cref="T:Microsoft.Extensions.Logging.ILogger" /> instance.</summary>
+            <param name="categoryName">The category name for messages produced by the logger.</param>
+            <returns>The instance of <see cref="T:Microsoft.Extensions.Logging.ILogger" /> that was created.</returns>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectLoggerProvider.Dispose">
+            <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
+        </member>
+        <member name="T:Sensirion.SmartInspect.SmartInspectParser">
+            <summary>SmartInspect connection parser
+            </summary>
+        </member>
+        <member name="M:Sensirion.SmartInspect.SmartInspectParser.GetConfiguration(Gurock.SmartInspect.SmartInspect)">
+            <summary>Delivers a list of <see cref="T:Sensirion.SmartInspect.BaseLogDefinition"/> of a given <see cref="T:Gurock.SmartInspect.SmartInspect"/>
+            </summary>
+            <param name="aSmartInspect">A <see cref="T:Gurock.SmartInspect.SmartInspect"/></param>
+            <returns>Returns a list of <see cref="T:Sensirion.SmartInspect.BaseLogDefinition"/></returns>
+        </member>
+        <member name="T:Sensirion.SmartInspect.TCPLogDefinition">
+            <summary>Defines the configuration for the TCP log stream to be created. 
+            </summary>
+        </member>
+        <member name="M:Sensirion.SmartInspect.TCPLogDefinition.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Object"/> class.
+            </summary>
+        </member>
+        <member name="P:Sensirion.SmartInspect.TCPLogDefinition.Host">
+            <summary>Host where the log messages go to 
+            </summary>
+        </member>
+        <member name="P:Sensirion.SmartInspect.TCPLogDefinition.Port">
+            <summary>Target port on the <see cref="P:Sensirion.SmartInspect.TCPLogDefinition.Host"/>.
+            </summary>
+        </member>
+        <member name="P:Sensirion.SmartInspect.TCPLogDefinition.TimeoutMs">
+            <summary>Timeout in milliseconds for connect and reconnect 
+            </summary>
+        </member>
+        <member name="M:Sensirion.SmartInspect.TCPLogDefinition.FillConnectionBuilder(Gurock.SmartInspect.ConnectionsBuilder)">
+            <summary>Adds the protocol to the submitted connection builder 
+            </summary>
+            <param name="aBuilder">Connection builder to be filled with protocols</param>
+        </member>
+        <member name="M:Sensirion.SmartInspect.TCPLogDefinition.NewLogTCP(System.String,Gurock.SmartInspect.Level,System.Boolean,Gurock.SmartInspect.Level,System.String,System.Int32,System.Int32)">
+            <summary>Adds a new File output to the protocol list. Each output will be configured 
+              for the smart inspect if the Configuration is applied with the 
+              <see cref="M:Sensirion.SmartInspect.SmartInspectConfigurator.Configure(System.String,Sensirion.SmartInspect.LogDefinitionList)"/> 
+              method is called.
+            </summary>
+            <param name="aCaption">Title of the log (can be used for filtering issues)</param>
+            <param name="aDebugLevel">Level for messages to be logged. If the Backlog feature is 
+              used, this is the level of messages to be logged in Memory. As recently as a message with
+              the <paramref name="aBacklogFlushLevel"/> has been detected, the backlog memory will be flushed
+              to the file.</param>
+            <param name="aUseBacklog"><c>true</c> if backlogging should be used (see remarks)</param>
+            <param name="aBacklogFlushLevel">Minimum level of a message to fire the trigger to write the backlog to the file.
+              This is only used if <paramref name="aUseBacklog"/> set to <c>true</c>. Backlogging 
+              described in details in the remarks section.</param>
+            <param name="aHost">Host where the log messages goes to</param>
+            <param name="aPort">Target port on the <paramref name="aHost"/>.</param>
+            <param name="aTimeoutMs">Timeout in milleseconds for connect and reconnect</param>
+            <remarks>
+              The <strong>Backlog</strong> feature means, that each message that should be logged will be hold in the memory if the
+              level of the message is between the <paramref name="aDebugLevel"/> and the <paramref name="aBacklogFlushLevel"/>. The
+              messages will be collected until either the buffer is full (old messages will be discarded to clear a space for the
+              new messages) or a message with the <paramref name="aBacklogFlushLevel"/> or higher is detected. In the second case the whole
+              buffer is written and after that the new message is written to. This enables the person who interprets the log to
+              see all messages before the error occurred in a more detailed manner.
+            </remarks>
+            <returns>A new instance of a <see cref="T:Sensirion.SmartInspect.TCPLogDefinition"/> class configured with the submitted parameters.</returns>
+        </member>
+        <member name="M:Sensirion.SmartInspect.TCPLogDefinition.GetStringRepresentation">
+            <summary>Gets a string representation of the configured logging. this is
+              not done in the <see cref="M:Sensirion.SmartInspect.BaseLogDefinition.ToString"/> method directly, to force
+              successor to implement this method.
+             <para>This method will be called after configuration of the logger, just
+               to log the current configuration (e.g. Log file location)
+              </para>
+            </summary>
+            <returns>String representation of the protocol</returns>
+        </member>
+        <member name="T:Sensirion.SmartInspect.TextLogDefinition">
+            <summary>Defines the configuration for the text log file to be created. 
+            </summary>
+        </member>
+        <member name="M:Sensirion.SmartInspect.TextLogDefinition.#ctor">
+            <summary>Initialize the Instance with default values
+              <para>
+                <list type="bullet">
+                  <item>
+                    <description>LogLevel = Debug</description>
+                  </item><item>
+                    <description>UseBacklog = true</description>
+                  </item><item>
+                    <description>BacklogBufferSize = 4096</description>
+                  </item><item>
+                    <description>BacklogTrigger = Warning</description>
+                  </item><item>
+                    <description>Async = true</description>
+                  </item><item>
+                    <description>AsyncBufferSize = 4096</description>
+                  </item><item>
+                    <description>Filename = log.sil</description>
+                  </item><item>
+                    <description>Append items</description>
+                  </item><item>
+                    <description>One log file</description>
+                  </item><item>
+                    <description>No File rotation</description>
+                  </item>
+                </list>
+              </para>
+            </summary>
+        </member>
+        <member name="P:Sensirion.SmartInspect.TextLogDefinition.Indent">
+            <summary>Indicates if the logging output should automatically be indented like in the Console. 
+            </summary>
+        </member>
+        <member name="P:Sensirion.SmartInspect.TextLogDefinition.Pattern">
+            <summary>Specifiers the pattern used to create a text representation of a log entry
+              <example>"[%timestamp%] %level%: %title%"</example> 
+            </summary>
+        </member>
+        <member name="M:Sensirion.SmartInspect.TextLogDefinition.FillConnectionBuilder(Gurock.SmartInspect.ConnectionsBuilder)">
+            <summary>Adds the protocol to the submitted connection builder 
+            </summary>
+            <param name="aBuilder">Connection builder to be filled with protocols</param>
+        </member>
+        <member name="M:Sensirion.SmartInspect.TextLogDefinition.NewLogText(System.String,System.String,Gurock.SmartInspect.Level,System.Boolean,Gurock.SmartInspect.Level,System.Boolean,System.String)">
+            <summary>Adds a new File output to the protocol list. Each output will be configured 
+              for the smart inspect if the Configuration is applied with the 
+              <see cref="M:Sensirion.SmartInspect.SmartInspectConfigurator.Configure(System.String,Sensirion.SmartInspect.LogDefinitionList)"/> 
+              method is called.
+            </summary>
+            <param name="aCaption">Title of the log (can be used for filtering issues)</param>
+            <param name="aFilename">Name of the file. If the filename consist of a name and date, this 
+              is just the name. SmartInspect will add the date automatically.</param>
+            <param name="aDebugLevel">Level for messages to be logged. If the Backlog feature is 
+              used, this is the level of messages to be logged in Memory. As recently as a message with
+              the <paramref name="aBacklogFlushLevel"/> has been detected, the backlog memory will be flushed
+              to the file.</param>
+            <param name="aUseBacklog"><c>true</c> if backlogging should be used (see remarks)</param>
+            <param name="aBacklogFlushLevel">Minimum level of a message to fire the trigger to write the backlog to the file.
+              This is only used if <paramref name="aUseBacklog"/> set to <c>true</c>. Backlogging 
+              described in details in the remarks section.</param>
+            <param name="aIndent">Indicates if the logging output should automatically be indented like in the Console.</param>
+            <param name="aPattern">Specifiers the pattern used to create a text representation of a log entry
+              <example>"[%timestamp%] %level%: %title%"</example>
+            </param>
+            <remarks>
+              The <strong>Backlog</strong> feature means, that each message that should be logged will be hold in the memory if the
+              level of the message is between the <paramref name="aDebugLevel"/> and the <paramref name="aBacklogFlushLevel"/>. The
+              messages will be collected until either the buffer is full (old messages will be discarded to clear a space for the
+              new messages) or a message with the <paramref name="aBacklogFlushLevel"/> or higher is detected. In the second case the whole
+              buffer is written and after that the new message is written to. This enables the person who interprets the log to
+              see all messages before the error occured in a more detailed manner.
+            </remarks>
+            <returns>A new instance of a <see cref="T:Sensirion.SmartInspect.TextLogDefinition"/> class configured with the submitted parameters.</returns>
+        </member>
+        <member name="M:Sensirion.SmartInspect.TextLogDefinition.GetStringRepresentation">
+            <summary>Gets a string representation of the configured logging. this is
+              not done in the <see cref="M:Sensirion.SmartInspect.BaseLogDefinition.ToString"/> method directly, to force
+              successor to implement this method.
+             <para>This method will be called after configuration of the logger, just
+               to log the current configuration (e.g. Log file location)
+              </para>
+            </summary>
+            <returns>String representation of the protocol</returns>
+        </member>
+        <member name="T:Sensirion.SmartInspect.ThreadLog.ThreadFileProtocol">
+            <summary>Log protocol that allows specifying threads that are to be logged to a separate file
+            </summary>
+        </member>
+        <member name="P:Sensirion.SmartInspect.ThreadLog.ThreadFileProtocol.Name">
+            <summary>Name of this protocol
+            </summary>
+        </member>
+        <member name="T:Sensirion.SmartInspect.ThreadLog.ThreadLogFileHelper">
+            <summary>Helps creating session log files that only include messages from certain threads
+            </summary>
+            <remarks>As <see cref="P:Gurock.SmartInspect.SiAuto.Si"/> is a singleton, so is this helper</remarks>
+        </member>
+        <member name="P:Sensirion.SmartInspect.ThreadLog.ThreadLogFileHelper.Instance">
+            <summary>Single instance
+            </summary>
+        </member>
+        <member name="M:Sensirion.SmartInspect.ThreadLog.ThreadLogFileHelper.#ctor">
+            <summary>Constructor
+            </summary>
+        </member>
+        <member name="M:Sensirion.SmartInspect.ThreadLog.ThreadLogFileHelper.SetupThreadAwareLogFile(System.String,System.Int32[])">
+            <summary>Setup a session log file that logs all messages from threads with the defined ids
+            to the log file with the given name
+            </summary>
+            <param name="logFileName">Name (path) of the log file</param>
+            <param name="threadIds">Thread ids to include in the log file</param>
+        </member>
+        <member name="M:Sensirion.SmartInspect.ThreadLog.ThreadLogFileHelper.ClearThreadAwareLogFile(System.String)">
+            <summary>Remove the log file with the given name from the definitions
+            </summary>
+            <param name="logFileName">Name of the logfile</param>
+        </member>
+        <member name="T:System.Runtime.CompilerServices.IsExternalInit">
+            <summary>
+            Reserved to be used by the compiler for tracking metadata.
+            This class should not be used by developers in source code.
+            </summary>
+        </member>
+        <member name="T:System.Runtime.CompilerServices.SkipLocalsInitAttribute">
+            <summary>
+            Used to indicate to the compiler that the <c>.locals init</c> flag should not be set in method headers.
+            </summary>
+            <remarks>Internal copy of the .NET 5 attribute.</remarks>
+        </member>
+    </members>
+</doc>

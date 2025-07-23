@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Exceptions</name>
+    </assembly>
+    <members>
+        <member name="T:Sensirion.Redistributables.Exceptions.InvalidValueException">
+            <summary>An exception that may be thrown in any context where an invalid data value is encountered. </summary>
+            <remarks>
+            Usage rules:
+            * Do not use this exception if the cause of the invalid value is known to be a programming error. In such cases use <see cref="T:System.ArgumentException"/>
+              or one of its children. When an operation is not permitted (perhaps given some value or a state) use  <see cref="T:System.InvalidOperationException"/>.
+            * Consider creating a more specific custom exception if clients must be able to catch your throws.
+            </remarks>
+        </member>
+        <member name="M:Sensirion.Redistributables.Exceptions.InvalidValueException.#ctor">
+            <summary>The constructor.</summary>
+        </member>
+        <member name="M:Sensirion.Redistributables.Exceptions.InvalidValueException.#ctor(System.String)">
+            <summary>The constructor.</summary>
+            <param name="message">The exception message.</param>
+        </member>
+        <member name="M:Sensirion.Redistributables.Exceptions.InvalidValueException.#ctor(System.String,System.Exception)">
+            <summary>The constructor.</summary>
+            <param name="message">The exception message.</param>
+            <param name="innerException">The inner exception.</param>
+        </member>
+        <member name="M:Sensirion.Redistributables.Exceptions.InvalidValueException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>The constructor needed for serialization.</summary>
+            <param name="info">Serialization info.</param>
+            <param name="context">Streaming context for serialization.</param>
+        </member>
+        <member name="T:System.Runtime.CompilerServices.IsExternalInit">
+            <summary>
+            Reserved to be used by the compiler for tracking metadata.
+            This class should not be used by developers in source code.
+            </summary>
+        </member>
+        <member name="T:System.Runtime.CompilerServices.SkipLocalsInitAttribute">
+            <summary>
+            Used to indicate to the compiler that the <c>.locals init</c> flag should not be set in method headers.
+            </summary>
+            <remarks>Internal copy of the .NET 5 attribute.</remarks>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,344 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Sensirion.Configuration</name>
+    </assembly>
+    <members>
+        <member name="T:Sensirion.Configuration.Attributes.ConfigurationIgnoreAttribute">
+            <summary>Attribute that tells the ConfigurationLoader to ignore this property completely.
+            </summary>
+        </member>
+        <member name="T:Sensirion.Configuration.Attributes.ConfigurationKeyAttribute">
+            <summary>An attribute that tells the ConfigurationLoader the key from which the configuration value must be loaded. </summary>
+        </member>
+        <member name="P:Sensirion.Configuration.Attributes.ConfigurationKeyAttribute.ConfigurationKey">
+            <summary>The configuration value key. </summary>
+        </member>
+        <member name="M:Sensirion.Configuration.Attributes.ConfigurationKeyAttribute.#ctor(System.String)">
+            <summary>The constructor. </summary>
+        </member>
+        <member name="M:Sensirion.Configuration.Attributes.ConfigurationKeyAttribute.MatchesOption(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Sensirion.Configuration.Attributes.ConfigurationKeyAttribute.ToString">
+            <inheritdoc />
+        </member>
+        <member name="T:Sensirion.Configuration.Attributes.ConfigurationOptionAttribute">
+            <summary>An attribute that tells the ConfigurationLoader the key from which the configuration value must be loaded. </summary>
+        </member>
+        <member name="P:Sensirion.Configuration.Attributes.ConfigurationOptionAttribute.Required">
+            <summary>Defines if the key is required or not. </summary>
+        </member>
+        <member name="P:Sensirion.Configuration.Attributes.ConfigurationOptionAttribute.LowerLimit">
+            <summary>Lower limit of the option (if applicable - can be null) </summary>
+        </member>
+        <member name="P:Sensirion.Configuration.Attributes.ConfigurationOptionAttribute.UpperLimit">
+            <summary>Lower limit of the option (if applicable - can be null) </summary>
+        </member>
+        <member name="P:Sensirion.Configuration.Attributes.ConfigurationOptionAttribute.Description">
+            <summary>Description of the option (the comment in the ini file) </summary>
+        </member>
+        <member name="P:Sensirion.Configuration.Attributes.ConfigurationOptionAttribute.Type">
+            <summary>Type of the option, this does not need to be specified.
+            Tools dealing with automatic handling of the attributes may want to assign this type via reflektion </summary>
+        </member>
+        <member name="M:Sensirion.Configuration.Attributes.ConfigurationOptionAttribute.MatchesOption(System.String)">
+            <summary>Check if this configuration option matches an option from the configuration file</summary>
+            <param name="aConfigurationOption">The option from the configuration file</param>
+            <returns><c>true</c> if the property associated with this attribute is for <paramref name="aConfigurationOption"/></returns>
+        </member>
+        <member name="T:Sensirion.Configuration.Attributes.ConfigurationTablePrefixAttribute">
+            <summary>An attribute that tells the ConfigurationLoader the table prefix from which the configuration value must be loaded. </summary>
+        </member>
+        <member name="P:Sensirion.Configuration.Attributes.ConfigurationTablePrefixAttribute.ConfigurationTablePrefix">
+            <summary>The configuration table prefix. </summary>
+        </member>
+        <member name="M:Sensirion.Configuration.Attributes.ConfigurationTablePrefixAttribute.#ctor(System.String)">
+            <summary>The constructor. </summary>
+            <param name="tablePrefix">The name of the configuration table prefix.</param>
+        </member>
+        <member name="M:Sensirion.Configuration.Attributes.ConfigurationTablePrefixAttribute.MatchesOption(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Sensirion.Configuration.Attributes.ConfigurationTablePrefixAttribute.ToString">
+            <inheritdoc />
+        </member>
+        <member name="T:Sensirion.Configuration.Attributes.ConfigurationSectionAttribute">
+            <summary>An attribute that tells the ConfigurationLoader the section from which the configuration value must be loaded. </summary>
+        </member>
+        <member name="P:Sensirion.Configuration.Attributes.ConfigurationSectionAttribute.Required">
+            <summary>Defines if the section is required or not. </summary>
+        </member>
+        <member name="P:Sensirion.Configuration.Attributes.ConfigurationSectionAttribute.ConfigurationSection">
+            <summary>Property that returns the line number. </summary>
+        </member>
+        <member name="M:Sensirion.Configuration.Attributes.ConfigurationSectionAttribute.#ctor(System.String)">
+            <summary>The constructor. </summary>
+            <param name="configurationSection">The name of the configuration section.</param>
+        </member>
+        <member name="T:Sensirion.Configuration.Attributes.ConfigurationToolAttribute">
+            <summary>Classes decorated with this attribute are ready for the IniConfigurationTool </summary>
+        </member>
+        <member name="T:Sensirion.Configuration.Attributes.LineNumberAttribute">
+            <summary>An attribute that keeps track of the line number in which the attributed entity was declared. </summary>
+            <example>To get the properties of a type in the order of their declaration:
+            [LineNumber]
+            public Int32 Foo {get; set;}
+            :
+            var orderedProperties = type.GetProperties().OrderBy(item => { LineNumberAttribute attr = item.GetCustomAttributes(typeof (LineNumberAttribute), false).First() as LineNumberAttribute; return attr != null ? attr.LineNumber : 0;});
+             </example>
+        </member>
+        <member name="F:Sensirion.Configuration.Attributes.LineNumberAttribute._lineNumber">
+            <summary>Field for the <see cref="P:Sensirion.Configuration.Attributes.LineNumberAttribute.LineNumber"/> property. </summary>
+        </member>
+        <member name="P:Sensirion.Configuration.Attributes.LineNumberAttribute.LineNumber">
+            <summary>Property that returns the line number. </summary>
+        </member>
+        <member name="M:Sensirion.Configuration.Attributes.LineNumberAttribute.#ctor(System.Int32)">
+            <summary>The constructor. </summary>
+            <param name="lineNumber">Do not set this explicitly. It will be set to CallerLineNumber implicitly.</param>
+        </member>
+        <member name="T:Sensirion.Configuration.ConfigurationAccessEventArgs">
+            <summary>The EventArgs uses for ConfigurationAccess
+            </summary>
+        </member>
+        <member name="P:Sensirion.Configuration.ConfigurationAccessEventArgs.ConfigurationAccessMessage">
+            <summary>
+            The message which describes the configuration access
+            </summary>
+        </member>
+        <member name="M:Sensirion.Configuration.ConfigurationAccessEventArgs.#ctor(System.String)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="configurationAccessMessage">The message which describes the configuration access</param>
+        </member>
+        <member name="T:Sensirion.Configuration.ConfigurationException">
+            <summary>Exception that is thrown if there is an error in the configuration.
+            </summary>
+        </member>
+        <member name="M:Sensirion.Configuration.ConfigurationException.#ctor(System.String)">
+            <summary>Initializes a new instance of <see cref="T:Sensirion.Configuration.ConfigurationException"/>
+            </summary>
+            <param name="message">Message describing the configuration error.</param>
+        </member>
+        <member name="M:Sensirion.Configuration.ConfigurationException.#ctor(System.String,System.String)">
+            <summary>Initializes a new instance of <see cref="T:Sensirion.Configuration.ConfigurationException"/>
+            </summary>
+            <param name="sectionName">Name of the configuration section.</param>
+            <param name="message">Message describing the configuration error.</param>
+        </member>
+        <member name="M:Sensirion.Configuration.ConfigurationException.#ctor(System.String,System.String,System.String)">
+            <summary>Initializes a new instance of <see cref="T:Sensirion.Configuration.ConfigurationException"/>
+            </summary>
+            <param name="sectionName">Name of the configuration section.</param>
+            <param name="optionName">Name of the configuration option.</param>
+            <param name="message">Message describing the configuration error.</param>
+        </member>
+        <member name="T:Sensirion.Configuration.HelperExtensionMethods">
+            <summary>Extension methods for dealing with configuration attributes </summary>
+        </member>
+        <member name="M:Sensirion.Configuration.HelperExtensionMethods.GetAllPropertiesOrderedWithLineNumberAttribute(System.Type)">
+            <summary>Gets all properties of a given type</summary>
+            <param name="aType">The type</param>
+            <returns>Collection of property infos ordered by line number.</returns>
+        </member>
+        <member name="T:Sensirion.Configuration.IConfigurationLoader">
+            <summary>Configuration loader to load values from an INI stream
+            </summary>
+        </member>
+        <member name="M:Sensirion.Configuration.IConfigurationLoader.LoadConfigurationFromStreamIntoClass(System.IO.Stream,System.Object,System.Collections.ObjectModel.Collection{System.String},System.String,System.String)">
+             <summary>Load values from a INI stream into the properties of a target object.
+             <para>
+             The properties in target can be public or private, but not static.
+             The properties in target must be decorated with ConfigurationSection and/or ConfigurationKey attributes.
+             <example>
+             <code>
+               //The Voltage property is filled with the value 3.0.
+            
+               //INI file:
+               [DeviceParameters]
+               DeviceVoltage=3.0
+             
+               //C# code:
+               [ConfigurationSection("DeviceParameters")]
+               [ConfigurationKey("DeviceVoltage")]
+               public float Voltage {get; set;}
+             </code>
+             </example>
+             </para>
+             <para>
+             If the property is a list of scalars then the INI value must be a comma-separated list.
+             <example>
+             <code>
+               //The MeasureTimeList property is filled with the values 3,5,8 and 10.
+            
+               //INI file:
+               [DeviceParameters]
+               MeasureTimes= 3, 5, 8, 10
+              
+               //C# code:
+               [ConfigurationSection("DeviceParameters")]
+               [ConfigurationKey("MeasureTimes")]
+               public List&lt;int&gt; MeasureTimeList {get; set;}
+             </code>
+             </example>
+             </para>
+             <para>
+             If the property is a list of some class, the list will be filled with one item per row in the section.
+             For this to work:
+               * the list property must only specify the section but not any key
+               * the properties in the item class must be decorated with the 'LineNumber' attribute
+               * the key names in the configuration section are ignored, but they must all be different
+               * the items in one config value must be separated by commas
+             <example>
+             <code>
+               //This is equivalent to 'new List&lt;ConfigModule&gt; { new ConfigModule { KNumber=1, IpAddress="192.168.100.100" }, new ConfigModule { KNumber=2, IpAddress="192.168.100.101" } }'.
+            
+               //INI file:
+               [Modules]
+               ModuleA= 1, 192.168.100.100
+               ModuleB= 2, 192.168.100.101
+              
+               //C# code:
+               [ConfigurationSection("Modules")]
+               public List&lt;ConfigModule&gt; ModuleList {get; set;}
+             
+               //Declaration of the list item class.
+               class ConfigModule {
+                 [LineNumber]
+                 public int KNumber {get; set;}
+                 [LineNumber]
+                 public string IpAddress {get; set;}
+               }
+             </code>
+             </example>
+             </para>
+             <para>
+             Usage with INI file:
+             <example>
+             <code>
+               Collection&lt;string&gt; errorCollection = new Collection&lt;string&gt;();
+               string fileName = "Blah.ini";
+               ConfigData configData = new ConfigData();
+               using (Stream iniStream = File.Open(fileName)) {
+                 if (ConfigurationLoader.LoadConfigurationFromStreamIntoClass(iniStream, configData, errorCollection, fileName)) {
+                   :
+                 } else {
+                   //Report config errors
+                 }
+               }
+             </code>
+             </example>
+             </para>
+             <para>
+             Usage with INI string:
+             <example>
+             <code>
+               Collection&lt;string&gt; errorCollection = new Collection&lt;string&gt;();
+               string iniString = @"
+             [TheSection]
+             SomeKey=LoadMeIfYouCan
+             ";
+               ConfigData configData = new ConfigData();
+               using (Stream iniStream = iniString.ToStream()) {
+                 if (ConfigurationLoader.LoadConfigurationFromStreamIntoClass(iniStream, configData, errorCollection)) {
+                   :
+                 } else {
+                   //Report config errors
+                 }
+               }
+             </code>
+             ></example>
+             </para>
+             </summary>
+             <param name="iniStream">The stream from which the INI data is read.</param>
+             <param name="target">The target class. </param>
+             <param name="errorCollection">Error messages are added to this collection. </param>
+             <param name="aSectionName">Optional. Can be used to override the ConfigurationSection attribute.</param>
+            <param name="sectionPrefixName">Optional. Is added as a prefix to the section name. Used to make sure that a product-specific section has a unique name. </param>
+            <returns><c>true</c> if successful. </returns>
+        </member>
+        <member name="M:Sensirion.Configuration.IConfigurationLoader.LoadFromFile``1(System.String,System.String,System.String)">
+            <summary>Load the property values of a given class instance of type T from an INI file. </summary>
+            <param name="fileName">The name of the INI file.</param>
+            <param name="sectionName">Optional. Can be used to override the ConfigurationSection attribute.</param>
+            <param name="sectionPrefixName">Optional. Is added as a prefix to the section name. Used to make sure that a product-specific section has a unique name. </param>
+        </member>
+        <member name="T:Sensirion.Configuration.IConfigurationProvider">
+            <summary>Provides configuration data. </summary>
+        </member>
+        <member name="M:Sensirion.Configuration.IConfigurationProvider.LoadConfiguration``1(System.String,System.String)">
+            <summary>Load configuration data into a class of the given type. </summary>
+            <typeparam name="T">The type.</typeparam>
+            <param name="sectionName">Optional. The name of a section. If no section name is given then the section names in the property attributes is used.</param>
+            <param name="sectionPrefixName">Optional. Is added as a prefix to the section name. Used to make sure that a product-specific section has a unique name. </param>
+            <returns>An instance of the configuration type filled with data.</returns>
+        </member>
+        <member name="T:Sensirion.Configuration.IValidateConfiguration">
+            <summary>Validation on configuration which is executed by the <see cref="T:Sensirion.Configuration.IConfigurationProvider"/>
+            after loading the configuration object.
+            </summary>
+        </member>
+        <member name="M:Sensirion.Configuration.IValidateConfiguration.Validate(System.String)">
+            <summary>Validates the content of the configuration
+            </summary>
+            <param name="sectionName">Name of configuration section</param>
+            <exception cref="T:Sensirion.Configuration.ConfigurationException">The implementation should throw, if the configuration
+            is invalid.</exception>
+        </member>
+        <member name="T:Microsoft.Extensions.Options.ValidateOptionsResultExtensions">
+            <summary>
+              For config validation
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Options.ValidateOptionsResultExtensions.Validate``2(Microsoft.Extensions.Options.OptionsBuilder{``0})">
+            <summary>
+              Validate
+            </summary>
+            <param name="builder"></param>
+            <typeparam name="TOptions"></typeparam>
+            <typeparam name="TValidator"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Options.ValidateOptionsResultExtensions.Validate(Microsoft.Extensions.Options.ValidateOptionsResult,Sensirion.Configuration.IValidateConfiguration,System.String)">
+            <summary>
+              Validate IValidatableConfiguration
+            </summary>
+            <param name="result"></param>
+            <param name="config"></param>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Options.ValidateOptionsResultExtensions.Validate(Microsoft.Extensions.Options.ValidateOptionsResult,System.Func{System.Boolean},System.String[])">
+            <summary>
+              Validate by delegate
+            </summary>
+            <param name="result"></param>
+            <param name="isValid"></param>
+            <param name="failures"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Options.ValidateOptionsResultExtensions.Validate(Microsoft.Extensions.Options.ValidateOptionsResult,System.Action,System.String)">
+            <summary>
+              Validate by action
+            </summary>
+            <param name="result"></param>
+            <param name="validate"></param>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="T:System.Runtime.CompilerServices.IsExternalInit">
+            <summary>
+            Reserved to be used by the compiler for tracking metadata.
+            This class should not be used by developers in source code.
+            </summary>
+        </member>
+        <member name="T:System.Runtime.CompilerServices.SkipLocalsInitAttribute">
+            <summary>
+            Used to indicate to the compiler that the <c>.locals init</c> flag should not be set in method headers.
+            </summary>
+            <remarks>Internal copy of the .NET 5 attribute.</remarks>
+        </member>
+    </members>
+</doc>

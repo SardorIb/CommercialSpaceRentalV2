@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Sensirion.WindowsRegistry</name>
+    </assembly>
+    <members>
+        <member name="T:Sensirion.WindowsRegistry.ObfuscateAndReveal">
+            <summary>Class to help with obfuscation and reveal of strings. The obfuscation is done using XOR.</summary>
+        </member>
+        <member name="M:Sensirion.WindowsRegistry.ObfuscateAndReveal.Obfuscate(System.String)">
+            <summary>Obfuscate the specified text.</summary>
+            <param name="textToObfuscate">The text to obfuscate.</param>
+            <returns>A base64 encoded obfuscated string</returns>
+        </member>
+        <member name="M:Sensirion.WindowsRegistry.ObfuscateAndReveal.Reveal(System.String)">
+            <summary>Decodes the specified base64 encoded obfuscated string.</summary>
+            <param name="base64ObfuscatedString">The base64 encoded obfuscated string.</param>
+            <returns>Original (not obfuscated) string</returns>
+        </member>
+        <member name="T:Sensirion.WindowsRegistry.RegistryValueDataResult`1">
+            <summary>Result object that contains the registry information</summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="P:Sensirion.WindowsRegistry.RegistryValueDataResult`1.Success">
+            <summary>Gets or sets a value indicating whether this <see cref="T:Sensirion.WindowsRegistry.RegistryValueDataResult`1"/> runs with success.</summary>
+            <value><c>true</c> if success; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:Sensirion.WindowsRegistry.RegistryValueDataResult`1.ErrorMessage">
+            <summary>Gets or sets the error message.</summary>
+        </member>
+        <member name="P:Sensirion.WindowsRegistry.RegistryValueDataResult`1.Exception">
+            <summary>Gets or sets the exception.</summary>
+        </member>
+        <member name="P:Sensirion.WindowsRegistry.RegistryValueDataResult`1.ObfuscatedRegistryKeyAndValueName">
+            <summary>Gets or sets the obfuscated registry key and value name.</summary>
+            <example>HKEY_LOCAL_MACHINE\SYSTEM\N1xrtUUf\RfghTTZ344==\IRhjZVtdV1USCF9Y\</example>
+        </member>
+        <member name="P:Sensirion.WindowsRegistry.RegistryValueDataResult`1.ValueData">
+            <summary>Gets or sets the value data.</summary>
+        </member>
+        <member name="T:Sensirion.WindowsRegistry.WindowsRegistryAccess">
+            <summary>
+            <para>Class that help with the access to windows registry key values that are locate under HKEY_LOCAL_MACHINE\SYSTEM\Sensirion\</para>
+            <para>The base registry key is obfuscated in windows registry, so instead of search by HKEY_LOCAL_MACHINE\SYSTEM\Sensirion\, search by HKEY_LOCAL_MACHINE\SYSTEM\N1xeRVxBW1kI\</para>
+            <para>NOTE: HKEY_LOCAL_MACHINE\SYSTEM\N1xeRVxBW1kI\ (HKEY_LOCAL_MACHINE\SYSTEM\Sensirion\) will be added automatically!</para>
+            </summary>
+        </member>
+        <member name="M:Sensirion.WindowsRegistry.WindowsRegistryAccess.GetRegistryValue``1(System.String,System.String,``0)">
+            <summary>Gets the registry value data.</summary>
+            <typeparam name="T"></typeparam>
+            <param name="registryKeyPath">The full registry path of the key, beginning with a valid registry root.</param>
+            <param name="valueName">The name of the name/value pair</param>
+            <param name="defaultValue">The value to return if valueName does not exist</param>
+            <returns><typeparam name="T"></typeparam></returns>
+            <exception cref="T:System.Security.SecurityException">The user does not have the permissions required to read from the registry key.</exception>
+            <exception cref="T:System.IO.IOException">The Microsoft.Win32.RegistryKey that contains the specified value has been marked for deletion.</exception>
+            <exception cref="T:System.ArgumentException">keyName does not begin with a valid registry root.</exception>
+        </member>
+        <member name="M:Sensirion.WindowsRegistry.WindowsRegistryAccess.GetObfuscatedKeyPathFromBasePath(System.String[])">
+            <summary>Gets the registry key path obfuscated with base path as prefix (<see cref="P:Sensirion.WindowsRegistry.WindowsRegistryAccess.BaseRegistryKeyPathObfuscated"/>).</summary>
+            <param name="registryKeys">The registry keys to obfuscate (Note: order is important!)</param>
+            <returns>Obfuscated registry key path</returns>
+            <example>
+            Call: BuildRegistryKeyPathObfuscated(new [] {"SWGroup","Test"})
+            Return: HKEY_LOCAL_MACHINE\SYSTEM\N1xeRVxBW1kI\N253RFpGQg==\MFxDQg==  (Plain text: HKEY_LOCAL_MACHINE\SYSTEM\Sensirion\SWGroup\Test)
+            </example>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Sensirion.WindowsRegistry.WindowsRegistryAccess.RevealRegistryValueData``1(System.String[],System.String)" -->
+        <member name="T:System.Runtime.CompilerServices.IsExternalInit">
+            <summary>
+            Reserved to be used by the compiler for tracking metadata.
+            This class should not be used by developers in source code.
+            </summary>
+        </member>
+        <member name="T:System.Runtime.CompilerServices.SkipLocalsInitAttribute">
+            <summary>
+            Used to indicate to the compiler that the <c>.locals init</c> flag should not be set in method headers.
+            </summary>
+            <remarks>Internal copy of the .NET 5 attribute.</remarks>
+        </member>
+    </members>
+</doc>

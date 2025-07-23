@@ -1,0 +1,1 @@
+C:\work\practice_projects\CommercialSpaceRental\CommercialSpaceRentalV2\CommercialSpaceRentalV2.FRONT\obj\Debug\net8.0\staticwebassets.build.json

@@ -1,0 +1,2039 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Sensirion.DB</name>
+    </assembly>
+    <members>
+        <member name="T:Sensirion.Data.DB.AssemblyList.AssemblyData">
+            <summary>Represents an assembly file of the given application
+            </summary>
+        </member>
+        <member name="P:Sensirion.Data.DB.AssemblyList.AssemblyData.Name">
+            <summary>The name of the assembly
+            </summary>
+        </member>
+        <member name="P:Sensirion.Data.DB.AssemblyList.AssemblyData.Version">
+            <summary>The version of the assembly
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.AssemblyList.AssemblyData.#ctor(System.String,System.Version)">
+            <summary>internal constructor
+            </summary>
+            <param name="aName">The name of the assembly</param>
+            <param name="aVersion">The version of the assembly</param>
+        </member>
+        <member name="T:Sensirion.Data.DB.AssemblyList.AssemblyList">
+            <summary>This class has a static method to get database save list of assembly files as <see cref="T:Sensirion.Data.DB.AssemblyList.AssemblyData"/>
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.AssemblyList.AssemblyList.GetAssemblies(System.Collections.Generic.IEnumerable{System.Reflection.Assembly})">
+            <summary>Delivers a database save list of assembly files as <see cref="T:Sensirion.Data.DB.AssemblyList.AssemblyData"/>.
+            </summary>
+            <param name="aAssemblies">An array of assembly informations</param>
+            <returns>Returns a database save list of assembly files as <see cref="T:Sensirion.Data.DB.AssemblyList.AssemblyData"/>.</returns>
+        </member>
+        <member name="T:Sensirion.Data.DB.BaseDBAction">
+            <summary>Base class for all db related classes that works with the
+              <see cref="T:Sensirion.Data.DB.SQLHelper"/> class. This base class provides transaction support.
+            </summary>
+            <remarks>
+              The Transaction can be started with the <see cref="M:Sensirion.Data.DB.BaseDBAction.BeginTransaction"/> method. No nested
+              transactions are allowed.
+            </remarks>
+        </member>
+        <member name="T:Sensirion.Data.DB.BaseDBAction.QueryHookEventArgs">
+            <summary>Class to hook the execution of queries. In the event you get the executing command 
+              and can parse for the parameters and the connection and change whatever you want :).
+            
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.BaseDBAction.QueryHookEventArgs.#ctor(System.Data.SqlClient.SqlCommand)">
+            <summary>Initializes the instance
+            </summary>
+            <param name="aCommand">Command that wants to execute the query</param>
+        </member>
+        <member name="F:Sensirion.Data.DB.BaseDBAction.QueryHookEventArgs._Command">
+            <summary>Backing field for the <see cref="P:Sensirion.Data.DB.BaseDBAction.QueryHookEventArgs.Command"/> Property.
+            <para>Command that wants to execute a query</para>
+            </summary>
+        </member>
+        <member name="P:Sensirion.Data.DB.BaseDBAction.QueryHookEventArgs.Command">
+            <summary>Command that wants to execute a query
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.BaseDBAction.QueryHookEventArgs.GetSQLCommandWithoutParameter(System.Data.SqlClient.SqlCommand)">
+            <summary>Converts the query to a string with the parameter values filled in 
+              !!! ATTENTION !!!. Not for productive code
+            </summary>
+            <param name="aCommand">Command to inspect</param>
+            <returns>Query to execute with parameter values filled in</returns>
+        </member>
+        <member name="F:Sensirion.Data.DB.BaseDBAction._Helper">
+            <summary>Backing field for the <see cref="P:Sensirion.Data.DB.BaseDBAction.Helper"/> Property.
+            <para>Helper for doing the queries</para>
+            </summary>
+        </member>
+        <member name="F:Sensirion.Data.DB.BaseDBAction._InternalHelper">
+            <summary>Used to set the Helper for the Wc2 data access 
+            </summary>
+        </member>
+        <member name="P:Sensirion.Data.DB.BaseDBAction.Helper">
+            <summary>Helper for doing the queries
+            </summary>
+        </member>
+        <member name="F:Sensirion.Data.DB.BaseDBAction._Active">
+            <summary>Backing field for the <see cref="P:Sensirion.Data.DB.BaseDBAction.Active"/> Property.
+            <para>if <c>true</c>, the SQLHelper Instance will be handled from this action with the static event.</para>
+            </summary>
+        </member>
+        <member name="P:Sensirion.Data.DB.BaseDBAction.Active">
+            <summary>if <c>true</c>, the SQLHelper Instance will be handled from this action with the static event.
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.BaseDBAction.#ctor(System.String)">
+            <summary>Initiates the instance
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.BaseDBAction.SQLHelper_AskForHelperInstance(System.Object,Sensirion.Data.DB.SQLHelper.SQLHelperEventArgs)">
+            <summary>Provides the helper to use for the queries. The Helper can contain
+              a connection. This connection will  be used for all further queries. The 
+              user (in this case this class) is responsible for managing the ressources.
+            </summary>
+        </member>
+        <member name="P:Sensirion.Data.DB.BaseDBAction.UseQueryHook">
+            <summary>if <c>true</c>, every query that is executed will fire an event to enable the user 
+            to log all queries (with parameters). This must be carfully used because of performance penalty.
+            </summary>
+        </member>
+        <member name="E:Sensirion.Data.DB.BaseDBAction.QueryHook">
+            <summary>Allows to inspect the currently executed queries. With the static mnethod
+              <see cref="!:SQLHelper.QueryHookEventArgs_fw.GetSQLCommandWithoutParameter(SqlCommand)"/> the 
+              query can be analysed and the parameter will be filled in the query string.
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.BaseDBAction._Helper_QueryHook(System.Object,Sensirion.Data.DB.SQLHelper.QueryHookEventArgs)">
+            <summary>Dispatcher for the <see cref="E:Sensirion.Data.DB.BaseDBAction.QueryHook"/> event
+            </summary>
+        </member>
+        <member name="F:Sensirion.Data.DB.BaseDBAction._CurrentTransaction">
+            <summary>Backing field for the <see cref="P:Sensirion.Data.DB.BaseDBAction.CurrentTransaction"/> Property.
+            <para>Gets the transaction in use. This member will be assigned if a new transaction has been started.
+              No nested transactions are allowed. Null if currently no transaction in use.</para>
+            </summary>
+        </member>
+        <member name="P:Sensirion.Data.DB.BaseDBAction.CurrentTransaction">
+            <summary>Gets the transaction in use. This member will be assigned if a new transaction has been started.
+              No nested transactions are allowe. Null if currently no transaction in use.
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.BaseDBAction.BeginTransaction">
+            <summary>Creates a database connection and starts a transaction. All further database tasks
+              will use this connection until <see cref="M:Sensirion.Data.DB.BaseDBAction.CommitTransaction"/> or <see cref="M:Sensirion.Data.DB.BaseDBAction.RollbackTransaction"/>
+              are called to end the transaction.
+            </summary>
+            <exception cref="T:System.ApplicationException">Nested Transactions are not allowed.</exception>
+        </member>
+        <member name="M:Sensirion.Data.DB.BaseDBAction.CommitTransaction">
+            <summary>Commits the pending transaction. The connection of the helper must be
+              in Transaction mode. After commiting the connection will be disposed.
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.BaseDBAction.RollbackTransaction">
+            <summary>Rollback the pending transaction. The connection of the helper must be
+              in Transaction mode. After rollback the connection will be disposed.
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.BaseDBAction.ExecuteInTransaction(System.Action)">
+            <summary>Executes the <paramref name="action"/> in an transaction. Does a rollback if not successful.</summary>
+            <param name="action">The action to execute.</param>
+        </member>
+        <member name="M:Sensirion.Data.DB.BaseDBAction.ExecuteInTransaction``1(System.Func{``0})">
+            <summary>Executes the <paramref name="function"/> in an transaction. Does a rollback if not successful.</summary>
+            <typeparam name="T"></typeparam>
+            <param name="function">The function to execute.</param>
+            <returns>the result of the function.</returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.BaseDBAction.Dispose">
+            <summary>Prevents a memory leak by removing the event handler for the <see cref="E:Sensirion.Data.DB.SQLHelper.AskForHelperInstance"/>
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.BaseDBAction.OnAfterCommit">
+            <summary>Used by a successor to perform actions after the commit has been performed.
+              The connection is still available.
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.BaseDBAction.OnBeforeCommit">
+            <summary>Used by a successor to perform actions before the commit will be performed 
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.BaseDBAction.OnAfterRollback">
+            <summary>Used by a successor to perform actions after the rolback has been performed.
+              The connection is still available.
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.BaseDBAction.OnBeforeRollback">
+            <summary>Used by a successor to perform actions before the rollback will be performed 
+            </summary>
+        </member>
+        <member name="T:Sensirion.Data.DB.BaseSensiBusinesObject">
+            <summary>Base class for all business objects created with CodeSmith
+            </summary>
+        </member>
+        <member name="E:Sensirion.Data.DB.BaseSensiBusinesObject.Saved">
+            <summary>If wired, the caller will be notified if the element has been saved to the database.
+             This event will only be called, if the object has been saved (that means it has been modified or new).
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.BaseSensiBusinesObject.OnSaved">
+            <summary>Dispatcher for the <see cref="E:Sensirion.Data.DB.BaseSensiBusinesObject.Saved"/> event
+            </summary>
+        </member>
+        <member name="E:Sensirion.Data.DB.BaseSensiBusinesObject.BeforeSaving">
+            <summary>If wired, the caller will be notified before the element will be saved to the database.
+             This event is called even if the object has not been modified.
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.BaseSensiBusinesObject.OnBeforeSaving">
+            <summary>Dispatcher for the <see cref="E:Sensirion.Data.DB.BaseSensiBusinesObject.BeforeSaving"/> event
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.BaseSensiBusinesObject.GetSQLHelper(System.Object)">
+            <summary>Get an instance of a helper class to perform the queries. The instance will be provided from the
+              application. If no Helper is provided, then a new one will be used. 
+            </summary>
+            <param name="aSender">Sender of the request (can be <see langword="null"/> in static environment)</param>
+            <returns>New or provided helper object</returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.BaseSensiBusinesObject.GetSQLHelper">
+            <summary>Get an instance of a helper class to perform the queries. The instance will be provided from the
+              application. If no Helper is provided, then a new one will be used. 
+            </summary>
+            <returns>New or provided helper object</returns>
+        </member>
+        <member name="P:Sensirion.Data.DB.BaseSensiBusinesObject.Helper">
+            <summary><c>SQLHelper</c> to use for database commands
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.BaseSensiBusinesObject.GetOrdinalFromName(System.String,System.Data.SqlClient.SqlDataReader)">
+            <summary>Gets the ordinal of the column from name. If the column does 
+              not exists, the return value is -1.
+            </summary>
+            <param name="aName">Name of the column</param>
+            <param name="aReader">Reader to scan</param>
+            <returns>Ordinal of the column or -1 if column does not exists</returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.BaseSensiBusinesObject.LoadSingleRowFromReader(System.Data.SqlClient.SqlDataReader)">
+            <summary>Loads a single row from a reader into the current item 
+            </summary>
+            <param name="aReader">Opened reader containing a row with the item data</param>
+        </member>
+        <member name="M:Sensirion.Data.DB.BaseSensiBusinesObject.Delete">
+            <summary>Deletes the element from the database
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.BaseSensiBusinesObject.Update">
+            <summary>Updates the element on the database with the new values 
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.BaseSensiBusinesObject.Create">
+            <summary>Creates a new data row in the Database and returns the identity column in the id property
+            </summary>
+            <exception cref="T:System.Data.MissingPrimaryKeyException">Thrown, if the identity could not read back</exception>
+        </member>
+        <member name="F:Sensirion.Data.DB.BaseSensiBusinesObject._HasBeenNew">
+            <summary>Backing field for the <see cref="P:Sensirion.Data.DB.BaseSensiBusinesObject.HasBeenNew"/> Property.
+            <para><see langword="true"/> if at least one property has changed since the last write to the db</para>
+            </summary>
+        </member>
+        <member name="P:Sensirion.Data.DB.BaseSensiBusinesObject.HasBeenNew">
+            <summary><see langword="true"/> if at least one property has changed since the last write to the db
+            </summary>
+        </member>
+        <member name="F:Sensirion.Data.DB.BaseSensiBusinesObject._HasBeenModified">
+            <summary>Backing field for the <see cref="P:Sensirion.Data.DB.BaseSensiBusinesObject.HasBeenModified"/> Property.
+            <para><see langword="true"/> if at least one property has changed during the last saving call</para>
+            </summary>
+        </member>
+        <member name="P:Sensirion.Data.DB.BaseSensiBusinesObject.HasBeenModified">
+            <summary><see langword="true"/> if at least one property has changed during the last saving call
+            </summary>
+        </member>
+        <member name="F:Sensirion.Data.DB.BaseSensiBusinesObject._Modified">
+            <summary>Backing field for the <see cref="P:Sensirion.Data.DB.BaseSensiBusinesObject.Modified"/> Property.
+            <para><see langword="true"/> if at least one property has changed since the last write to the db</para>
+            </summary>
+        </member>
+        <member name="P:Sensirion.Data.DB.BaseSensiBusinesObject.Modified">
+            <summary><see langword="true"/> if at least one property has changed since the last write to the db
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.BaseSensiBusinesObject.LoadAllDepending(System.Boolean)">
+            <summary>Loads ALL Foreign Key related elements. This can be very time consuming
+            </summary>
+            <param name="aDeep"><see langword="true"/>, if depending elements of sub elements should be loaded too</param>
+        </member>
+        <member name="M:Sensirion.Data.DB.BaseSensiBusinesObject.LoadAllDepending(System.Int32)">
+            <summary>Loads ALL Foreign Key related elements. This can be very time consuming
+            </summary>
+            <param name="aDepth">Limits the level to load all depending objects (-1 means all level)</param>
+        </member>
+        <member name="M:Sensirion.Data.DB.BaseSensiBusinesObject.Save">
+            <summary>Saves the Element to the db. If the element does not exists, a new data row will be
+              inserted. Otherwise the existing row will be updated with the new values.
+              <para>The depending elements will not be saved but the ID will be assigned to them (foreign keys)</para>
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.BaseSensiBusinesObject.Save(System.Boolean)">
+            <summary>Saves the Element to the db. If the element does not exists, a new data row will be
+              inserted. Otherwise the existing row will be updated with the new values.
+              <param>
+                The element does not perform an update, if the modified flag is not <see langword="true"/>.
+              </param>
+            </summary>
+            <param name="aDeep"><see langword="true"/>, if the depending elements will be saved too</param>
+        </member>
+        <member name="M:Sensirion.Data.DB.BaseSensiBusinesObject.Save(System.Int32)">
+            <summary>Saves the Element to the db. If the element does not exists, a new data row will be
+              inserted. Otherwise the existing row will be updated with the new values.
+              <para>The element does not perform an update, if the modified flag is not <see langword="true"/>.
+              </para>
+            </summary>
+            <param name="aDepth">Levels to be saved.
+              <para>
+                <list type="bullet">
+                  <item>
+                    <description>A Level of 0 means, that no dependent objects will be saved</description>
+                  </item><item>
+                    <description>Level of 1 means, all depending objects will be saved but not deep.</description>
+                  </item><item>
+                    <description>Level of two means, that all depending objects and all their depending objects will be saved.</description>
+                  </item><item>
+                    <description>Level of -1 means, that all depending objects will be saved deep (unlimited level).</description>
+                  </item>
+                </list>
+              </para>
+            </param>
+        </member>
+        <member name="M:Sensirion.Data.DB.BaseSensiBusinesObject.UpdateDependentObjectsWithID(System.Boolean)">
+            <summary>Updates all depending objects with the ID of the current object 
+            </summary>
+            <param name="aDeep"><see langword="true"/>, if the depending elements will be updated too</param>
+        </member>
+        <member name="M:Sensirion.Data.DB.BaseSensiBusinesObject.UpdateDependentObjectsWithID(System.Int32)">
+            <summary>Updates all depending objects with the ID of the current object 
+            </summary>
+            <param name="aDepth"><see langword="true"/>, if the depending elements will be updated too</param>
+        </member>
+        <member name="M:Sensirion.Data.DB.BaseSensiBusinesObject.ResetId(System.Int32)">
+            <summary>Marks the object as new if it has not been loaded from database
+              This can be useful, if a transaction has been rolled back and all the objects
+              must be saved again. If some actions has been taken before and some objects got an Id
+              they must be reseted to be new, because the received Id does not exists anymore
+              on the database and a identity violation will occur if the object is saved again.
+            </summary>
+            <param name="aDepth">The level to which the reset will be done (-1 = all level)</param>
+        </member>
+        <member name="M:Sensirion.Data.DB.BaseSensiBusinesObject.WritePropertiesToStream(System.IO.MemoryStream)">
+            <summary>Writes the binary representation of all db properties 
+              to the passed <paramref name="aSerializeStream"/> for 
+              the calculation of the hash.
+            </summary>
+            <param name="aSerializeStream">Stream where the db properties 
+              has to be serialized for hash calculation.
+            </param>
+        </member>
+        <member name="M:Sensirion.Data.DB.BaseSensiBusinesObject.WriteAdditionalPropertiesToStream(System.IO.MemoryStream)">
+            <summary>
+            Writes the binary representation of all additional properties
+            (such as foreign keys, since these are by default not taken into account) to the passed
+            <paramref name="aSerializeStream"/> for the calculation of the hash.
+            </summary>
+            <param name="aSerializeStream">Stream where the db properties 
+              has to be serialized for hash calculation.
+            </param>
+        </member>
+        <member name="M:Sensirion.Data.DB.BaseSensiBusinesObject.CalculateHash">
+            <summary>Calculates the hash for this instance 
+            </summary>
+            <returns>16 Bytes of the <see cref="T:System.Security.Cryptography.MD5"/> hash.</returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.BaseSensiBusinesObject.SerializeTypeToByteArray``1(``0,System.IO.MemoryStream)">
+            <summary>Serializes the passed <paramref name="aInput"/> and returns
+              its content as a <see langword="byte"/> array. If <paramref name="aInput"/> is null, a serialized placeholder is added.
+            </summary>
+            <typeparam name="T"><see cref="T:System.Type"/> of the class 
+              to be serialized to array
+            </typeparam>
+            <param name="aInput">Instance of a class to be serialized</param>
+            <param name="aSerializeStream">Stream where to serialize the instance
+              passed in the <paramref name="aInput"/> argument
+            </param>
+            <returns>Byte array that represents the binary content 
+              of the passed <paramref name="aInput"/>
+            </returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.BaseSensiBusinesObject.CalculateMd5Hash(System.IO.MemoryStream)">
+            <summary>Calculates the <see cref="T:System.Security.Cryptography.MD5"/> hash for the passed content 
+              within the <paramref name="aInputStream"/>
+            </summary>
+            <param name="aInputStream">Stream with the content. The stream must
+              not be set to position 0.
+            </param>
+            <returns>Array with 16 bytes with the <see cref="T:System.Security.Cryptography.MD5"/> hash</returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.BaseSensiBusinesObject.GetHashAsHexString(System.Byte[])">
+            <summary>Calculates a hex string with the hash as a sequence of
+              hex characters (The characters are upper case). There will not 
+              added a prefix or a postfix to the generated string. If a pre- or
+              postfix is used the caller must add it by him self.
+            </summary>
+            <param name="aHash"><see cref="T:System.Byte"/> array to be processed</param>
+            <returns><see cref="T:System.String"/> with a sequence of upper 
+              case hex characters (e.g. "0125AF2B")
+            </returns>
+        </member>
+        <member name="T:Sensirion.Data.DB.CheckedDbVersionWithSchema">
+            <summary>Holds expected and current version information from one single schema 
+            </summary>
+        </member>
+        <member name="P:Sensirion.Data.DB.CheckedDbVersionWithSchema.CurrentMajor">
+            <summary>Major version of the schema on the database 
+            </summary>
+        </member>
+        <member name="P:Sensirion.Data.DB.CheckedDbVersionWithSchema.CurrentMinor">
+            <summary>Minor version of the schema on the database 
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.CheckedDbVersionWithSchema.#ctor(System.String,System.Int32,System.Int32,System.Boolean,System.Int32,System.Int32)">
+            <summary>Initializes the instance 
+            </summary>
+            <param name="aName">Name of the schema</param>
+            <param name="aMajor">Expected major version for the schema</param>
+            <param name="aMinor">Expected minor version of the schema</param>
+            <param name="aValid">If <see langword="true"/> the version information is valid</param>
+            <param name="aCurrentMajor">Major version of the schema on the database</param>
+            <param name="aCurrentMinor">Minor version of the schema on the database</param>
+        </member>
+        <member name="M:Sensirion.Data.DB.CheckedDbVersionWithSchema.ToString">
+            <summary>Returns a string that represents the current object.</summary>
+            <returns>A string that represents the current object.</returns>
+            <filterpriority>2</filterpriority>
+        </member>
+        <member name="T:Sensirion.Data.DB.DbVersionReader">
+            <summary>Reads and checks versions stored on Sensirion Measure Database
+            </summary>
+        </member>
+        <member name="F:Sensirion.Data.DB.DbVersionReader._Helper">
+            <summary>SQL database access helper
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.DbVersionReader.#ctor(Sensirion.Data.DB.IExecuteQuery)">
+            <summary>Instantiates the instance
+            </summary>
+            <param name="aHelper">SQL database access helper</param>
+        </member>
+        <member name="M:Sensirion.Data.DB.DbVersionReader.GetMainDBVersion(Sensirion.Data.DB.IExecuteQuery,System.Int32@,System.Int32@)">
+            <summary>Gets the Main Version information out of the database 
+            </summary>
+            <param name="aHelper">Helper for the database access.</param>
+            <param name="aMajor">Major release. If return value is <see langword="false"/>, then the major value is <c>int.MaxValue</c></param>
+            <param name="aMinor">Minor release. If return value is <see langword="false"/>, then the minor value is <c>int.MaxValue</c></param>
+            <returns><see langword="true"/>, if no error occurred</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="aHelper" /> is <c>null</c>.</exception>
+        </member>
+        <member name="M:Sensirion.Data.DB.DbVersionReader.GetMinorDBVersion(Sensirion.Data.DB.IExecuteQuery,System.Int32@)">
+            <summary>Gets the Minor Version information out of the database 
+            </summary>
+            <param name="aHelper">Helper for the database access.</param>
+            <param name="aMinor">Minor release. If return value is <see langword="false"/>, then the minor value is <c>int.MaxValue</c></param>
+            <returns><see langword="true"/>, if no error occurred</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="aHelper" /> is <c>null</c>.</exception>
+        </member>
+        <member name="M:Sensirion.Data.DB.DbVersionReader.GetMajorDBVersion(Sensirion.Data.DB.IExecuteQuery,System.Int32@)">
+            <summary>Gets the Major Version information out of the database 
+            </summary>
+            <param name="aHelper">Helper for the database access.</param>
+            <param name="aMajor">Major release. If return value is <see langword="false"/>, then the major value is <c>int.MaxValue</c></param>
+            <returns><see langword="true"/>, if no error occurred</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="aHelper" /> is <c>null</c>.</exception>
+        </member>
+        <member name="M:Sensirion.Data.DB.DbVersionReader.GetSchemaVersion(Sensirion.Data.DB.IExecuteQuery,System.String,System.Int32@,System.Int32@,System.Int32,System.Int32)">
+            <summary>Gets the Main Version information out of the database 
+            </summary>
+            <param name="aHelper">Helper for the database access.</param>
+            <param name="aSchemaName">Name of the asked schema</param>
+            <param name="aMajor">Major release. If return value is <see langword="false"/>, then the major value is <paramref name="aMajorDefault"/></param>
+            <param name="aMinor">Minor release. If return value is <see langword="false"/>, then the minor value is <paramref name="aMinorDefault"/></param>
+            <param name="aMajorDefault">Default value for the major version, if the version could not be read.</param>
+            <param name="aMinorDefault">Default value for the minor version, if the version could not be read.</param>
+            <returns><see langword="true"/>, if no error occurred. If an error occurred, the 
+              <paramref name="aMajor"/> will be set to the value of <paramref name="aMajorDefault"/>
+              and the <paramref name="aMinor"/> will be set to the value of <paramref name="aMinorDefault"/>.
+            </returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="aHelper" /> is <c>null</c>.</exception>
+        </member>
+        <member name="M:Sensirion.Data.DB.DbVersionReader.GetSchemaVersion(Sensirion.Data.DB.IExecuteQuery,System.String,System.Int32@,System.Int32@)">
+            <summary>Gets the Main Version information out of the database 
+            </summary>
+            <param name="aHelper">Helper for the database access.</param>
+            <param name="aSchemaName">Name of the asked schema</param>
+            <param name="aMajor">Major release. If return value is <see langword="false"/>, then the major value is <c>int.MaxValue</c></param>
+            <param name="aMinor">Minor release. If return value is <see langword="false"/>, then the minor value is <c>int.MaxValue</c></param>
+            <returns><see langword="true"/>, if no error occurred</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="aHelper" /> is <c>null</c>.</exception>
+        </member>
+        <member name="M:Sensirion.Data.DB.DbVersionReader.GetSchemaVersion(Sensirion.Data.DB.IExecuteQuery,System.String[],System.Int32,System.Int32)">
+            <summary>Gets the version information for an array of schema names.
+            </summary>
+            <param name="aHelper">Helper for the database access.</param>
+            <param name="aSchemaNames">Array with the schema names</param>
+            <param name="aMinorDefault">Every time a schema couldn't be read this version will be written to the result.</param>
+            <param name="aMajorDefault">Every time a schema couldn't be read this version will be written to the result.</param>
+            <returns>Array with version information for each wanted schema. If information for a schema could not be read. the 
+              values of <see cref="P:Sensirion.Data.DB.DbVersionWithSchema.Major"/> will be set to <paramref name="aMajorDefault"/> and 
+              the <see cref="P:Sensirion.Data.DB.DbVersionWithSchema.Minor"/> will be set to <paramref name="aMinorDefault"/>. Also the
+              <see cref="P:Sensirion.Data.DB.DbVersionWithSchema.Valid"/> property will be set to <see langword="false"/> for this schema.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">Either <paramref name="aSchemaNames" /> or 
+              <paramref name="aHelper"/> is <c>null</c>.
+            </exception>
+        </member>
+        <member name="M:Sensirion.Data.DB.DbVersionReader.GetAllSchemaName(Sensirion.Data.DB.IExecuteQuery)">
+            <summary>Gets a list of all schemas in the connected database 
+            </summary>
+            <param name="aHelper">Helper to get access to the database</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if the <paramref name="aHelper"/> is null</exception>
+            <returns>Array with one entry for each schema found in the t_VersionInformation table</returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.DbVersionReader.GetSchemaVersion(Sensirion.Data.DB.IExecuteQuery,System.Collections.Generic.IEnumerable{Sensirion.Data.DB.DbVersionWithSchema},System.Int32,System.Int32)">
+            <summary>Reads the current database schema versions and returns them together with the expected versions
+            </summary>
+            <param name="aHelper">Helper for the database access.</param>
+            <param name="aExpected">Expected schema versions</param>
+            <param name="aMinorDefault">Every time a schema couldn't be read this version will be written to the result.</param>
+            <param name="aMajorDefault">Every time a schema couldn't be read this version will be written to the result.</param>
+            <returns><c>True</c> if all tested current database schema versions are valid.</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown if one of the arguments is <c>null</c></exception>
+        </member>
+        <member name="M:Sensirion.Data.DB.DbVersionReader.CheckSchemaVersion(System.Collections.Generic.List{Sensirion.Data.DB.DbVersionWithSchema},System.Collections.Generic.List{Sensirion.Data.DB.CheckedDbVersionWithSchema}@)">
+            <summary>Checks for each given schema the version
+            <remarks>A schema version is valid if the major number match the expected one and the minor number is equal or larger than the expected minor number.</remarks>
+            </summary>
+            <param name="aExpected">List of expected schema versions</param>
+            <param name="aCurrent">List of checked schema versions</param>
+            <returns><c>True</c> if all schema versions are valid</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="aExpected" /> is <c>null</c>.</exception>
+        </member>
+        <member name="M:Sensirion.Data.DB.DbVersionReader.CheckValidity(System.Collections.Generic.List{Sensirion.Data.DB.CheckedDbVersionWithSchema})">
+            <summary>Validates if all expected and current database versions are valid
+            <remarks>A schema version is valid if the major number match the expected one and the minor number is equal or larger than the expected minor number.</remarks>
+            </summary>
+            <param name="checkedDbVersions">List of expected and current schema versions</param>
+            <returns><c>True</c> if all schemata have valid versions</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="checkedDbVersions" /> is <c>null</c>.</exception>
+        </member>
+        <member name="T:Sensirion.Data.DB.DbVersionWithSchema">
+            <summary>Holds version information from one single schema 
+            </summary>
+        </member>
+        <member name="P:Sensirion.Data.DB.DbVersionWithSchema.Name">
+            <summary>Name of the schema
+            </summary>
+        </member>
+        <member name="P:Sensirion.Data.DB.DbVersionWithSchema.Major">
+            <summary>Major version for the schema
+            </summary>
+        </member>
+        <member name="P:Sensirion.Data.DB.DbVersionWithSchema.Minor">
+            <summary>Minor version of the schema
+            </summary>
+        </member>
+        <member name="P:Sensirion.Data.DB.DbVersionWithSchema.Valid">
+            <summary>If <see langword="true"/> the version information is valid
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.DbVersionWithSchema.#ctor(System.String,System.Int32,System.Int32,System.Boolean)">
+            <summary>Initializes the instance 
+            </summary>
+            <param name="aName">Name of the schema</param>
+            <param name="aMajor">Major version for the schema</param>
+            <param name="aMinor">Minor version of the schema</param>
+            <param name="aValid">If <see langword="true"/> the version information is valid</param>
+        </member>
+        <member name="M:Sensirion.Data.DB.DbVersionWithSchema.ToString">
+            <summary>Returns a string that represents the current object.</summary>
+            <returns>A string that represents the current object.</returns>
+            <filterpriority>2</filterpriority>
+        </member>
+        <member name="T:Sensirion.Data.DB.ICheckDbSchemaVersion">
+            <summary>This interface offers the possibility to perform a validation check on database schema versions.
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.ICheckDbSchemaVersion.CheckSchemaVersion(System.Collections.Generic.List{Sensirion.Data.DB.DbVersionWithSchema},System.Collections.Generic.List{Sensirion.Data.DB.CheckedDbVersionWithSchema}@)">
+            <summary>Checks for each given schema the version
+            </summary>
+            <param name="aExpected">List of expected schema versions</param>
+            <param name="aCurrent">List of checked schema versions</param>
+            <returns><c>True</c> if all schema versions are valid</returns>
+        </member>
+        <member name="T:Sensirion.Data.DB.IExecuteQuery">
+            <summary>Allows to execute queries against the SQL Server database
+            </summary>
+        </member>
+        <member name="P:Sensirion.Data.DB.IExecuteQuery.ConnectionString">
+            <summary>Connection string of the instance.
+            </summary>
+        </member>
+        <member name="P:Sensirion.Data.DB.IExecuteQuery.TransactionToUse">
+            <summary>Transaction that should be used in this instance. The Transaction has been created in the
+              BeginTransaction() Method of the connection Method. If no transaction is used this member will be <see langword="null"/>
+            </summary>
+        </member>
+        <member name="P:Sensirion.Data.DB.IExecuteQuery.IsSingleRow">
+            <summary>Enables the database to optimize the execution of a query
+            </summary>
+        </member>
+        <member name="P:Sensirion.Data.DB.IExecuteQuery.LastException">
+            <summary>Stores the last exception that occurred when executing a SQL query. Can be reset using
+            <see cref="M:Sensirion.Data.DB.IExecuteQuery.ResetLastException"/>.
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.IExecuteQuery.ResetLastException">
+            <summary>Resets the <see cref="P:Sensirion.Data.DB.IExecuteQuery.LastException"/> to <see langword="null"/>. This should be done
+            before a query is executed for which a potential excpetion will be evaluated.
+            </summary>
+        </member>
+        <member name="P:Sensirion.Data.DB.IExecuteQuery.ConnectionToUse">
+            <summary>Connection that should be used in this instance. If no connection has been provided, a
+             new connection with the default connection string will be created.
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.IExecuteQuery.ExecuteSqlExactlyOneResult(System.String,System.String,System.String,System.Object[])">
+            <summary>Executes the query. Throws a meaningful exception if not exactly one result row is found.
+            
+            Example usage:
+            <code>
+                  ExecuteSqlExactlyOneResult("SELECT ...", 
+                                             "currently active ProductionStepDefinition", 
+                                             "ArticleNumber='{0}' AND StandardizedProductionStepName='{1}'",
+                                             articleNumber, standardizedProductionStepName);
+            </code>
+             </summary>
+            <param name="aQuery">Query to execute</param>
+            <param name="queriedEntity">The queried entity. Used to generate a meaningful message.</param>
+            <param name="criteria">The criteria. Used to generate a meaningful message.</param>
+            <param name="criteriaParams">The criteria parameters. Used to generate a meaningful message.</param>
+            <exception cref="T:Sensirion.Data.DB.SQLHelperException">Exception thrown, of something is wrong with the execution of the query. 
+              The text of the executing query is contained with parameters and values.</exception>
+            <returns>The retrieved record or null if there is no result.</returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.IExecuteQuery.ExecuteSqlSingleResult(System.String)">
+            <summary>Executes the query. Returns null is no results are found. Throws an exception if more than one result row is found. </summary>
+            <param name="aQuery">Query to execute</param>
+            <exception cref="T:Sensirion.Data.DB.SQLHelperException">Exception thrown, of something is wrong with the execution of the query. 
+              The text of the executing query is contained with parameters and values.</exception>
+            <returns>The retrieved record or null if there is no result.</returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.IExecuteQuery.ExecuteSqlScalarToInt(System.String,System.Int32@)">
+            <summary>Executes the query and tries to transform the return value into an integer
+            </summary>
+            <param name="aQuery">Query to execute</param><param name="aValue">Variable where the return value will be filled in
+            </param>
+            <exception cref="T:Sensirion.Data.DB.Internal.SQLHelperException_fw">Exception thrown, of something is wrong with the execution of the query. The text of the executing query is contained with parameters and values.
+            </exception>
+            <returns><c>true</c> if the query executes and the return value has been successfully converted
+            </returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.IExecuteQuery.ExecuteSqlScalarToInt(System.String,System.Int64@)">
+            <summary>Executes the query and tries to transform the return value into an long
+            </summary>
+            <param name="aQuery">Query to execute</param><param name="aValue">Variable where the return value will be filled in
+            </param>
+            <exception cref="T:Sensirion.Data.DB.Internal.SQLHelperException_fw">Exception thrown, of something is wrong with the execution of the query.
+              The text of the executing query is contained with parameters and values.</exception>
+            <returns><c>true</c> if the query executes and the return value has been successfully converted
+            </returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.IExecuteQuery.ExecuteSqlScalarToInt(System.String,System.Int16@)">
+            <summary>Executes the query and tries to transform the return value into a short
+            </summary>
+            <param name="aQuery">Query to execute</param>
+            <param name="aValue">Variable where the return value will be filled in
+            </param>
+            <exception cref="T:Sensirion.Data.DB.Internal.SQLHelperException_fw">Exception thrown, of something is wrong with the execution of the query. The text of the executing query is contained with parameters and values.
+            </exception>
+            <returns><c>true</c> if the query executes and the return value has been successfully converted
+            </returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.IExecuteQuery.ExecuteSqlScalarToInt(System.String,System.Byte@)">
+            <summary>Executes the query and tries to transform the return value into a byte
+            </summary>
+            <param name="aQuery">Query to execute</param>
+            <param name="aValue">Variable where the return value will be filled in
+            </param>
+            <exception cref="T:Sensirion.Data.DB.Internal.SQLHelperException_fw">Exception thrown, of something is wrong with the execution of the query. The text of the executing query is contained with parameters and values.
+            </exception>
+            <returns><c>true</c> if the query executes and the return value has been successfully converted
+            </returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.IExecuteQuery.ExecuteSqlScalarToInt32(System.String,System.Int32@)">
+            <summary>Executes the query and tries to transform the return value into an integer
+            </summary>
+            <param name="aQuery">Query to execute</param>
+            <param name="aValue">Variable where the return value will be filled in
+            </param>
+            <exception cref="T:Sensirion.Data.DB.Internal.SQLHelperException_fw">Exception thrown, of something is wrong with the execution of the query. The text of the executing query is contained with parameters and values.
+            </exception>
+            <returns><c>true</c> if the query executes and the return value has been successfully converted
+            </returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.IExecuteQuery.ExecuteSqlScalarToInt64(System.String,System.Int64@)">
+            <summary>Executes the query and tries to transform the return value into a long
+            </summary>
+            <param name="aQuery">Query to execute</param>
+            <param name="aValue">Variable where the return value will be filled in
+            </param>
+            <exception cref="T:Sensirion.Data.DB.Internal.SQLHelperException_fw">Exception thrown, of something is wrong with the execution of the query. The text of the executing query is contained with parameters and values.
+            </exception>
+            <returns><c>true</c> if the query executes and the return value has been successfully converted
+            </returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.IExecuteQuery.ExecuteSqlScalarToDouble(System.String,System.Double@)">
+            <summary>Executes the query and tries to transform the return value into a double
+            </summary>
+            <param name="aQuery">Query to execute</param>
+            <param name="aValue">Variable where the return value will be filled in
+            </param>
+            <exception cref="T:Sensirion.Data.DB.Internal.SQLHelperException_fw">Exception thrown, of something is wrong with the execution of the query. The text of the executing query is contained with parameters and values.
+            </exception>
+            <returns><c>true</c> if the query executes and the return value has been successfully converted
+            </returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.IExecuteQuery.ExecuteSqlScalarToFloat(System.String,System.Single@)">
+            <summary>Executes the query and tries to transform the return value into a float (single)
+            </summary>
+            <param name="aQuery">Query to execute</param>
+            <param name="aValue">Variable where the return value will be filled in
+            </param>
+            <exception cref="T:Sensirion.Data.DB.Internal.SQLHelperException_fw">Exception thrown, of something is wrong with the execution of the query. The text of the executing query is contained with parameters and values.
+            </exception>
+            <returns><c>true</c> if the query executes and the return value has been successfully converted
+            </returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.IExecuteQuery.ExecuteSqlScalarToString(System.String,System.String@)">
+            <summary>Executes the query and tries to transform the return value into a string
+            </summary>
+            <param name="aQuery">Query to execute</param>
+            <param name="aValue">Variable where the return value will be filled in
+            </param>
+            <exception cref="T:Sensirion.Data.DB.Internal.SQLHelperException_fw">Exception thrown, of something is wrong with the execution of the query. The text of the executing query is contained with parameters and values.
+            </exception>
+            <returns><c>true</c> if the query executes and the return value has been successfully converted
+            </returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.IExecuteQuery.ExecuteSqlScalar(System.String)">
+            <summary>Executes the query and tries to transform the return value into a long
+            </summary>
+            <param name="aQuery">Query to execute
+            </param>
+            <exception cref="T:Sensirion.Data.DB.Internal.SQLHelperException_fw">Exception thrown, of something is wrong with the execution of the query. The text of the executing query is contained with parameters and values.
+            </exception>
+            <returns>The return value of the query
+            </returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.IExecuteQuery.ExecuteSqlManyResults(System.String)">
+            <summary>Executes the query. </summary>
+            <param name="aQuery">Query to execute</param>
+            <exception cref="T:Sensirion.Data.DB.SQLHelperException">Exception thrown, of something is wrong with the execution of the query.</exception>
+            <returns>The retrieved records, never null.</returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.IExecuteQuery.ExecuteSqlReader(System.String,System.Data.SqlClient.SqlConnection)">
+            <summary>Executes the query with a given connection
+            </summary>
+            <param name="aQuery">Query to execute
+            </param>
+            <param name="aCon">Connection to be used to execute the query
+            </param>
+            <exception cref="T:Sensirion.Data.DB.Internal.SQLHelperException_fw">Exception thrown, of something is wrong with the execution of the query. The text of the executing query is contained with parameters and values.
+            </exception>
+            <returns>An open reader to parse for data
+            </returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.IExecuteQuery.ExecuteSqlReader(System.String,System.Data.SqlClient.SqlCommand)">
+            <summary>Executes the query with a given connection
+            </summary>
+            <param name="aQuery">Query to execute</param>
+            <param name="aCommand">Command to be used to execute the query
+            </param>
+            <exception cref="T:Sensirion.Data.DB.Internal.SQLHelperException_fw">Exception thrown, of something is wrong with the execution of the query. The text of the executing query is contained with parameters and values.
+            </exception>
+            <returns>An open reader to parse for data
+            </returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.IExecuteQuery.ExecuteSqlReader(System.Data.SqlClient.SqlCommand)">
+            <summary>Executes the command with a given connection
+            </summary>
+            <param name="aCommand">Command to execute
+            </param>
+            <exception cref="T:Sensirion.Data.DB.Internal.SQLHelperException_fw">Exception thrown, of something is wrong with the execution of the query. The text of the executing query is contained with parameters and values.
+            </exception>
+            <returns>An open reader to parse for data
+            </returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.IExecuteQuery.AddParameter(System.String,System.Data.DbType,System.Object,System.Boolean)">
+            <summary>Adds a sql parameter to the collection. The data type is a generic data type
+            </summary>
+            <param name="aName">Name of the parameter
+            </param>
+            <param name="aType">Type of the parameter
+            </param>
+            <param name="aValue">Value of the parameter
+            </param>
+            <param name="aIsNullable">True, if <c>null</c> is a valid value</param>
+            <returns>Added parameter as a sql parameter
+            </returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.IExecuteQuery.AddParameter(System.String,System.Data.SqlDbType,System.Object,System.Boolean,System.Data.ParameterDirection)">
+            <summary>Adds a sql parameter to the collection
+            </summary>
+            <param name="aName">Name of the parameter
+            </param>
+            <param name="aType">Type of the parameter
+            </param>
+            <param name="aValue">Value of the parameter
+            </param>
+            <param name="aDirection">Input or Output parameter
+            </param>
+            <param name="aIsNullable">True, if <c>null</c> is a valid value
+            </param>
+            <returns>Added parameter as a sql parameter
+            </returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.IExecuteQuery.AddParameter(System.Data.SqlClient.SqlParameter)">
+            <summary>Adds a configured Parameter to the collection
+            </summary>
+            <param name="aParameter">Parameter to b added to the instance to be executed the next time.
+            </param>
+        </member>
+        <member name="M:Sensirion.Data.DB.IExecuteQuery.GetConnection">
+            <summary>Gets a new Connection. If already a connection exist in the 
+              <see cref="P:Sensirion.Data.DB.Internal.SQLHelper.ConnectionToUse"/> property,
+              this connection will be used.
+            </summary>
+            <returns>Connection a new, or a already assigned connection (see <see cref="P:Sensirion.Data.DB.IExecuteQuery.ConnectionToUse"/>)</returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.IExecuteQuery.ReleaseConnection">
+            <summary>Release the Connection provided in the property <see cref="P:Sensirion.Data.DB.IExecuteQuery.ConnectionToUse"/>. If a 
+              Connection has been provided, the connection will be set to <see langword="null"/> and will be disposed before.
+            </summary>
+        </member>
+        <member name="P:Sensirion.Data.DB.IExecuteQuery.InTransaction">
+            <summary>Gets the state if an internal transaction has been started or not
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.IExecuteQuery.BeginTransaction">
+            <summary> Starts a transaction. The Transaction will be created on an
+              existing connection, or a new connection will be created too.
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.IExecuteQuery.Commit">
+            <summary>The current transaction will be committed. If no transaction is active a <see cref="T:System.InvalidOperationException"/>
+              should be raised.
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.IExecuteQuery.Rollback">
+            <summary>The current transaction will be rolled back. Each registered method will be executed before the rollback
+              (see <see cref="M:Sensirion.Data.DB.IExecuteQuery.AddBeforeRollbackNotification(System.Action)"/>). 
+              has been done.
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.IExecuteQuery.Reset">
+            <summary>Resets the helper.
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.IExecuteQuery.ResetParameter">
+            <summary>Resets the parameter that are injected in the query 
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.IExecuteQuery.AddAfterCommitNotification(System.Action)">
+            <summary>Adds a notification in case of a commit. Be carefull when add a handler to this, because if
+              you do not call <see cref="M:Sensirion.Data.DB.IExecuteQuery.RemoveAfterCommitNotification(System.Guid)"/> the handler will stay in memory and 
+              will be called on each commit that is done with this instance.
+              Because this is not a .net event you can call <see cref="M:Sensirion.Data.DB.IExecuteQuery.RemoveAfterCommitNotification(System.Guid)"/> and 
+              <see cref="M:Sensirion.Data.DB.IExecuteQuery.RemoveBeforeRollbackNotification(System.Guid)"/> during the notification itself.
+            </summary>
+            <param name="aToCall">delegate to call in case of a commit</param>
+            <returns>GUID to deregister the notification with the <see cref="M:Sensirion.Data.DB.IExecuteQuery.RemoveAfterCommitNotification(System.Guid)"/></returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.IExecuteQuery.RemoveAfterCommitNotification(System.Guid)">
+            <summary>Removes a notification from the list of notifications in case of a commit.
+              This method can be called even if there is a notification running.
+            </summary>
+            <param name="aToRemove">The GUID returned by the <see cref="M:Sensirion.Data.DB.IExecuteQuery.AddAfterCommitNotification(System.Action)"/> method.</param>
+        </member>
+        <member name="M:Sensirion.Data.DB.IExecuteQuery.AddBeforeRollbackNotification(System.Action)">
+            <summary>Adds a notification in case of a rollback. Be carefull when add a handler to this, because if
+              you do not call <see cref="M:Sensirion.Data.DB.IExecuteQuery.RemoveBeforeRollbackNotification(System.Guid)"/> the handler will stay in memory and 
+              will be called on each rollback that is done with this instance.
+              Because this is not a .net event you can call <see cref="M:Sensirion.Data.DB.IExecuteQuery.RemoveAfterCommitNotification(System.Guid)"/> and 
+              <see cref="M:Sensirion.Data.DB.IExecuteQuery.RemoveBeforeRollbackNotification(System.Guid)"/> during the notification itself.
+            </summary>
+            <param name="aToCall">Delegate to call in case of a rollback</param>
+            <returns>GUID to deregister the notification with the <see cref="M:Sensirion.Data.DB.IExecuteQuery.RemoveBeforeRollbackNotification(System.Guid)"/></returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.IExecuteQuery.RemoveBeforeRollbackNotification(System.Guid)">
+            <summary>Removes a notification from the list of notifications in case of a rollback.
+              This method can be called even if there is a notification running.
+            </summary>
+            <param name="aToRemove">The GUID returned by the <see cref="M:Sensirion.Data.DB.IExecuteQuery.AddBeforeRollbackNotification(System.Action)"/> method.</param>
+        </member>
+        <member name="M:Sensirion.Data.DB.IExecuteQuery.CreateConfigurationLink(System.Int32,System.Int32,System.String,System.String,System.String)">
+            <summary>Creates the link between the configuration and an item. The field names and table names must be provided.
+              The item and the configuration must be saved before, because both id must be provided.
+            </summary>
+            <param name="aCrossTableTargetId">Id of the data row in the item (target) table</param>
+            <param name="aConfigId">Id in the configuration table</param>
+            <param name="aCrossTableName">Name of the cross table (e.g. 'Prober.t_ProbeSession_Configuration')</param>
+            <param name="aCrossTableTargetIdFieldName">Name of the field that points to the item (target) table</param>
+            <param name="aConfigurationIdFieldName">Name of the field that points to the configuration table</param>
+            <exception cref="T:Sensirion.Data.DB.SQLHelperException">Exception thrown, of something is wrong with the execution of the query. 
+              The text of the executing query is contained with parameters and values.</exception>
+        </member>
+        <member name="M:Sensirion.Data.DB.IExecuteQuery.ConfigurationExists(System.Byte[],System.Int32,System.String,System.String,System.String,System.String,System.String,System.String,System.Int32@)">
+            <summary>Checks if a configuration exists on the database. The connection of the helper will be used 
+            </summary>
+            <param name="aHash">Hash value of the configuration</param>
+            <param name="aLength">length of the configuration</param>
+            <param name="aOriginalName">Original name of the configuration (e.g. file name)</param>
+            <param name="aTableName">Full name of the configuration table (schema included if a schema is assigned to)</param>
+            <param name="aIdFieldName">Name of the id field in the configuration table</param>
+            <param name="aHashFieldName">Name of the hash field in the configuration table</param>
+            <param name="aLengthFieldName">Name of the length field in the configuration table</param>
+            <param name="aOriginalNameFieldName">Name of the original name field in the configuration table</param>
+            <param name="aConfigurationID">provides the id of the configuration, if it exists. Should not be used if result is <c>false</c></param>
+            <exception cref="T:Sensirion.Data.DB.SQLHelperException">Exception thrown, of something is wrong with the execution of the query. 
+              The text of the executing query is contained with parameters and values.</exception>
+            <returns><c>true</c>, if the configuration exist on the database. If <c>false</c>, the <paramref name="aConfigurationID"/>, can not be used (default -1)</returns>
+        </member>
+        <member name="T:Sensirion.Data.DB.MeasureDBConnectionCheck">
+            <summary> Checks the Connection to SQL Server measure databases </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.MeasureDBConnectionCheck.#ctor(System.String,System.String,System.String,System.String,System.String)">
+            <summary> Initializes the instance </summary>
+            <param name="aDBServerName"> Name of the server to connect </param>
+            <param name="aDBName"> Name of the database on the server </param>
+            <param name="aUsername"> User name for connection (should be empty) </param>
+            <param name="aPassword"> Password for connection (should be empty) </param>
+            <param name="aFailoverPartner"> Failover partner if in cluster environment </param>
+        </member>
+        <member name="M:Sensirion.Data.DB.MeasureDBConnectionCheck.#ctor(System.String)">
+            <summary> Initializes the instance </summary>
+            <param name="aConnectionString"> Fully configured connection string to connect
+              to the sql server </param>
+        </member>
+        <member name="T:Sensirion.Data.DB.MeasureOdbcConnectionCheck">
+            <summary> Checks the Connection to SQL Server measure databases </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.MeasureOdbcConnectionCheck.#ctor(System.String,System.String,System.String,System.String,System.String)">
+            <summary> Initializes the instance </summary>
+            <param name="aDBServerName"> Name of the server to connect </param>
+            <param name="aDBName"> Name of the database on the server </param>
+            <param name="aUsername"> User name for connection (should be empty) </param>
+            <param name="aPassword"> Password for connection (should be empty) </param>
+            <param name="aFailoverPartner"> Failover partner if in cluster environment </param>
+        </member>
+        <member name="M:Sensirion.Data.DB.MeasureOdbcConnectionCheck.#ctor(System.String)">
+            <summary> Initializes the instance </summary>
+            <param name="aConnectionString"> Fully configured connection string to connect
+              to the sql server </param>
+        </member>
+        <member name="M:Sensirion.Data.DB.MeasureOdbcConnectionCheck.CheckConnection">
+            <summary> Call this method to get the state of the measure database server </summary>
+            <returns> <c> true </c> if the measure (or SensiTrackOne) database server is
+              available and responsive </returns>
+        </member>
+        <member name="T:Sensirion.Data.DB.MsAccessOdbcHelper">
+            <summary> Class for executing queries on a Microsoft Access database using ODBC
+              (used in LabView calibration software). </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.MsAccessOdbcHelper.ExecuteQuery(System.String,System.String)">
+            <summary> Executes a query on a Microsoft Access database using ODBC and
+              returns the found records as an array of strings. </summary>
+            <param name="dbPath"> Path to the MS Access database (*.mdb) </param>
+            <param name="query"> The query to execute </param>
+            <returns> </returns>
+        </member>
+        <member name="T:Sensirion.Data.DB.SensiBusinessObjectHelper.DbValue">
+            <summary>Describes an DB value
+            </summary>
+        </member>
+        <member name="P:Sensirion.Data.DB.SensiBusinessObjectHelper.DbValue.Name">
+            <summary>The field name
+            </summary>
+        </member>
+        <member name="P:Sensirion.Data.DB.SensiBusinessObjectHelper.DbValue.Value">
+            <summary>The field value
+            </summary>
+        </member>
+        <member name="P:Sensirion.Data.DB.SensiBusinessObjectHelper.DbValue.SqlType">
+            <summary>The field SQL type
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.SensiBusinessObjectHelper.DbValue.#ctor(System.String,System.Object,System.Data.SqlDbType)">
+            <summary>Default constructor
+            </summary>
+            <param name="name">The field name</param>
+            <param name="value">The field value</param>
+            <param name="sqlType">The field SQL type</param>
+        </member>
+        <member name="T:Sensirion.Data.DB.SensiBusinessObjectHelper.IWhereConditionFactory">
+            <summary>Interface for creating the where condition clauses
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.SensiBusinessObjectHelper.IWhereConditionFactory.GetConditionString(Sensirion.Data.DB.SensiBusinessObjectHelper.DbValue,System.String)">
+            <summary>Get the condition string for a given database field and value
+            </summary>
+            <param name="dbValue">The database field, value and type</param>
+            <param name="variableName">The name of the variable</param>
+            <returns>Returns a condition string</returns>
+        </member>
+        <member name="T:Sensirion.Data.DB.SensiBusinessObjectHelper.SqlDataWriterHelper">
+            <summary>A helper for writing <see cref="T:Sensirion.Data.DB.BaseSensiBusinesObject"/> to database
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.SensiBusinessObjectHelper.SqlDataWriterHelper.#ctor(Sensirion.Data.DB.SensiConnectionStringBuilder,Sensirion.Data.DB.SensiBusinessObjectHelper.IWhereConditionFactory,Gurock.SmartInspect.Session)">
+            <summary>Default constructor
+            </summary>
+            <param name="stringBuilder">A database connection string builder</param>
+            <param name="whereConditionFactory">Factory for the where condition clauses</param>
+            <param name="aSiSession">The smart inspect logger</param>
+        </member>
+        <member name="M:Sensirion.Data.DB.SensiBusinessObjectHelper.SqlDataWriterHelper.#ctor(Sensirion.Data.DB.SensiConnectionStringBuilder,Gurock.SmartInspect.Session)">
+            <summary>Default constructor
+            </summary>
+            <param name="stringBuilder">A database connection string builder</param>
+            <param name="aSiSession">The smart inspect logger</param>
+        </member>
+        <member name="M:Sensirion.Data.DB.SensiBusinessObjectHelper.SqlDataWriterHelper.#ctor(Sensirion.Data.DB.IExecuteQuery,System.String,System.String,Sensirion.Data.DB.SensiBusinessObjectHelper.IWhereConditionFactory,Gurock.SmartInspect.Session)">
+            <summary>Constructor for unit tests
+            </summary>
+            <param name="aSqlHelper">The SQL database access</param>
+            <param name="serverName">The DB server name</param>
+            <param name="databaseName">The database name</param>
+            <param name="whereConditionFactory">Factory for the where condition clauses</param>
+            <param name="aSiSession">The smart inspect logger</param>
+        </member>
+        <member name="M:Sensirion.Data.DB.SensiBusinessObjectHelper.SqlDataWriterHelper.GetOrCreateDbObject``1(System.Collections.Generic.Dictionary{System.String,System.String},System.Func{System.String,System.String,Sensirion.Data.DB.IExecuteQuery,Sensirion.Data.DB.SQLHelper.ParameterType[],System.Collections.Generic.List{``0}},System.Func{``0},System.String,System.Boolean,System.Boolean)">
+            <summary>Gets or creates a database object based on <see cref="T:Sensirion.Data.DB.BaseSensiBusinesObject"/>
+            </summary>
+            <typeparam name="TDbObject">A database object based on <see cref="T:Sensirion.Data.DB.BaseSensiBusinesObject"/></typeparam>
+            <param name="aKeys">A dictionary of field name and field value as string</param>
+            <param name="aDbSelectMethod">A CodeSmith generated method called "LoadCustomized", that delivers a list of database objects</param>
+            <param name="aDbObjectCreateMethod">A method that creates a database object based on <see cref="T:Sensirion.Data.DB.BaseSensiBusinesObject"/>. This method can be <p>null</p></param>
+            <param name="aId">An optional ID of the new object</param>
+            <param name="aMultipleAllowed">Indicates, if the result of the of <see cref="!:aDbSelectMethod"/>, can deliver multiple records</param>
+            <param name="aNullAllowed">Indicates, if the result of the of <see cref="!:aDbSelectMethod"/>, can deliver no records</param>
+            <returns>Returns the database object</returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.SensiBusinessObjectHelper.SqlDataWriterHelper.GetOrCreateDbObject``1(System.Collections.Generic.IEnumerable{Sensirion.Data.DB.SensiBusinessObjectHelper.DbValue},System.Func{System.String,System.String,Sensirion.Data.DB.IExecuteQuery,Sensirion.Data.DB.SQLHelper.ParameterType[],System.Collections.Generic.List{``0}},System.Func{``0},System.String,System.Boolean,System.Boolean)">
+            <summary>Gets or creates a database object based on <see cref="T:Sensirion.Data.DB.BaseSensiBusinesObject"/>
+            </summary>
+            <typeparam name="TDbObject">A database object based on <see cref="T:Sensirion.Data.DB.BaseSensiBusinesObject"/></typeparam>
+            <param name="aKeys">A list of database values</param>
+            <param name="aDbSelectMethod">A CodeSmith generated method called "LoadCustomized", that delivers a list of database objects</param>
+            <param name="aDbObjectCreateMethod">A method that creates a database object based on <see cref="T:Sensirion.Data.DB.BaseSensiBusinesObject"/>. This method can be <p>null</p></param>
+            <param name="aId">An optional ID of the new object</param>
+            <param name="aMultipleAllowed">Indicates, if the result of the of <see cref="!:aDbSelectMethod"/>, can deliver multiple records</param>
+            <param name="aNullAllowed">Indicates, if the result of the of <see cref="!:aDbSelectMethod"/>, can deliver no records</param>
+            <returns>Returns the database object</returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.SensiBusinessObjectHelper.SqlDataWriterHelper.GetOrCreateDbObject``1(System.Func{System.Collections.Generic.List{``0}},System.String,System.Func{``0},System.Boolean,System.Boolean)">
+            <summary>Gets or creates a database object based on <see cref="T:Sensirion.Data.DB.BaseSensiBusinesObject"/>
+            </summary>
+            <typeparam name="TDbObject">A database object based on <see cref="T:Sensirion.Data.DB.BaseSensiBusinesObject"/></typeparam>
+            <param name="aDbSelectMethod">A method, that delivers a list of database objects</param>
+            <param name="aDbObjectCreateMethod">A method that creates a database object based on <see cref="T:Sensirion.Data.DB.BaseSensiBusinesObject"/>. This method can be <p>null</p></param>
+            <param name="aId">An optional ID of the new object</param>
+            <param name="aMultipleAllowed">Indicates, if the result of the of <see cref="!:aDbSelectMethod"/>, can deliver multiple records</param>
+            <param name="aNullAllowed">Indicates, if the result of the of <see cref="!:aDbSelectMethod"/>, can deliver no records</param>
+            <returns>Returns the database object</returns>
+        </member>
+        <member name="T:Sensirion.Data.DB.SensiBusinessObjectHelper.WhereConditionFactory">
+            <summary>Factory for the where condition clauses
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.SensiBusinessObjectHelper.WhereConditionFactory.#ctor(System.Int32)">
+            <summary>Default constructor
+            </summary>
+            <param name="numCompareDigits">The number of digits, that should be compared for float and number</param>
+        </member>
+        <member name="M:Sensirion.Data.DB.SensiBusinessObjectHelper.WhereConditionFactory.GetConditionString(Sensirion.Data.DB.SensiBusinessObjectHelper.DbValue,System.String)">
+            <summary>Get the condition string for a given database field and value
+            </summary>
+            <param name="dbValue">The database field, value and type</param>
+            <param name="variableName">The name of the variable</param>
+            <returns>Returns a condition string</returns>
+        </member>
+        <member name="T:Sensirion.Data.DB.SensiConnectionStringBuilder">
+            <summary>Used to build a valid connection string from the properties</summary>
+        </member>
+        <member name="F:Sensirion.Data.DB.SensiConnectionStringBuilder._DefaultUser">
+            <summary>The user for the applications located in the registry that is different for each site 
+            </summary>
+        </member>
+        <member name="F:Sensirion.Data.DB.SensiConnectionStringBuilder._DefaultPassword">
+            <summary>The password for the applications located in the registry that is different for each site 
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.SensiConnectionStringBuilder.#cctor">
+            <summary>Static constructor that accesses the registry for the user and the password used by
+              our application. This information is located in the registry and is different at each site.
+              This code is located in the static constructor to read this information only once without having a
+              singleton (needs locking all the time). This static constructor is thread safe because it is
+              executed only once by the .NET framework when the class is used the first time
+              (for a more detailed explanation see https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/static-constructors)
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.SensiConnectionStringBuilder.GetDefaultPassword">
+            <summary>Gets the password for the default user out of the registry. This information will be
+              placed there by IT and is different for each site. To be a little bit hidden to the normal user,
+              the password is obfuscated (not encrypted).
+            </summary>
+            <returns>Password for the default user</returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.SensiConnectionStringBuilder.GetDefaultUser">
+            <summary>Gets name of the default user out of the registry. This information will be placed there
+              by IT and is different for each site. To be a little bit hidden to the normal user,
+              the user name is obfuscated (not encrypted).
+            </summary>
+            <returns>Password for the default user</returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.SensiConnectionStringBuilder.#ctor">
+            <summary>Initializes a new instance of the class.
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.SensiConnectionStringBuilder.#ctor(System.String,System.String,System.Boolean,System.String)">
+            <summary>Initializes a new instance of the class.
+            </summary>
+            <param name="aServerName">Name of the server to connect</param>
+            <param name="aDataBaseName">Name of the database to connect</param>
+            <param name="aIntegratedSecurity">if <c>true</c>, the current windows user will be used</param>
+            <param name="aApplicationName">Name of the Application (useful for profiling).</param>
+        </member>
+        <member name="P:Sensirion.Data.DB.SensiConnectionStringBuilder.FailoverPartner">
+            <summary>Server name of the failover partner
+            </summary>
+        </member>
+        <member name="P:Sensirion.Data.DB.SensiConnectionStringBuilder.Password">
+            <summary>Password for the user (not used if the default user is used)
+            </summary>
+        </member>
+        <member name="P:Sensirion.Data.DB.SensiConnectionStringBuilder.DBUser">
+            <summary>Username for the database connection (not used if default user --> empty string)
+            </summary>
+        </member>
+        <member name="P:Sensirion.Data.DB.SensiConnectionStringBuilder.ServerName">
+            <summary>Name of the server to connect
+            </summary>
+        </member>
+        <member name="P:Sensirion.Data.DB.SensiConnectionStringBuilder.DataBaseName">
+            <summary>Name of the database to connect
+            </summary>
+        </member>
+        <member name="P:Sensirion.Data.DB.SensiConnectionStringBuilder.IntegratedSecurity">
+            <summary>if <c>true</c>, the current windows user will be used
+            </summary>
+        </member>
+        <member name="P:Sensirion.Data.DB.SensiConnectionStringBuilder.ApplicationName">
+            <summary>Name of the Application (useful for profiling). Default = 'Rigi'
+            </summary>
+        </member>
+        <member name="F:Sensirion.Data.DB.SensiConnectionStringBuilder._ConnectionTimeout">
+            <summary>Backing field for the <see cref="P:Sensirion.Data.DB.SensiConnectionStringBuilder.ConnectionTimeout"/> Property.
+            <para>Timeout for the underlaying connection in seconds</para>
+            </summary>
+        </member>
+        <member name="P:Sensirion.Data.DB.SensiConnectionStringBuilder.ConnectionTimeout">
+            <summary>Timeout for the underlaying connection in seconds
+            </summary>
+        </member>
+        <member name="P:Sensirion.Data.DB.SensiConnectionStringBuilder.ConnectionString">
+            <summary>Connection string representing the setted properties
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.SensiConnectionStringBuilder.BuildConnectionString">
+            <summary>Builds the connection string due to the properties of the class</summary>
+            <returns>A connection string.</returns>
+            <exception cref="T:System.Exception">
+            Occurs when the username and/or password is empty/null (and the <see cref="P:Sensirion.Data.DB.SensiConnectionStringBuilder.IntegratedSecurity"/>  is false), and fails while trying to get from registry.
+            </exception>
+        </member>
+        <member name="T:Sensirion.Data.DB.SqlBulkCopyHelper">
+            <summary>To make the use of <see cref="T:System.Data.SqlClient.SqlBulkCopy"/> easier and avoid wrong column orders</summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.SqlBulkCopyHelper.ApplyColumnMappings(System.Data.SqlClient.SqlBulkCopy,System.Data.DataTable)">
+            <summary>Adds column mappings for all specified columns. Column names must match table column names.</summary>
+            <param name="bulkCopy">The bulk copy to add columns mappings to.</param>
+            <param name="dataTable">The data table to read column names from.</param>
+        </member>
+        <member name="T:Sensirion.Data.DB.SqlConnectionHelper">
+            <summary>Class for handle the current <see cref="T:System.Data.SqlClient.SqlConnection"/>
+            </summary>
+        </member>
+        <member name="P:Sensirion.Data.DB.SqlConnectionHelper.SqlConnection">
+            <summary>The current SQL connection
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.SqlConnectionHelper.#ctor(Sensirion.Data.DB.IExecuteQuery)">
+            <summary>Default constructor
+            </summary>
+            <param name="executeQuery">The SQL helper</param>
+        </member>
+        <member name="M:Sensirion.Data.DB.SqlConnectionHelper.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="M:Sensirion.Data.DB.SqlConnectionHelper.op_Implicit(Sensirion.Data.DB.SqlConnectionHelper)~System.Data.SqlClient.SqlConnection">
+            <summary>Implicit conversion to <see cref="P:Sensirion.Data.DB.SqlConnectionHelper.SqlConnection"/>
+            </summary>
+            <param name="sqlConnectionHelper">A SQL connection</param>
+        </member>
+        <member name="T:Sensirion.Data.DB.SqlDataReaderExtensionMethods">
+            <summary>Extension methods for the <see cref="T:System.Data.SqlClient.SqlDataReader"/>
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.SqlDataReaderExtensionMethods.GetData``1(System.Data.SqlClient.SqlDataReader,System.String,``0)">
+            <summary>Gets data of a specific column
+            </summary>
+            <typeparam name="TType">The result type</typeparam>
+            <param name="reader">The <see cref="T:System.Data.SqlClient.SqlDataReader"/> to extend.</param>
+            <param name="fieldName">The SQL field name</param>
+            <param name="defaultValue">The default value</param>
+            <returns>Returns the data of a specific column</returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.SqlDataReaderExtensionMethods.GetData``1(System.Data.SqlClient.SqlDataReader,System.String,System.Nullable{System.Int32}@,``0)">
+            <summary>Gets data of a specific column
+            </summary>
+            <typeparam name="TType">The result type</typeparam>
+            <param name="reader">The <see cref="T:System.Data.SqlClient.SqlDataReader"/> to extend.</param>
+            <param name="fieldName">The SQL field name</param>
+            <param name="ordinal">The SQL field ordinal. If <p>null</p>, it will be set.</param>
+            <param name="defaultValue">The default value</param>
+            <returns>Returns the data of a specific column</returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.SqlDataReaderExtensionMethods.IsDBNull(System.Data.SqlClient.SqlDataReader,System.String)">
+            <summary>Gets a value that indicates whether the column contains non-existent or missing values.
+            </summary>
+            <param name="reader">The <see cref="T:System.Data.SqlClient.SqlDataReader"/> to extend.</param>
+            <param name="aFieldName">The SQL field name</param>
+            <returns>Indicates, if the database value is null</returns>
+        </member>
+        <member name="T:Sensirion.Data.DB.SqlFileHandler">
+            <summary>Sourcecode for the class that allows to execute .sql files via sqlcmd utility.
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.SqlFileHandler.ExecuteSqlFile(System.String,System.String,System.String)">
+            <summary>Executes the SQL commands in the given file via access to sqlcmd utility. 
+            The utility must be installed.
+            </summary>
+            <param name="aFilePath">The path to the sql file to execute</param>
+            <param name="aServerName">The name of the server that hosts the database.</param>
+            <param name="aDbName">The name of the database.</param>
+            <returns><c>true</c> if successful. <c>false</c> otherwise.</returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.SqlFileHandler.ExecuteSqlFile(System.String,Sensirion.Data.DB.SensiConnectionStringBuilder,System.Int32)">
+            <summary>Executes the SQL commands in the given file via access to sqlcmd utility. 
+            The utility must be installed.
+            </summary>
+            <param name="aFilePath">The path to the sql file to execute</param>
+            <param name="aConnectionString">The connection string for the database.</param>
+            <param name="timeoutSeconds">[Optional] Timeout in seconds. Default 20s.</param>
+            <returns><c>true</c> if successful. <c>false</c> otherwise.</returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.SqlFileHandler.ExecuteSqlFileWithException(System.String,Sensirion.Data.DB.SensiConnectionStringBuilder,System.Int32)">
+            <summary>Executes the SQL commands in the given file via access to sqlcmd utility. 
+            The utility must be installed.
+            </summary>
+            <param name="aFilePath">The path to the sql file to execute</param>
+            <param name="aConnectionString">The connection string for the database.</param>
+            <param name="timeoutSeconds">[Optional] Timeout in seconds. Default 20s.</param>
+            <exception cref="T:System.IO.IOException">thrown if the exit code of the process used is not 0</exception>
+        </member>
+        <member name="T:Sensirion.Data.DB.SQLHelper">
+            <summary>Class to provide services for the SQLServer 
+            </summary>
+            <remarks>
+            <h3>Serialization</h3>
+            Following information is not serialized and lost when serialized:
+              <list type="bullet">
+                <item>TransactionToUse</item>
+                <item>ConnectionToUse</item>
+                <item>All parameters in the instance.</item>
+              </list>
+            </remarks>
+        </member>
+        <member name="T:Sensirion.Data.DB.SQLHelper.SQLHelperEventArgs">
+            <summary>Event arguments for the Helper class 
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLHelper.SQLHelperEventArgs.#ctor(Sensirion.Data.DB.SQLHelper)">
+            <summary>Initializes the instance
+            </summary>
+        </member>
+        <member name="P:Sensirion.Data.DB.SQLHelper.SQLHelperEventArgs.Helper">
+            <summary>Used to get a helper object to access the db
+            </summary>
+        </member>
+        <member name="T:Sensirion.Data.DB.SQLHelper.QueryHookEventArgs">
+            <summary>Class to hook the execution of queries. In the event you get the executing command 
+              and can parse for the parameters and the connection and change whatever you want :).
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLHelper.QueryHookEventArgs.#ctor(System.Data.SqlClient.SqlCommand)">
+            <summary>Initializes the instance
+            </summary>
+            <param name="aCommand">Command that wants to execute the query</param>
+        </member>
+        <member name="P:Sensirion.Data.DB.SQLHelper.QueryHookEventArgs.Command">
+            <summary>Command that wants to execute a query
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLHelper.QueryHookEventArgs.GetSQLCommandWithoutParameter(System.Data.SqlClient.SqlCommand)">
+            <summary>Converts the query to a string with the parameter values filled in.
+              !!! ATTENTION !!!. Not for productive code.
+            </summary>
+            <param name="aCommand">Command to inspect</param>
+            <returns>Query to execute with parameter values filled in. 
+              If an error occurs, the error message will be returned
+            </returns>
+        </member>
+        <member name="T:Sensirion.Data.DB.SQLHelper.ParameterType">
+            <summary>Represents a parameter that can be used in customized queries 
+            </summary>
+        </member>
+        <member name="F:Sensirion.Data.DB.SQLHelper.ParameterType.Name">
+            <summary>Name of the parameter 
+            </summary>
+        </member>
+        <member name="F:Sensirion.Data.DB.SQLHelper.ParameterType.DataType">
+            <summary>DataType of the parameter. This type will be converted in a proprietary data type (depending on
+              used database management system.</summary>
+        </member>
+        <member name="F:Sensirion.Data.DB.SQLHelper.ParameterType.Value">
+            <summary>Value of the parameter 
+            </summary>
+        </member>
+        <member name="F:Sensirion.Data.DB.SQLHelper.ParameterType.IsNullable">
+            <summary>True, if the parameter value can be <see langword="null"/> 
+            </summary>
+        </member>
+        <member name="E:Sensirion.Data.DB.SQLHelper.QueryHook">
+            <summary>Event that allows to peek the next executing command object. 
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLHelper.DoQueryHook(System.Data.SqlClient.SqlCommand)">
+            <summary>Dispatcher for the Query Hook 
+            </summary>
+            <param name="aCommand">Command to inspect</param>
+        </member>
+        <member name="F:Sensirion.Data.DB.SQLHelper.DEFAULT_COMMAND_TIMEOUT">
+            <summary>Default timeout for the execution of a command in seconds 
+            </summary>
+        </member>
+        <member name="F:Sensirion.Data.DB.SQLHelper._DefaultConnectionString">
+            <summary>Backing field for the <see cref="P:Sensirion.Data.DB.SQLHelper.DefaultConnectionString"/> Property.
+            <para>Default to connect to the database</para>
+            </summary>
+        </member>
+        <member name="P:Sensirion.Data.DB.SQLHelper.DefaultConnectionString">
+            <summary>Default to connect to the database
+            </summary>
+        </member>
+        <member name="E:Sensirion.Data.DB.SQLHelper.AskForHelperInstance">
+            <summary>Used to get a Helper class to access the db. This event will be called every time
+              a business object wants to access the database. If no Handler will be provided, a
+              new one will be created.
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLHelper.DoAskForHelperInstance(System.Object)">
+            <summary>Calls the <see cref="E:Sensirion.Data.DB.SQLHelper.AskForHelperInstance"/> event to get a helper instance.
+              If no helper is provided, <see langword="null"/> will be returned
+            </summary>
+            <param name="aSender">Sender that asks for the helper (a business object)</param>
+            <returns>provided Helper or <see langword="null"/></returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLHelper.#ctor">
+            <summary>Initializes the instance with the default connection string
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLHelper.#ctor(System.String)">
+            <summary>Initializes the instance 
+            </summary>
+            <param name="aConnectionString">Connection string to be used for the instance</param>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLHelper.#ctor(System.Int32)">
+            <summary>Initializes the instance 
+            </summary>
+            <param name="aCommandTimeout">Timeout for a single execute of a command</param>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLHelper.#ctor(System.Int32,System.Boolean)">
+            <summary>Initializes the instance 
+            </summary>
+            <param name="aCommandTimeout">Timeout for a single execute of a command</param>
+            <param name="aIsSingleRow">Enables the database to optimize the execution of a query</param>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLHelper.#ctor(System.String,System.Int32,System.Boolean)">
+            <summary>Initializes the instance 
+            </summary>
+            <param name="aConnectionString">Connection string to be used for the instance</param>
+            <param name="aCommandTimeout">Timeout for a single execute of a command</param>
+            <param name="aIsSingleRow">Enables the database to optimize the execution of a query</param>
+        </member>
+        <member name="F:Sensirion.Data.DB.SQLHelper._ConnectionString">
+            <summary>Backing field for the <see cref="P:Sensirion.Data.DB.SQLHelper.ConnectionString"/> Property.
+            <para>Connection string of the instance</para>
+            </summary>
+        </member>
+        <member name="P:Sensirion.Data.DB.SQLHelper.ConnectionString">
+            <summary>Connection string of the instance
+            </summary>
+        </member>
+        <member name="P:Sensirion.Data.DB.SQLHelper.CommandTimeout">
+            <summary>Timeout for a single execute of a command
+            </summary>
+        </member>
+        <member name="F:Sensirion.Data.DB.SQLHelper._IsSingleRow">
+            <summary>Backing field for the <see cref="P:Sensirion.Data.DB.SQLHelper.IsSingleRow"/> Property.
+            <para>Enables the database to optimize the execution of a query</para>
+            </summary>
+        </member>
+        <member name="P:Sensirion.Data.DB.SQLHelper.IsSingleRow">
+            <summary>Enables the database to optimize the execution of a query
+            </summary>
+        </member>
+        <member name="F:Sensirion.Data.DB.SQLHelper._Parameters">
+            <summary>Backing field for the <see cref="P:Sensirion.Data.DB.SQLHelper.Parameters"/> Property.
+            <para>Collection of parameters to be set in the query</para>
+            </summary>
+        </member>
+        <member name="P:Sensirion.Data.DB.SQLHelper.Parameters">
+            <summary>Collection of parameters to be set in the query
+            </summary>
+        </member>
+        <member name="F:Sensirion.Data.DB.SQLHelper._ConnectionToUse">
+            <summary>Backing field for the <see cref="P:Sensirion.Data.DB.SQLHelper.ConnectionToUse"/> Property.
+            <para>Connection that should be used in this instance. If no connection has been provided, a 
+               new connection with the default connection string will be created.
+            </para>
+            </summary>
+        </member>
+        <member name="P:Sensirion.Data.DB.SQLHelper.ConnectionToUse">
+            <summary>Connection that should be used in this instance. If no connection has been provided, a 
+               new connection with the default connection string will be created.
+            </summary>
+        </member>
+        <member name="F:Sensirion.Data.DB.SQLHelper._TransactionToUse">
+            <summary>Backing field for the 
+            <para>Transaction that should be used in this instance. The Transaction has been created in the
+             BeginTransaction() Method of the connection. If no transaction is used this member will be <see langword="null"/></para>
+            </summary>
+        </member>
+        <member name="P:Sensirion.Data.DB.SQLHelper.TransactionToUse">
+            <summary>Transaction that should be used in this instance. The Transaction has been created in the
+              BeginTransaction() Method of the connection Method. If no transaction is used this member will be <see langword="null"/>
+            </summary>
+        </member>
+        <member name="F:Sensirion.Data.DB.SQLHelper._ConvertMinValuesToDbNull">
+            <summary>Backing field for the <see cref="P:Sensirion.Data.DB.SQLHelper.ConvertMinValuesToDbNull"/> Property.
+            <para>Converts parameter values to <see langword="null"/> if a min value has been assigned</para>
+            </summary>
+        </member>
+        <member name="P:Sensirion.Data.DB.SQLHelper.ConvertMinValuesToDbNull">
+            <summary>Converts parameter values to <see langword="null"/> if a min value has been assigned
+            </summary>
+        </member>
+        <member name="F:Sensirion.Data.DB.SQLHelper._ConvertEmptyValuesToDbNull">
+            <summary>Backing field for the <see cref="P:Sensirion.Data.DB.SQLHelper.ConvertEmptyValuesToDbNull"/> Property.
+            <para>Converts parameter values to <see langword="null"/> if an empty value has been assigned</para>
+            </summary>
+        </member>
+        <member name="P:Sensirion.Data.DB.SQLHelper.ConvertEmptyValuesToDbNull">
+            <summary>Converts parameter values to <see langword="null"/> if an empty value has been assigned
+            </summary>
+        </member>
+        <member name="F:Sensirion.Data.DB.SQLHelper._ConvertMaxValuesToDbNull">
+            <summary>Backing field for the <see cref="P:Sensirion.Data.DB.SQLHelper.ConvertMaxValuesToDbNull"/> Property.
+            <para>Converts parameter values to <see langword="null"/> if a max value has been assigned to</para>
+            </summary>
+        </member>
+        <member name="P:Sensirion.Data.DB.SQLHelper.ConvertMaxValuesToDbNull">
+            <summary>Converts parameter values to <see langword="null"/> if a max value has been assigned to
+            </summary>
+        </member>
+        <member name="F:Sensirion.Data.DB.SQLHelper._lastException">
+            <summary>Backing field for <see cref="P:Sensirion.Data.DB.SQLHelper.LastException"/> property.
+            </summary>
+        </member>
+        <member name="P:Sensirion.Data.DB.SQLHelper.LastException">
+            <summary>Stores the last exception that occurred when executing a SQL query. Can be reset using
+            <see cref="M:Sensirion.Data.DB.SQLHelper.ResetLastException"/>.
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLHelper.ExecuteSqlScalarToInt(System.String,System.Int32@)">
+            <summary>Executes the query and tries to transform the return value into an integer
+            </summary>
+            <param name="aQuery">Query to execute</param>
+            <param name="aValue">Variable where the return value will be filled in</param>
+            <exception cref="T:Sensirion.Data.DB.SQLHelperException">Exception thrown, of something is wrong with the execution of the query. 
+              The text of the executing query is contained with parameters and values.</exception>
+            <returns><c>true</c> if the query executes and the return value has been successfully converted</returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLHelper.ExecuteSqlScalarToInt(System.String,System.Int64@)">
+            <summary>Executes the query and tries to transform the return value into an long
+            </summary>
+            <param name="aQuery">Query to execute</param>
+            <param name="aValue">Variable where the return value will be filled in</param>
+            <exception cref="T:Sensirion.Data.DB.SQLHelperException">Exception thrown, of something is wrong with the execution of the query. 
+              The text of the executing query is contained with parameters and values.</exception>
+            <returns><c>true</c> if the query executes and the return value has been successfully converted</returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLHelper.ExecuteSqlScalarToInt(System.String,System.Int16@)">
+            <summary>Executes the query and tries to transform the return value into a short
+            </summary>
+            <param name="aQuery">Query to execute</param>
+            <param name="aValue">Variable where the return value will be filled in</param>
+            <exception cref="T:Sensirion.Data.DB.SQLHelperException">Exception thrown, of something is wrong with the execution of the query. 
+              The text of the executing query is contained with parameters and values.</exception>
+            <returns><c>true</c> if the query executes and the return value has been successfully converted</returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLHelper.ExecuteSqlScalarToInt(System.String,System.Byte@)">
+            <summary>Executes the query and tries to transform the return value into a byte
+            </summary>
+            <param name="aQuery">Query to execute</param>
+            <param name="aValue">Variable where the return value will be filled in</param>
+            <exception cref="T:Sensirion.Data.DB.SQLHelperException">Exception thrown, of something is wrong with the execution of the query. 
+              The text of the executing query is contained with parameters and values.</exception>
+            <returns><c>true</c> if the query executes and the return value has been successfully converted</returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLHelper.ExecuteSqlScalarToInt32(System.String,System.Int32@)">
+            <summary>Executes the query and tries to transform the return value into an integer
+            </summary>
+            <param name="aQuery">Query to execute</param>
+            <param name="aValue">Variable where the return value will be filled in</param>
+            <exception cref="T:Sensirion.Data.DB.SQLHelperException">Exception thrown, of something is wrong with the execution of the query. 
+              The text of the executing query is contained with parameters and values.</exception>
+            <returns><c>true</c> if the query executes and the return value has been successfully converted</returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLHelper.ExecuteSqlScalarToInt64(System.String,System.Int64@)">
+            <summary>Executes the query and tries to transform the return value into a long
+            </summary>
+            <param name="aQuery">Query to execute</param>
+            <param name="aValue">Variable where the return value will be filled in</param>
+            <exception cref="T:Sensirion.Data.DB.SQLHelperException">Exception thrown, of something is wrong with the execution of the query. 
+              The text of the executing query is contained with parameters and values.</exception>
+            <returns><c>true</c> if the query executes and the return value has been successfully converted</returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLHelper.ExecuteSqlScalarToDouble(System.String,System.Double@)">
+            <summary>Executes the query and tries to transform the return value into a double
+            </summary>
+            <param name="aQuery">Query to execute</param>
+            <param name="aValue">Variable where the return value will be filled in</param>
+            <exception cref="T:Sensirion.Data.DB.SQLHelperException">Exception thrown, of something is wrong with the execution of the query. 
+              The text of the executing query is contained with parameters and values.</exception>
+            <returns><c>true</c> if the query executes and the return value has been successfully converted</returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLHelper.ExecuteSqlScalarToFloat(System.String,System.Single@)">
+            <summary>Executes the query and tries to transform the return value into a float (single)
+            </summary>
+            <param name="aQuery">Query to execute</param>
+            <param name="aValue">Variable where the return value will be filled in</param>
+            <exception cref="T:Sensirion.Data.DB.SQLHelperException">Exception thrown, of something is wrong with the execution of the query. 
+              The text of the executing query is contained with parameters and values.</exception>
+            <returns><c>true</c> if the query executes and the return value has been successfully converted</returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLHelper.ExecuteSqlScalarToString(System.String,System.String@)">
+            <summary>Executes the query and tries to transform the return value into a string
+            </summary>
+            <param name="aQuery">Query to execute</param>
+            <param name="aValue">Variable where the return value will be filled in</param>
+            <exception cref="T:Sensirion.Data.DB.SQLHelperException">Exception thrown, of something is wrong with the execution of the query. 
+              The text of the executing query is contained with parameters and values.</exception>
+            <returns><c>true</c> if the query executes and the return value has been successfully converted</returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLHelper.ExecuteSqlScalar(System.String)">
+            <summary>Executes the query and returns the value as object
+            </summary>
+            <param name="aQuery">Query to execute</param>
+            <exception cref="T:Sensirion.Data.DB.SQLHelperException">Exception thrown, of something is wrong with the execution of the query. 
+              The text of the executing query is contained with parameters and values.</exception>
+            <returns>The return value of the query</returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLHelper.ExecuteSqlReader(System.String,System.Data.SqlClient.SqlConnection)">
+            <summary>Executes the query with a given connection. Take care to close the connection
+              when you don't need the reader anymore, because the caller is responsible to manage the 
+              connection manually.    
+            </summary>
+            <param name="aQuery">Query to execute</param>
+            <param name="aCon">Connection to be used to execute the query</param>
+            <exception cref="T:Sensirion.Data.DB.SQLHelperException">Exception thrown, of something is wrong with the execution of the query. 
+              The text of the executing query is contained with parameters and values.</exception>
+            <returns>An open reader to parse for data</returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLHelper.ExecuteSqlExactlyOneResult(System.String,System.String,System.String,System.Object[])">
+            <summary>Executes the query. Throws a meaningful exception if not exactly one result row is found.
+            
+            Example usage:
+            <code>
+                  ExecuteSqlExactlyOneResult("SELECT ...", 
+                                             "currently active ProductionStepDefinition", 
+                                             "ArticleNumber='{0}' AND StandardizedProductionStepName='{1}'",
+                                             articleNumber, standardizedProductionStepName);
+            </code>
+             </summary>
+            <param name="aQuery">Query to execute</param>
+            <param name="queriedEntity">The queried entity. Used to generate a meaningful message.</param>
+            <param name="criteria">The criteria. Used to generate a meaningful message.</param>
+            <param name="criteriaParams">The criteria parameters. Used to generate a meaningful message.</param>
+            <exception cref="T:Sensirion.Data.DB.SQLHelperException">Exception thrown, of something is wrong with the execution of the query. 
+              The text of the executing query is contained with parameters and values.</exception>
+            <returns>The retrieved record or null if there is no result.</returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLHelper.ExecuteSqlSingleResult(System.String)">
+            <summary>Executes the query. Returns null is no results are found. Throws an exception if more than one result row is found. </summary>
+            <param name="aQuery">Query to execute</param>
+            <exception cref="T:Sensirion.Data.DB.SQLHelperException">Exception thrown, of something is wrong with the execution of the query. 
+              The text of the executing query is contained with parameters and values.</exception>
+            <returns>The retrieved record or null if there is no result.</returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLHelper.ExecuteSqlManyResults(System.String)">
+            <summary>Executes the query. </summary>
+            <param name="aQuery">Query to execute</param>
+            <exception cref="T:Sensirion.Data.DB.SQLHelperException">Exception thrown, of something is wrong with the execution of the query.</exception>
+            <returns>The retrieved records, never null.</returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLHelper.ExecuteSqlReader(System.String,System.Data.SqlClient.SqlCommand)">
+            <summary>Executes the query with a given connection. Take care to close the connection
+              when you don't need the reader anymore, because the caller is responsible to manage the 
+              connection manually. The passed argument <paramref name="aCommand"/> is bound to the
+              connection, so the caller must dispose the command AND the connection manually.
+            </summary>
+            <param name="aQuery">Query to execute</param>
+            <param name="aCommand">Command to be used to execute the query</param>
+            <exception cref="T:Sensirion.Data.DB.SQLHelperException">Exception thrown, of something is wrong with the execution of the query. 
+              The text of the executing query is contained with parameters and values.</exception>
+            <returns>An open reader to parse for data</returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLHelper.ExecuteSqlReader(System.Data.SqlClient.SqlCommand)">
+            <summary>Executes the command with a given connection. Take care to close the connection
+              when you don't need the reader anymore, because the caller is responsible to manage the 
+              connection manually. The passed argument <paramref name="aCommand"/> is bound to the
+              connection, so the caller must dispose the command AND the connection manually.
+            </summary>
+            <param name="aCommand">Command to execute</param>
+            <exception cref="T:Sensirion.Data.DB.SQLHelperException">Exception thrown, of something is wrong with the execution of the query. 
+              The text of the executing query is contained with parameters and values.</exception>
+            <returns>An open reader to parse for data</returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLHelper.ConvertDbTypeToSQL(System.Data.DbType)">
+            <summary>Converts a generic data type in a SQLServer data type 
+            </summary>
+            <param name="aType">Type to be converted</param>
+            <returns>Converted type</returns>
+            <exception cref="T:System.NotSupportedException">Thrown if a data type is not supported by the method</exception>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLHelper.AddParameter(System.String,System.Data.DbType,System.Object,System.Boolean)">
+            <summary>Adds a sql parameter to the collection. The data type is a generic data type 
+            </summary>
+            <param name="aName">Name of the parameter</param>
+            <param name="aType">Type of the parameter</param>
+            <param name="aValue">Value of the parameter</param>
+            <param name="aIsNullable">True, if <c>null</c> is a valid value</param>
+            <returns>Added parameter as a sql parameter</returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLHelper.AddParameter(System.String,System.Data.SqlDbType,System.Object,System.Boolean,System.Data.ParameterDirection)">
+            <summary>Adds a sql parameter to the collection
+            </summary>
+            <param name="aName">Name of the parameter</param>
+            <param name="aType">Type of the parameter</param>
+            <param name="aValue">Value of the parameter</param>
+            <param name="aDirection">Input or Output parameter</param>
+            <param name="aIsNullable">True, if <c>null</c> is a valid value</param>
+            <returns>Added parameter as a sql parameter</returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLHelper.AddParameter(System.Data.SqlClient.SqlParameter)">
+            <summary>Adds a configured Parameter to the collection 
+            </summary>
+            <param name="aParameter"></param>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLHelper.GetConnection">
+            <summary>Gets a new Connection. If already a connection exist in the <see cref="P:Sensirion.Data.DB.SQLHelper.ConnectionToUse"/> property,
+              this connection will be used.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLHelper.IsConnectionUserControlled">
+            <summary>Returns <see langword="true"/>, if the connection is controlled by the user and should not be 
+              closed by the helper 
+            </summary>
+            <returns>True, if the user controls the connection</returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLHelper.ResetParameter">
+            <summary>Resets the parameter that are injected in the query 
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLHelper.Reset">
+            <summary>Resets the helper. The parameter and the <see cref="P:Sensirion.Data.DB.SQLHelper.LastException"/> will be reset and the <see cref="P:Sensirion.Data.DB.SQLHelper.IsSingleRow"/> property
+              will be set to <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLHelper.ReleaseConnection">
+            <summary>Release the Connection provided in the property <see cref="P:Sensirion.Data.DB.SQLHelper.ConnectionToUse"/>. If a 
+              Connection has been provided, the connection will be set to <see langword="null"/> and will be disposed before.
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLHelper.CreateConnection">
+            <summary>Creates a connection with the default parameter 
+            </summary>
+            <returns>The new connection object</returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLHelper.ResetLastException">
+            <summary>Resets the <see cref="P:Sensirion.Data.DB.SQLHelper.LastException"/> to <see langword="null"/>. This should be done
+            before a query is executed for which a potential excpetion will be evaluated.
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLHelper.ConfigurationExists(System.Byte[],System.Int32,System.String,System.Int32@)">
+            <summary>Checks if a configuration exists on the database. The connection of the helper will be used.
+              The fields of the table and the table name are default values (See in Remarks)
+            </summary>
+            <remarks>
+              <para>
+                <list type="table">
+                  <listheader>
+                    <description><strong>Name</strong></description>
+                    <description>value</description>
+                  </listheader>
+                  <item>
+                    <description>Table Name</description>
+                    <description>t_Configuration</description>
+                  </item>
+                  <item>
+                    <description>Id field name</description>
+                    <description>ConfigurationId</description>
+                  </item>
+                  <item>
+                    <description>Hash field name</description>
+                    <description>Hash</description>
+                  </item>
+                  <item>
+                    <description>Length field name</description>
+                    <description>Length</description>
+                  </item>
+                  <item>
+                    <description>Original name field name</description>
+                    <description>OriginalName</description>
+                  </item>
+                </list>
+              </para>    
+            </remarks>
+            <param name="aHash">Hash value of the configuration</param>
+            <param name="aLength">length of the configuration</param>
+            <param name="aOriginalName">Original name of the configuration (e.g. file name)</param>
+            <param name="aConfigurationID">provides the id of the configuration, if it exists. Should not be used if result is <c>false</c></param>
+            <exception cref="T:Sensirion.Data.DB.SQLHelperException">Exception thrown, of something is wrong with the execution of the query. 
+              The text of the executing query is contained with parameters and values.</exception>
+            <returns><c>true</c>, if the configuration exist on the database. If <c>false</c>, the <paramref name="aConfigurationID"/>, can not be used (default -1)</returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLHelper.ConfigurationExists(System.Byte[],System.Int32,System.String,System.String,System.String,System.String,System.String,System.String,System.Int32@)">
+            <summary>Checks if a configuration exists on the database. The connection of the helper will be used 
+            </summary>
+            <param name="aHash">Hash value of the configuration</param>
+            <param name="aLength">length of the configuration</param>
+            <param name="aOriginalName">Original name of the configuration (e.g. file name)</param>
+            <param name="aTableName">Full name of the configuration table (schema included if a schema is assigned to)</param>
+            <param name="aIdFieldName">Name of the id field in the configuration table</param>
+            <param name="aHashFieldName">Name of the hash field in the configuration table</param>
+            <param name="aLengthFieldName">Name of the length field in the configuration table</param>
+            <param name="aOriginalNameFieldName">Name of the original name field in the configuration table</param>
+            <param name="aConfigurationID">provides the id of the configuration, if it exists. Should not be used if result is <c>false</c></param>
+            <exception cref="T:Sensirion.Data.DB.SQLHelperException">Exception thrown, of something is wrong with the execution of the query. 
+              The text of the executing query is contained with parameters and values.</exception>
+            <returns><c>true</c>, if the configuration exist on the database. If <c>false</c>, the <paramref name="aConfigurationID"/>, can not be used (default -1)</returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLHelper.CreateConfigurationLink(System.Int32,System.Int32,System.String,System.String,System.String)">
+            <summary>Creates the link between the configuration and an item. The field names and table names must be provided.
+              The item and the configuration must be saved before, because both id must be provided.
+            </summary>
+            <param name="aCrossTableTargetId">Id of the data row in the item (target) table</param>
+            <param name="aConfigId">Id in the configuration table</param>
+            <param name="aCrossTableName">Name of the cross table (e.g. 'Prober.t_ProbeSession_Configuration')</param>
+            <param name="aCrossTableTargetIdFieldName">Name of the field that points to the item (target) table</param>
+            <param name="aConfigurationIdFieldName">Name of the field that points to the configuration table</param>
+            <exception cref="T:Sensirion.Data.DB.SQLHelperException">Exception thrown, of something is wrong with the execution of the query. 
+              The text of the executing query is contained with parameters and values.</exception>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLHelper.CopyParameters(System.Data.SqlClient.SqlCommand)">
+            <summary>Copies the parameters of the instance in the command object 
+            </summary>
+            <param name="aCommand">Command object that executes the query</param>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLHelper.InitParameters(System.Runtime.Serialization.StreamingContext)">
+            <summary>This method is called during deserialization 
+            and used to reinitialize the parameter list in
+            <see cref="F:Sensirion.Data.DB.SQLHelper._Parameters"/>
+            </summary>
+            <param name="aContext">Streaming context.</param>
+        </member>
+        <member name="P:Sensirion.Data.DB.SQLHelper.InTransaction">
+            <summary>Gets the state if an <c>internal</c> transaction has been started or not
+            </summary>
+        </member>
+        <member name="F:Sensirion.Data.DB.SQLHelper._AfterCommitDelegates">
+            <summary>Backing field for the events 
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLHelper.AddAfterCommitNotification(System.Action)">
+            <summary>Adds a notification in case of a commit. Be careful when add a handler to <c>this</c>, because if
+              you do not call <see cref="M:Sensirion.Data.DB.IExecuteQuery.RemoveAfterCommitNotification(System.Guid)"/> the handler will stay in memory and 
+              will be called on each commit that is done with this instance.
+              Because this is not a .net event you can call <see cref="M:Sensirion.Data.DB.IExecuteQuery.RemoveAfterCommitNotification(System.Guid)"/> and 
+              <see cref="M:Sensirion.Data.DB.IExecuteQuery.RemoveBeforeRollbackNotification(System.Guid)"/> during the notification itself.
+            </summary>
+            <param name="aToCall">delegate to call in case of a commit</param>
+            <returns>GUID to deregister the notification with the <see cref="M:Sensirion.Data.DB.IExecuteQuery.RemoveAfterCommitNotification(System.Guid)"/></returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLHelper.RemoveAfterCommitNotification(System.Guid)">
+            <summary>Removes a notification from the list of notifications in case of a commit.
+              This method can be called even if there is a notification running.
+            </summary>
+            <param name="aToRemove">The GUID returned by the <see cref="M:Sensirion.Data.DB.IExecuteQuery.AddAfterCommitNotification(System.Action)"/> method.</param>
+        </member>
+        <member name="F:Sensirion.Data.DB.SQLHelper._BeforeRollbackDelegates">
+            <summary>Backing field for the events 
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLHelper.AddBeforeRollbackNotification(System.Action)">
+            <summary>Adds a notification in case of a rollback. Be carefull when add a handler to this, because if
+              you do not call <see cref="M:Sensirion.Data.DB.IExecuteQuery.RemoveBeforeRollbackNotification(System.Guid)"/> the handler will stay in memory and 
+              will be called on each rollback that is done with this instance.
+              Because this is not a .net event you can call <see cref="M:Sensirion.Data.DB.IExecuteQuery.RemoveAfterCommitNotification(System.Guid)"/> and 
+              <see cref="M:Sensirion.Data.DB.IExecuteQuery.RemoveBeforeRollbackNotification(System.Guid)"/> during the notification itself.
+            </summary>
+            <param name="aToCall">Delegate to call in case of a rollback</param>
+            <returns>GUID to deregister the notification with the <see cref="M:Sensirion.Data.DB.IExecuteQuery.RemoveBeforeRollbackNotification(System.Guid)"/></returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLHelper.RemoveBeforeRollbackNotification(System.Guid)">
+            <summary>Removes a notification from the list of notifications in case of a rollback.
+              This method can be called even if there is a notification running.
+            </summary>
+            <param name="aToRemove">The GUID returned by the <see cref="M:Sensirion.Data.DB.IExecuteQuery.AddBeforeRollbackNotification(System.Action)"/> method.</param>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLHelper.BeginTransaction">
+            <summary> Starts a transaction. The Transaction will be created on an
+              existing connection, or a new connection will be created too.
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLHelper.BeginTransaction(System.Data.IsolationLevel)">
+            <summary>
+            Starts a transaction. The Transaction will be created on an
+            existing connection, or a new connection will be created too.
+            </summary>
+            <param name="iso">The isolation level.</param>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLHelper.Commit">
+            <summary>The current transaction will be committed. If no transaction is active a <see cref="T:System.InvalidOperationException"/>
+              should be raised.
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLHelper.Rollback">
+            <summary>The current transaction will be rolled back. Each registered method will be executed before the rollback
+              (see <see cref="M:Sensirion.Data.DB.IExecuteQuery.AddBeforeRollbackNotification(System.Action)"/>). 
+              has been done.
+            </summary>
+        </member>
+        <member name="T:Sensirion.Data.DB.SQLHelperException">
+            <summary>Exception class that will be used by the <see cref="T:Sensirion.Data.DB.SQLHelper"/> class 
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLHelperException.#ctor(System.String,System.String)">
+            <summary>Initializes a new instance of the <see cref="T:System.Exception" /> class.
+            </summary>
+            <param name="aExecutingQuery">Query that causes the error</param>
+            <param name="aExecutingQueryResolved">Query that causes the error with values instead of parameters</param>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLHelperException.#ctor(System.String,System.Exception,System.String,System.String)">
+            <summary>Initializes a new instance of the <see cref="T:System.Exception" /> class with a specified error message and a reference to the inner exception that is the cause of this exception.
+            </summary>
+            <param name="message">The error message that explains the reason for the exception. </param>
+            <param name="innerException">The exception that is the cause of the current exception, or a null reference (Nothing in Visual Basic) if no inner exception is specified. </param>
+            <param name="aExecutingQuery">Query that causes the error</param>
+            <param name="aExecutingQueryResolved">Query that causes the error with values instead of parameters</param>
+        </member>
+        <member name="F:Sensirion.Data.DB.SQLHelperException._ExecutingQuery">
+            <summary>Backing field for the <see cref="P:Sensirion.Data.DB.SQLHelperException.ExecutingQuery"/> Property.
+            <para>Query that causes the error</para>
+            </summary>
+        </member>
+        <member name="P:Sensirion.Data.DB.SQLHelperException.ExecutingQuery">
+            <summary>Query that causes the error
+            </summary>
+        </member>
+        <member name="F:Sensirion.Data.DB.SQLHelperException._ExecutingQueryResolved">
+            <summary>Backing field for the <see cref="P:Sensirion.Data.DB.SQLHelperException.ExecutingQueryResolved"/> Property.
+            <para>Resolved query that causes the errror. All values from parameter are included as values</para>
+            </summary>
+        </member>
+        <member name="P:Sensirion.Data.DB.SQLHelperException.ExecutingQueryResolved">
+            <summary>Resolved query that causes the errror. All values from parameter are included as values
+            </summary>
+        </member>
+        <member name="T:Sensirion.Data.DB.SQLQueryFunctions">
+            <summary>Collection of wrappeer classe to deal with SQL generator
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLQueryFunctions.ExecuteSqlQueryTransaction(System.String,Sensirion.Data.DB.BaseDBAction)">
+            <summary>Execute a Query as transaction
+            </summary>
+            <param name="aQuery"></param>
+            <param name="aDbAction"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLQueryFunctions.ExecuteSqlQueryScalar(System.String,Sensirion.Data.DB.BaseDBAction)">
+            <summary>
+            
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="aQuery"></param>
+            <param name="aDbAction"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLQueryFunctions.ExecuteSqlQueryScalar``1(System.String,Sensirion.Data.DB.BaseDBAction)">
+            <summary>
+            
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="aQuery"></param>
+            <param name="aDbAction"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Sensirion.Data.DB.SQLQueryParams">
+            <summary> Wrapper for SQL parameters to split variable and static parameters
+            </summary>
+        </member>
+        <member name="F:Sensirion.Data.DB.SQLQueryParams.NEW_LINE">
+            <summary>
+            New line fpr SQL statements
+            </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLQueryParams.SqlStrValue(System.Object)">
+            <summary>Retruns a value as SQL scriptable string
+            </summary>
+            <param name="aValue">something</param>
+            <returns>a string</returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLQueryParams.SqlStrValueList``1(``0[])">
+            <summary>Retruns a value as SQL scriptable string
+            </summary>
+            <param name="aValueList">something in an array</param>
+            <returns>a list of sql valid string values string</returns>
+        </member>
+        <member name="P:Sensirion.Data.DB.SQLQueryParams.Values">
+            <summary>Get's all 'allowed' SQL parameters.
+            Non SQL '@' Paramaters are ignored.
+            ATTENTION: REPLACES BASE FUNCTION!
+            </summary>
+            <returns><see cref="T:Sensirion.Data.DB.SQLHelper.ParameterType"/> list matching '@' SQL parameters</returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLQueryParams.SetParam``1(System.String,``0,System.String)">
+            <summary>Adds an key value pair <see cref="T:System.Int32"/> to a int <see cref="T:Sensirion.Data.DB.SQLHelper.ParameterType"/> dictionary.
+            </summary>
+            <param name="aKey">Paramter key</param> 
+            <param name="aValue">Parameter value</param>
+            <param name="aOperator">Operator string (=, !=, etc.)</param> 
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLQueryParams.SetSqlParam(System.String,System.String,System.String)">
+            <summary>Adds an key value pair <see cref="T:System.Int32"/> to a int <see cref="T:Sensirion.Data.DB.SQLHelper.ParameterType"/> dictionary.
+            </summary>
+            <param name="aKey">Paramter key</param> 
+            <param name="aSqlStrValue">Parameter value already formated.</param>
+            <param name="aOperator">Operator string (=, !=, etc.)</param> 
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLQueryParams.SetCondInCondition``1(System.String,``0[])">
+            <summary>Craetes an "IN" Condiiotn from a list of values.
+            </summary>
+            <param name="aKey">Paramter key</param> 
+            <param name="aValueList">Parameter value list</param>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLQueryParams.IsParamToSet``1(``0)">
+            <summary>Determens if a paramter should be set or not.
+            By default all nullable paramteres which have the value null ann all id parameters which have the value -1 are not set.
+            </summary>
+            <typeparam name="T">Type of the values</typeparam>
+            <param name="aValue">a value</param>
+            <returns>Should be a parmeter or not</returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLQueryParams.SetCondParam``1(System.String,``0,System.String)">
+            <summary>Adds an key value pair <see cref="T:System.Int32"/> to a int <see cref="T:Sensirion.Data.DB.SQLHelper.ParameterType"/> dictionary if > 0.
+            </summary>
+            <param name="aKey">Paramter key</param> 
+            <param name="aValue">Parameter value already formated.</param>
+            <param name="aOperator">Operator string (=, !=, etc.)</param> 
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLQueryParams.GetParamSql(System.String,System.String,System.String,System.String)">
+            <summary> Builds a query form <see cref="T:Sensirion.Data.DB.SQLQueryParams"/>
+            </summary>
+            <param name="head">SQL head ot the query where paramters are not required (eg. SELECT / UPDATE etc.)</param>
+            <param name="body">SQL body of the query introducing parameters (eg.: WHERE / AND) will only be part of the query if parameters exists </param>
+            <param name="tail">Optional SQL tail of the query (eg.: ORDER)</param>
+            <param name="join">SQL logic string to join the parameters (eg.: AND / OR) </param>
+            <returns>The query</returns>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLQueryParams.BuildQuery(Sensirion.Data.DB.SQLHelper,System.String,System.String,System.String,System.String)">
+            <summary>Builds a query form <see cref="T:Sensirion.Data.DB.SQLQueryParams"/> and updates all paramters for the <see cref="T:Sensirion.Data.DB.SQLHelper"/>
+            </summary>
+            <param name="head">SQL head ot the query where paramters are not required (eg. SELECT / UPDATE etc.)</param>
+            <param name="body">SQL body of the query introducing parameters (eg.: WHERE / AND) will only be part of the query if parameters exists </param>
+            <param name="tail">Optional SQL tail of the query (eg.: ORDER)</param>
+            <param name="join">SQL logic string to join the parameters (eg.: AND / OR) </param>
+            <param name="aHelper">Used to access the database. Connection string must be provided in the helper</param>
+            <returns>The builded query</returns>
+        </member>
+        <member name="T:Sensirion.Data.DB.SQLServerConnectionCheck">
+            <summary> Checks the Connection to a SQL Server databases </summary>
+        </member>
+        <member name="F:Sensirion.Data.DB.SQLServerConnectionCheck._ConnectionString">
+            <summary> Database connection string </summary>
+        </member>
+        <member name="P:Sensirion.Data.DB.SQLServerConnectionCheck.ErrorMessage">
+            <summary> Error message, is not empty if an exception occurred. </summary>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLServerConnectionCheck.#ctor(System.String,System.String,System.String,System.String,System.String)">
+            <summary> Initializes the instance </summary>
+            <param name="aDBServerName"> Name of the server to connect </param>
+            <param name="aDBName"> Name of the database on the server </param>
+            <param name="aUsername"> User name for connection (should be empty) </param>
+            <param name="aPassword"> Password for connection (should be empty) </param>
+            <param name="aFailoverPartner"> Failover partner if in cluster environment </param>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLServerConnectionCheck.#ctor(System.String)">
+            <summary> Initializes the instance </summary>
+            <param name="aConnectionString"> Fully configured connection string to connect
+              to the sql server </param>
+        </member>
+        <member name="M:Sensirion.Data.DB.SQLServerConnectionCheck.CheckConnection">
+            <summary> Call this method to get the state of the measure database server </summary>
+            <returns> <c> true </c> if the measure (or SensiTrackOne) database server is
+              available and responsive </returns>
+        </member>
+        <member name="T:System.Runtime.CompilerServices.IsExternalInit">
+            <summary>
+            Reserved to be used by the compiler for tracking metadata.
+            This class should not be used by developers in source code.
+            </summary>
+        </member>
+        <member name="T:System.Runtime.CompilerServices.SkipLocalsInitAttribute">
+            <summary>
+            Used to indicate to the compiler that the <c>.locals init</c> flag should not be set in method headers.
+            </summary>
+            <remarks>Internal copy of the .NET 5 attribute.</remarks>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,2022 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Sensirion.FileIO</name>
+    </assembly>
+    <members>
+        <member name="T:Sensirion.FileIO.BaseConfigParser">
+            <summary>Base class for objects that want to parse configurations
+            </summary>
+        </member>
+        <member name="P:Sensirion.FileIO.BaseConfigParser.Reader">
+            <summary>Helps read configurations from a config store
+            </summary>
+        </member>
+        <member name="M:Sensirion.FileIO.BaseConfigParser.#ctor(Sensirion.FileIO.ConfigStoreReader)">
+            <summary>Constructor
+            </summary>
+        </member>
+        <member name="T:Sensirion.FileIO.ChipRamFileParser">
+            <summary>class that parses file with content destined for the RAM for a macro enabled 
+            chip (Monsun, ElCapitan...)
+            </summary>
+        </member>
+        <member name="F:Sensirion.FileIO.ChipRamFileParser._ramWordCount">
+            <summary> Number of 16bit words that fit into RAM of the chip
+            </summary>
+        </member>
+        <member name="M:Sensirion.FileIO.ChipRamFileParser.#ctor(System.Int32)">
+            <summary>Creates new instance of the ChipRamFileParser
+            </summary>
+            <param name="aRamWordCount">Number of 16bit words that fit into RAM of the chip</param>
+        </member>
+        <member name="M:Sensirion.FileIO.ChipRamFileParser.ReadRamProfileDataFromFile(System.String)">
+            <summary> Read in ram content from file
+            </summary>
+            <param name="aFileName">RAM file as provided by ASIC macro compiler</param>
+        </member>
+        <member name="M:Sensirion.FileIO.ChipRamFileParser.ReadRamProfileDataFromFile(System.IO.StreamReader)">
+            <summary> Read in ram content from file
+            </summary>
+            <param name="aStreamReader">StreamReader for RAM file as provided by ASIC macro compiler</param>
+        </member>
+        <member name="T:Sensirion.FileIO.ConfigDirectoryFinder">
+            <summary>Contains a method to find the configuration directory
+            </summary>
+        </member>
+        <member name="P:Sensirion.FileIO.ConfigDirectoryFinder.LastConfigDirectory">
+            <summary>The path of the last determined configuration directory
+            </summary>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigDirectoryFinder.GetConfigPath">
+            <summary>Read the configuration path from file ini\Source.ini
+            </summary>
+            <returns>Returns the configuration directory.</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigDirectoryFinder.GetConfigPath(System.String,System.Boolean,System.Boolean)">
+            <summary>Read the configuration path from defined ini file recursively
+            </summary>
+            <param name="aDefaultDirectory">The default directory, is only used, when parameter aSourceFileIsRequired is <p>false</p>.</param>
+            <param name="aSourceFileIsRequired">If <p>true</p>, a source file is required.</param>
+            <param name="aUseDefaultDirectories">Indicates, if the default directories must be used.</param>
+            <returns>Returns the configuration directory.</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigDirectoryFinder.GetConfigFilePath(System.String,System.String)">
+            <summary>Delivers the absolute path of a configuration file, based on the configuration directory path.
+            </summary>
+            <param name="aPath">The path of the configuration file</param>
+            <param name="aDirectoryPath">The configuration directory path. It is optional, then <see cref="P:Sensirion.FileIO.ConfigDirectoryFinder.LastConfigDirectory"/> is used.</param>
+            <returns>Returns the absolute path of the configuration file</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigDirectoryFinder.GetRepositoryDirectory(System.String,System.Int32)">
+            <summary>Find the repository directory
+            </summary>
+            <param name="aConfigDirectory">A configuration directory</param>
+            <param name="aMaxDepth">The maximum depth to search</param>
+            <returns>Returns the repository directory, if not found, <p>null</p> is returned</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigDirectoryFinder.GetSmallestCommonDirectory(System.String[])">
+            <summary>Find the smallest common directory of all given directory entries
+            </summary>
+            <param name="aDirectories">A List of directories</param>
+            <returns>Returns the smallest common directory</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigDirectoryFinder.GetSmallestCommonDirectory(System.Collections.Generic.IEnumerable{Sensirion.FileIO.IBinaryFileData})">
+            <summary>Find the smallest common directory of all given configuration files
+            </summary>
+            <param name="aConfigFiles">A List of configuration files</param>
+            <returns>Returns the smallest common directory</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigDirectoryFinder.GetSmallestCommonDirectory(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>Find the smallest common directory of all given directory entries
+            </summary>
+            <param name="aDirectories">A List of directories</param>
+            <returns>Returns the smallest common directory</returns>
+        </member>
+        <member name="T:Sensirion.FileIO.ConfigStore">
+             <summary>Configuration from INI-file.</summary>
+             <remarks>
+             <para>
+             To get options from an INI file, read the file and then get the options
+             using the Get methods.
+             </para>
+             <code>
+             ConfigStore cfg = new ConfigStore();
+             cfg.Read("test.ini");
+             string cfgName = cfg.Get("Info", "ConfigurationName");
+             bool moveFiles = cfg.GetBool("Info", "MoveFilesToServer");
+             int limit = cfg.GetInt("LeakageTest", "Limit");
+             float factor = cfg.GetFloat("LeakageTest", "Factor");
+             long userreg = cfg.GetLong("LeakageTest", "UserReg");
+             Type[] types = {typeof(string), typeof(string), typeof(float)};
+             DataTable table = cfg.GetDataTable("Parameters", "Measurement", types, null);
+             TimeSpan span = cfg.GetTimeSpan("Settings", "WaitTime");
+             </code>
+             
+             <para>
+             There are also Set methods to create INI-files. An INI-file suitable
+             for the example above can be generated with:
+             </para>
+             <code>
+             ConfigStore cfg = new ConfigStore();
+             cfg.AddSection("Info");
+             cfg.Set("Info", "ConfigurationName", "Config_SDP1000");
+             cfg.Set("Info", "MoveFilesToServer", true);
+             cfg.AddSection("LeakageTest");
+             cfg.Set("LeakageTest", "Limit", 500);
+             cfg.SetHex("LeakageTest", "UserReg", 0x0e0c);
+             cfg.Set("LeakageTest", "Factor", 3.141592653);
+            
+             DataTable table = new DataTable();
+             table.Columns.Add("Name", typeof(string));
+             table.Columns.Add("Unit", typeof(string));
+             table.Columns.Add("Value", typeof(float));
+             table.Rows.Add("Temperature", "°C", 23.56);
+             table.Rows.Add("Humidity", "%RH", 41.26);
+             cfg.Set("Parameters", "Measurement", table);
+             cfg.Save("test.ini");
+             </code>
+             
+             <para>The generated file looks like this:</para>
+             <code>
+             [Info]
+             ConfigurationName = Config_SDP1000
+             MoveFilesToServer = True
+             [LeakageTest]
+             Limit = 500
+             UserReg = 0xe0c
+             Factor = 3.141592653
+             [Parameters]
+             Headers = Name,Unit,Value
+             Measurement0 = Temperature,°C,23.56
+             Measurement1 = Humidity,%RH,41.26
+             </code>
+             
+             <para><b>Reading Multiple Files</b></para>
+             <para>A configuration can also be split into multiple files.</para>
+             <code>cfg.Read("test1.ini", "test2.ini");</code>
+             <para>It it also possible to include sub-INI-files from another INI-file:</para>
+             <code>cfg.Read("master.ini");</code>
+             <para>with <c>master.ini</c>:</para>
+             <code>
+             [Info]
+             ConfigurationName = Config_SDP1000
+             MoveFilesToServer = True
+             [Includes]
+             File0 = slave1.ini
+             File1 = slave2.ini
+             </code>
+             <para>and <c>slave1.ini</c>, <c>slave2.ini</c>:</para>
+             <code>
+             [LeakageTest]
+             Limit = 500
+             UserReg = 0xe0c
+             Factor = 3.141592653
+             </code>
+             <code>
+             [Parameters]
+             Headers = Name,Unit,Value
+             Measurement0 = Temperature,°C,23.56
+             Measurement1 = Humidity,%RH,41.26
+             </code>
+             <para>If a relative path is passed to Read() it is relative to the
+             executing assembly. Relative paths of included files are relative
+             to the directory of the including file.</para>
+             
+             <para><b>Format of INI-Files</b></para>
+             <list type="bullet">
+             <item>If non-ASCII characters are used, the encoding is UTF-8</item>
+             <item>Only semicolons are allowed as comment characters</item>
+             <item>Boolean values are True, False (not case sensitive)</item>
+             <item>Hexadecimal values are prefixed with "0x"</item>
+             <item>DateTime values have the format "2009-12-07 13:09:24.364" or
+             "2009-12-07T13:09:24.364", seconds and milliseconds can be omitted,
+             TimeSpan values are "13:09:24.364"</item>
+             <item>Tables are supported using a section with options consisting
+             of a prefix and a number, rows are sorted by number. Header names
+             can be specified using a "Headers" option. Values are separated by
+             commas.</item>
+             </list>
+             </remarks>
+        </member>
+        <member name="T:Sensirion.FileIO.ConfigStore.PrefixNumberComparer">
+            <summary>Comparer to compare string with the format "PrefixNumber".
+            </summary>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.PrefixNumberComparer.#ctor(System.String)">
+            <summary>Constructor.</summary>
+            <param name="prefix">prefix to use</param>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.PrefixNumberComparer.Compare(System.String,System.String)">
+            <summary>Comparision function.</summary>
+            <param name="lhs">left hand side</param>
+            <param name="rhs">right hand side</param>
+            <returns>0 if equal, -1 if lhs less than rhs, else 1</returns>
+        </member>
+        <member name="P:Sensirion.FileIO.ConfigStore.ConfigSource">
+            <summary> Config source 
+            </summary>
+        </member>
+        <member name="P:Sensirion.FileIO.ConfigStore.UsedFiles">
+            <summary>Delivers a list of all used ini files.
+            </summary>
+        </member>
+        <member name="E:Sensirion.FileIO.ConfigStore.ConfigurationAccessEvent">
+            <summary>
+            Event which is raised when a configuration value was accessed.
+            </summary>
+            <remarks>
+            Be aware that this is a public static event.
+            If you subscribe to this event, your reference will be hold to the end of time. If you do not want to live till the end of time, be sure to unsubscribe.
+            </remarks>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.#ctor">
+            <summary>Constructor.</summary>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.#ctor(Nini.Config.IniConfigSource)">
+            <summary>Constructor.</summary>
+            <param name="aSource"></param>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.Clear">
+            <summary>Clear configuration.</summary>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.Read(System.String[])">
+            <summary>Read from one or multiple files.</summary>
+            <param name="filePaths">paths to files</param>
+            <remarks>If filePaths are not absolute a base directory is prefixed,
+            which is taken from the assembly path for the first file and
+            from the first file for all remaining files. Also files listed
+            in a section "Includes" with keys "File0", "File1", ... will be read.
+            </remarks>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.Read(System.IO.DirectoryInfo,System.String[])">
+            <summary>Read from one or multiple files.</summary>
+            <param name="directoryInfo">the root directory in case of relative paths</param>
+            <param name="filePaths">paths to files</param>
+            <remarks>If filePaths are not absolute a base directory is prefixed,
+            which is taken from the assembly path for the first file and
+            from the first file for all remaining files. Also files listed
+            in a section "Includes" with keys "File0", "File1", ... will be read.
+            </remarks>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.Read(System.String,System.IO.DirectoryInfo)">
+            <summary>Read from one or multiple files.</summary>
+            <param name="directoryInfo">the root directory in case of relative paths</param>
+            <param name="filePath">path to file</param>
+            <remarks>If filePaths are not absolute a base directory is prefixed,
+            which is taken from the assembly path for the first file and
+            from the first file for all remaining files. Also files listed
+            in a section "Includes" with keys "File0", "File1", ... will be read.
+            </remarks>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.Read(System.IO.TextReader)">
+            <summary>Read from a text reader.</summary>
+            <param name="reader">text reader</param>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.Read(System.IO.Stream)">
+            <summary>Read from a stream.</summary>
+            <param name="stream">stream</param>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.Merge(System.String[])">
+            <summary>Merge from one or multiple files.</summary>
+            <param name="filePaths">paths to files</param>
+            <remarks>If filePaths are not absolute a base directory is prefixed,
+            which is taken from the assembly path for the first file and
+            from the first file for all remaining files. Also files listed
+            in a section "Includes" with keys "File0", "File1", ... will be read.
+            </remarks>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.ExpandKeyValues">
+            <summary>Expands variables of the form ${KEY} with the value of the
+            option key in the same section. To refer to other section, use the
+            syntax ${SECTION|KEY}.</summary>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.ToString">
+            <summary>Convert to string.</summary>
+            <returns>configuration as string</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.Equals(Sensirion.FileIO.ConfigStore)">
+            <summary>
+            checks if the sections are the same, the options are the same, and the values are the same.
+            the order is irrelevant.
+            </summary>
+            <param name="configStore"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.EnumerateSections">
+            <summary>Enumerate all sections, e.g. using foreach.
+            </summary>
+            <returns>iterator over section names</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.GetSections">
+            <summary>Get all section names.</summary>
+            <returns>array of section names</returns>
+            <remarks>If you want to iterate over the section names with foreach,
+            using EnumerateSections() is more efficient.</remarks>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.GetOptions(System.String)">
+            <summary>Get all options of a section.</summary>
+            <param name="section">section name</param>
+            <returns>array of option names</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.GetValues(System.String)">
+            <summary>Get all values of a section.</summary>
+            <param name="section">section name</param>
+            <returns>array of values</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.GetValues(System.String,System.Text.RegularExpressions.Regex)">
+            <summary>Get all values of a section matching the given regular expression.</summary>
+            <param name="section">section name</param>
+            <param name="filter">to apply, may not be null</param>
+            <returns>array of values</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.HasSection(System.String)">
+            <summary>Check if section exists.</summary>
+            <param name="section">section name</param>
+            <returns>true if section exists</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.HasOption(System.String,System.String)">
+            <summary>Check if option exists.</summary>
+            <param name="section">section name</param>
+            <param name="option">option name</param>
+            <returns>true if option exists</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.Get(System.String,System.String)">
+            <summary>Get option as string.</summary>
+            <param name="section">section name</param>
+            <param name="option">option name</param>
+            <returns>option as string, null if it does not exist</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.GetMandatoryValue(System.String,System.String)">
+            <summary>Get a mandatory option as string. This method throws an <see cref="T:System.ArgumentException"/> if the option value is not
+            given in the ini file.</summary>
+            <param name="section">section name</param>
+            <param name="option">option name</param>
+            <returns>option as string (only if it does exist)</returns>
+            <exception cref="T:System.ArgumentException">thrown if option is missing (null or empty)</exception>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.EnsureOptionPresent(System.String,System.String)">
+            <summary>Asserts that the given option is present (with or without value). 
+            This method throws an <see cref="T:System.ArgumentException"/> if the option is not given in the ini file.</summary>
+            <param name="section">section name</param>
+            <param name="option">option name</param>
+            <exception cref="T:System.ArgumentException">thrown if option is not specified at all</exception>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.Get(System.String,System.String,System.String)">
+            <summary>Get option as string.</summary>
+            <param name="section">section name</param>
+            <param name="option">option name</param>
+            <param name="defaultValue">default value</param>
+            <returns>option as string, defaultValue if it does not exist</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.GetByte(System.String,System.String)">
+            <summary>Get option as byte.</summary>
+            <param name="section">section name</param>
+            <param name="option">option name</param>
+            <returns>option as byte</returns>
+            <exception cref="T:System.FormatException">if parsing fails</exception>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.GetByte(System.String,System.String,System.Byte)">
+            <summary>Get option as byte.</summary>
+            <param name="section">section name</param>
+            <param name="option">option name</param>
+            <param name="defaultValue">default value</param>
+            <returns>option as byte, defaultValue if not available or
+            not convertible</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.GetShort(System.String,System.String)">
+            <summary>Get option as unsigned integer (<see cref="T:System.Int16"/>).</summary>
+            <param name="section">section name</param>
+            <param name="option">option name</param>
+            <returns>option as <see cref="T:System.Int16"/></returns>
+            <exception cref="T:System.FormatException">if parsing fails</exception>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.GetShort(System.String,System.String,System.Int16)">
+            <summary>Get option as unsigned integer (<see cref="T:System.Int16"/>).</summary>
+            <param name="section">section name</param>
+            <param name="option">option name</param>
+            <param name="defaultValue">default value</param>
+            <returns>option as <see cref="T:System.Int16"/>, defaultValue if not available or
+            not convertible</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.GetUshort(System.String,System.String)">
+            <summary>Get option as unsigned integer (<see cref="T:System.UInt16"/>).</summary>
+            <param name="section">section name</param>
+            <param name="option">option name</param>
+            <returns>option as <see cref="T:System.UInt16"/></returns>
+            <exception cref="T:System.FormatException">if parsing fails</exception>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.GetUshort(System.String,System.String,System.UInt16)">
+            <summary>Get option as unsigned integer (<see cref="T:System.UInt16"/>).</summary>
+            <param name="section">section name</param>
+            <param name="option">option name</param>
+            <param name="defaultValue">default value</param>
+            <returns>option as <see cref="T:System.UInt16"/>, defaultValue if not available or
+            not convertible</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.GetInt(System.String,System.String)">
+            <summary>Get option as integer.</summary>
+            <param name="section">section name</param>
+            <param name="option">option name</param>
+            <returns>option as int</returns>
+            <exception cref="T:System.FormatException">if parsing fails</exception>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.GetInt(System.String,System.String,System.Int32)">
+            <summary>Get option as integer.</summary>
+            <param name="section">section name</param>
+            <param name="option">option name</param>
+            <param name="defaultValue">default value</param>
+            <returns>option as integer, defaultValue if not available or
+            not convertible</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.GetUint(System.String,System.String)">
+            <summary>Get option as integer.</summary>
+            <param name="section">section name</param>
+            <param name="option">option name</param>
+            <returns>option as int</returns>
+            <exception cref="T:System.FormatException">if parsing fails</exception>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.GetUint(System.String,System.String,System.UInt32)">
+            <summary>Get option as unsigned integer <see cref="T:System.UInt32"/>.</summary>
+            <param name="section">section name</param>
+            <param name="option">option name</param>
+            <param name="defaultValue">default value</param>
+            <returns>option as <see cref="T:System.UInt32"/>, defaultValue if not available or
+            not convertible</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.GetLong(System.String,System.String)">
+            <summary>Get option as long integer.</summary>
+            <param name="section">section name</param>
+            <param name="option">option name</param>
+            <returns>option as long</returns>
+            <exception cref="T:System.FormatException">if parsing fails</exception>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.GetLong(System.String,System.String,System.Int64)">
+            <summary>Get option as long integer.</summary>
+            <param name="section">section name</param>
+            <param name="option">option name</param>
+            <param name="defaultValue">default value</param>
+            <returns>option as string, defaultValue if not available or
+            not convertible</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.GetBool(System.String,System.String)">
+            <summary>Get option as boolean.</summary>
+            <param name="section">section name</param>
+            <param name="option">option name</param>
+            <returns>option as boolean</returns>
+            <exception cref="T:System.FormatException">if parsing fails</exception>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.GetBool(System.String,System.String,System.Boolean)">
+            <summary>Get option as boolean.</summary>
+            <param name="section">section name</param>
+            <param name="option">option name</param>
+            <param name="defaultValue">default value</param>
+            <returns>option as boolean, defaultValue if not available or
+            not convertible</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.GetFloat(System.String,System.String)">
+            <summary>Get option as float.</summary>
+            <param name="section">section name</param>
+            <param name="option">option name</param>
+            <returns>option as float</returns>
+            <exception cref="T:System.FormatException">if parsing fails</exception>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.GetFloat(System.String,System.String,System.Single)">
+            <summary>Get option as float.</summary>
+            <param name="section">section name</param>
+            <param name="option">option name</param>
+            <param name="defaultValue">default value</param>
+            <returns>option as float, defaultValue if not available or
+            not convertible</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.GetDouble(System.String,System.String)">
+            <summary>Get option as double.</summary>
+            <param name="section">section name</param>
+            <param name="option">option name</param>
+            <returns>option as double</returns>
+            <exception cref="T:System.FormatException">if parsing fails</exception>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.GetDouble(System.String,System.String,System.Double)">
+            <summary>Get option as double.</summary>
+            <param name="section">section name</param>
+            <param name="option">option name</param>
+            <param name="defaultValue">default value</param>
+            <returns>option as double, defaultValue if not available or
+            not convertible</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.GetTimeSpan(System.String,System.String)">
+            <summary>Get option as time span.</summary>
+            <param name="section">section name</param>
+            <param name="option">option name</param>
+            <returns>option as time span</returns>
+            <exception cref="T:System.FormatException">if parsing fails</exception>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.GetEnum``1(System.String,System.String,System.Boolean)">
+            <summary>Get option as enum
+            </summary>
+            <typeparam name="TEnum">Enum the config store string should be parsed to</typeparam>
+            <param name="section">section name</param>
+            <param name="option">option name</param>
+            <param name="ignoreCase">[Optional] <c>True</c>: ignore case, <c>False</c>: observe case</param>
+            <returns>option as enum</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.GetEnum(System.Type,System.String,System.String,System.Boolean)">
+            <summary>Get option as enum
+            </summary>
+            <param name="tEnum">Enum type the config store string should be parsed to</param>
+            <param name="section">section name</param>
+            <param name="option">option name</param>
+            <param name="ignoreCase">[Optional] <c>True</c>: ignore case, <c>False</c>: observe case</param>
+            <returns>option as enum</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.GetTimeSpan(System.String,System.String,System.TimeSpan)">
+            <summary>Get option as time span.</summary>
+            <param name="section">section name</param>
+            <param name="option">option name</param>
+            <param name="defaultValue">default value</param>
+            <returns>option as time span, defaultValue if not available or
+            not convertible</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.GetIpAddress(System.String,System.String,System.Boolean)">
+            <summary>Get option as IP address.</summary>
+            <param name="aSection">section name</param>
+            <param name="aOption">option name</param>
+            <param name="aParameterRequired">Declare, if the parameter is required.</param>
+            <returns>option as string, defaultValue if not available or not convertible</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.GetStrings(System.String,System.String)">
+            <summary>Get option as an array of strings.</summary>
+            <param name="section">section name</param>
+            <param name="option">option name</param>
+            <returns>array of strings</returns>
+            <remarks>The option string must use commas to separate the values. If a
+            comma has to be included in a field, it can be escaped with a backslash.
+            </remarks>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.GetConfigStore(System.String,System.String,System.String,System.Boolean,System.Boolean)">
+            <summary>Reads INI files from option and merge it to the <see cref="T:Sensirion.FileIO.ConfigStore"/>
+            </summary>
+            <param name="aSection"></param>
+            <param name="aOption"></param>
+            <param name="aBaseDirectory">The base directory, if ini files have an relative path, if <p>null</p>, the directory of the last read INI file will be used.</param>
+            <param name="aCreateNewConfigStore">If <p>true</p>, the current <see cref="T:Sensirion.FileIO.ConfigStore"/> will be cloned and the new INI-files be me merged,
+            otherwise the INI-files will be merged to the current <see cref="P:Sensirion.FileIO.ConfigStore.ConfigSource"/>></param>
+            <param name="aMergeConfig">true to merge into existing configuration</param>
+            <returns>Returns a <see cref="T:Sensirion.FileIO.ConfigStore"/>with all INI files</returns>
+            <exception cref="T:System.ArgumentException">thrown if option is missing (null or empty)</exception>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.GetStringTable(System.String,System.String)">
+            <summary>Get prefixed options as a table of strings.</summary>
+            <param name="section">section name</param>
+            <param name="prefix">option prefix</param>
+            <returns>array of string arrays</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.GetObjectTable(System.String,System.String,System.Type[])">
+            <summary>Get prefixed options as a table of objects.</summary>
+            <param name="section">section name</param>
+            <param name="prefix">option prefix</param>
+            <param name="types">column types, if types is null or its first element
+            is null, the types are guessed</param>
+            <returns>array of object arrays</returns>
+            <exception cref="T:System.FormatException">if parsing failed</exception>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.GetDataTable(System.String,System.String)">
+            <summary>Get prefixed options as a DataTable.</summary>
+            <param name="section">section name</param>
+            <param name="prefix">option prefix</param>
+            <returns>array of object arrays</returns>
+            <remarks>The header names are read from the section and the types
+            are guessed from the string values.</remarks>
+            <example>For an example see <see cref="M:Sensirion.FileIO.ConfigStore.GetDataTable(System.String,System.String,System.Boolean)"/></example>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.GetDataTable(System.String,System.String,System.Boolean)">
+            <summary>Get prefixed options as a DataTable.</summary>
+            <param name="section">section name</param>
+            <param name="prefix">option prefix</param>
+            <param name="allowExploded">allow tables with one row to be specified as
+            header=value pairs (exploded form)</param>
+            <returns>array of object arrays</returns>
+            <remarks>The header names are read from the section and the types
+            are guessed from the string values.</remarks>
+            <example>
+            Example of a data table within an ini file
+            <code>
+              Headers=BinCode,Description,Quality
+              Data0=1F,Pass,Pass
+              Data1=31,IDD_Idle,FAIL
+              Data2=32,IDD_Operating,FAIL
+              Data3=33,Bias,FAIL
+              Data4=34,OSC,FAIL
+              Data5=35,OTP,FAIL
+            </code>
+            </example>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.GetDataTable(System.String,System.String,System.Type[],System.String[])">
+            <summary>Get prefixed options as a DataTable.</summary>
+            <param name="section">section name</param>
+            <param name="prefix">option prefix</param>
+            <param name="types">column types, if types is null or its first element
+            is null, the types are guessed</param>
+            <param name="headers">header names, if null the headers are read from
+            option "Headers" (fallback to "f0", "f1", ...)</param>
+            <returns>array of object arrays</returns>
+            <exception cref="T:System.FormatException">if parsing failed</exception>
+            <example>For an example see <see cref="M:Sensirion.FileIO.ConfigStore.GetDataTable(System.String,System.String,System.Boolean)"/></example>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.Set(System.String,System.String,System.String)">
+            <summary>Set option as string.</summary>
+            <param name="section">section name</param>
+            <param name="option">option name</param>
+            <param name="value">value as string</param>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.GetFallbackValue``1(System.String,System.String,System.String,``0)">
+            <summary>Extracts the option value from the parent or sub section whereby the subsection option  
+            value takes precedence.
+            </summary>
+            <param name="section">The name of the parent section e.g. the part in front of the first "."</param>
+            <param name="subSection">The subsection name e.g. the part after the "."</param>
+            <param name="option">The name of the option to extract.</param>
+            <param name="defaultValue">The default value.</param>
+            <returns>The extracted option value.</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.Set(System.String,System.String,System.Data.DataTable)">
+            <summary>Set option as DataTable.</summary>
+            <param name="section">section name</param>
+            <param name="prefix">option prefix</param>
+            <param name="table">value as DataTable</param>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.Set(System.String,System.String,System.Object)">
+            <summary>Set option from an object.</summary>
+            <param name="section">section name</param>
+            <param name="option">option name</param>
+            <param name="value">value as object</param>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.SetHex(System.String,System.String,System.Int64)">
+            <summary>Set option as hexadecimal value.</summary>
+            <param name="section">section name</param>
+            <param name="option">option name</param>
+            <param name="value">value as long integer</param>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.RemoveOption(System.String,System.String)">
+            <summary>Remove an option.</summary>
+            <param name="section">section name</param>
+            <param name="option">option name</param>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.AddSection(System.String)">
+            <summary>Add a new section.</summary>
+            <param name="section">section name</param>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.RemoveSection(System.String)">
+            <summary>Remove a section.</summary>
+            <param name="section">section name</param>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.Save(System.String)">
+            <summary>Save configuration.</summary>
+            <param name="path">file path</param>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.Save">
+            <summary>Save configuration.</summary>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.Save(System.IO.Stream)">
+            <summary>Save configuration.</summary>
+            <param name="stream">stream</param>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.Save(System.IO.TextWriter)">
+            <summary>Save configuration.</summary>
+            <param name="writer">text writer</param>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.Add(Sensirion.FileIO.ConfigStore)">
+            <summary> Adds another config store </summary>
+            <param name="storeToAdd"></param>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.ThrowException(System.String,System.Exception[])">
+            <summary>Throws an <exception cref="T:Sensirion.Redistributables.Exceptions.InvalidValueException"> wtih detailed information about the <see cref="T:Sensirion.FileIO.ConfigStore"/>.</exception>
+            </summary>
+            <param name="aErrorDescription">An error description for the exception</param>
+            <param name="aExceptions">A list of exceptions is optionally</param>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.ThrowException(System.String,System.Collections.Generic.IEnumerable{System.Exception})">
+            <summary>Throws an <exception cref="T:Sensirion.Redistributables.Exceptions.InvalidValueException"> wtih detailed information about the <see cref="T:Sensirion.FileIO.ConfigStore"/>.</exception>
+            </summary>
+            <param name="aErrorDescription">An error description for the exception</param>
+            <param name="aExceptions">A list of exceptions is optionally</param>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.AddUsedFile(System.String)">
+            <summary>Add manually a additional used file
+            </summary>
+            <param name="aFileName">A file name</param>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.AddUsedFile(Sensirion.FileIO.IBinaryFileData)">
+            <summary>Add manually a additional used file
+            </summary>
+            <param name="aFileData">A file data</param>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.ReadFiles(System.Collections.Generic.IEnumerable{System.String},System.String,System.Boolean)">
+            <summary>Read a list of files.
+            </summary>
+            <param name="filePaths">files to read</param>
+            <param name="baseDir">base directory for relative paths</param>
+            <param name="merge">true to merge into existing configuration</param>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStore.HandleIncludes(System.String)">
+            <summary>Read files in a section "Includes" with keys "File0",
+            "File1", ...
+            </summary>
+            <param name="baseDir">base directory for relative paths</param>
+        </member>
+        <member name="T:Sensirion.FileIO.ConfigStoreFactory">
+            <summary>Creates instances of <see cref="T:Sensirion.FileIO.ConfigStore"/>
+            </summary>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStoreFactory.ParseFiles(System.String[])">
+            <summary>Reads the parameter from the INI strings in the <paramref name="configFiles"/> argument
+            </summary>
+            <param name="configFiles">String containing INI, XML or Registry-configs.</param>
+            <returns><see cref="T:Nini.Config.IniConfigSource"/></returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStoreFactory.ParseText(System.String)">
+            <summary>Reads the parameter from the INI - strings in the <paramref name="configString"/> argument
+            </summary>
+            <param name="configString">String containing INI, XML or Registry-configs.</param>
+            <returns><see cref="T:Nini.Config.IniConfigSource"/></returns>
+        </member>
+        <member name="T:Sensirion.FileIO.ConfigStoreReader">
+            <summary>Helps in reading values from a config store.
+            </summary>
+        </member>
+        <member name="P:Sensirion.FileIO.ConfigStoreReader.Store">
+            <summary>The underlying config store. Use the store directly of you do not want
+            to add error reports for optional values
+            </summary>
+        </member>
+        <member name="P:Sensirion.FileIO.ConfigStoreReader.Errors">
+            <summary>Get the errors that were registered to this reader
+            </summary>
+        </member>
+        <member name="P:Sensirion.FileIO.ConfigStoreReader.StringifiedErrors">
+            <summary>All errors joined by line breaks
+            </summary>
+        </member>
+        <member name="P:Sensirion.FileIO.ConfigStoreReader.InvolvedFilePaths">
+            <summary>All files paths that were retrieved by this readyer
+            </summary>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStoreReader.CreateFromFiles(System.String[])">
+            <summary>Create a reader from a set of files
+            </summary>
+            <param name="filePaths">Paths to config files</param>
+            <returns>Initializes reader</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStoreReader.#ctor(Sensirion.FileIO.ConfigStore)">
+            <summary>Constructor
+            </summary>
+            <param name="store"></param>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStoreReader.ConfigureConfigStore(Sensirion.FileIO.ConfigStore)">
+            <summary>The shortcuts in the ini-files for the local ini-path and the application-path are
+              expanded here. Valid shortcuts in the ini-files are: 
+              ${<see cref="F:Sensirion.FileIO.ConfigStoreReader.SecPath"/>|<see cref="F:Sensirion.FileIO.ConfigStoreReader.KeyLocal"/>} for the local ini-path and
+              ${<see cref="F:Sensirion.FileIO.ConfigStoreReader.SecPath"/>|<see cref="F:Sensirion.FileIO.ConfigStoreReader.KeyApp"/>} for the application-path
+            </summary>
+            <param name="aStore">The config store, where the shortcuts are expanded.</param>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStoreReader.TryGetString(System.String,System.String,System.String@)">
+            <summary>Try to get a string option value
+            </summary>
+            <param name="sectionName">Section that contains the option</param>
+            <param name="optionName">Name of the option</param>
+            <param name="value">The read value</param>
+            <returns>True if read successfully</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStoreReader.TryGetStrings(System.String,System.String,System.String[]@)">
+            <summary>Try to get a string option value
+            </summary>
+            <param name="sectionName">Section that contains the option</param>
+            <param name="optionName">Name of the option</param>
+            <param name="value">The read value</param>
+            <returns>True if read successfully</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStoreReader.TryGetEnum``1(System.String,System.String,``0@)">
+            <summary>Try to get an option value that defines the value of an enum
+            </summary>
+            <param name="sectionName">Section that contains the option</param>
+            <param name="optionName">Name of the option</param>
+            <param name="value">The read value</param>
+            <returns>True if read successfully</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStoreReader.TryGetDouble(System.String,System.String,System.Double@)">
+            <summary>Try to get a double option value
+            </summary>
+            <param name="sectionName">Section that contains the option</param>
+            <param name="optionName">Name of the option</param>
+            <param name="value">The read value</param>
+            <returns>True if read successfully</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStoreReader.TryGetTimeSpan(System.String,System.String,System.TimeSpan@)">
+            <summary>Try to get a TimeSpan option value
+            </summary>
+            <param name="sectionName">Section that contains the option</param>
+            <param name="optionName">Name of the option</param>
+            <param name="value">The read value</param>
+            <returns>True if read successfully</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStoreReader.TryGetFloat(System.String,System.String,System.Single@)">
+            <summary>Try to get a float option value
+            </summary>
+            <param name="sectionName">Section that contains the option</param>
+            <param name="optionName">Name of the option</param>
+            <param name="value">The read value</param>
+            <returns>True if read successfully</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStoreReader.TryGetByte(System.String,System.String,System.Byte@)">
+            <summary>Try to get a byte option value
+            </summary>
+            <param name="sectionName">Section that contains the option</param>
+            <param name="optionName">Name of the option</param>
+            <param name="value">The read value</param>
+            <returns>True if read successfully</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStoreReader.TryGetShort(System.String,System.String,System.Int16@)">
+            <summary>Try to get a short option value
+            </summary>
+            <param name="sectionName">Section that contains the option</param>
+            <param name="optionName">Name of the option</param>
+            <param name="value">The read value</param>
+            <returns>True if read successfully</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStoreReader.TryGetUshort(System.String,System.String,System.UInt16@)">
+            <summary>Try to get a ushort option value
+            </summary>
+            <param name="sectionName">Section that contains the option</param>
+            <param name="optionName">Name of the option</param>
+            <param name="value">The read value</param>
+            <returns>True if read successfully</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStoreReader.TryGetInt(System.String,System.String,System.Int32@)">
+            <summary>Try to get an int option value
+            </summary>
+            <param name="sectionName">Section that contains the option</param>
+            <param name="optionName">Name of the option</param>
+            <param name="value">The read value</param>
+            <returns>True if read successfully</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStoreReader.TryGetUint(System.String,System.String,System.UInt32@)">
+            <summary>Try to get an int option value
+            </summary>
+            <param name="sectionName">Section that contains the option</param>
+            <param name="optionName">Name of the option</param>
+            <param name="value">The read value</param>
+            <returns>True if read successfully</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStoreReader.TryGetLong(System.String,System.String,System.Int64@)">
+            <summary>Try to get a long option value
+            </summary>
+            <param name="sectionName">Section that contains the option</param>
+            <param name="optionName">Name of the option</param>
+            <param name="value">The read value</param>
+            <returns>True if read successfully</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStoreReader.TryGetBool(System.String,System.String,System.Boolean@)">
+            <summary>Try to get a boolean option value
+            </summary>
+            <param name="sectionName">Section that contains the option</param>
+            <param name="optionName">Name of the option</param>
+            <param name="value">The read value</param>
+            <returns>True if read successfully</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStoreReader.TryGetDataTable(System.String,System.String,System.Type[],System.String[],System.Data.DataTable@)">
+            <summary>Try to get a data table from INI list
+            </summary>
+            <param name="sectionName">Section that contains the option</param>
+            <param name="prefixName">Name of the table prefix</param>
+            <param name="types"></param>
+            <param name="headers"></param>
+            <param name="value">The read value</param>
+            <returns>True if read successfully</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStoreReader.TryGetDataTable(System.String,System.String,System.Data.DataTable@)">
+            <summary>Try to get a data table from INI list
+            </summary>
+            <param name="sectionName">Section that contains the option</param>
+            <param name="prefixName">Name of the table prefix</param>
+            <param name="value">The read value</param>
+            <returns>True if read successfully</returns>
+            <example>For an example see <see cref="M:Sensirion.FileIO.ConfigStore.GetDataTable(System.String,System.String,System.Boolean)"/></example>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStoreReader.TryGetFilePath(System.String,System.String,System.String@,System.Boolean)">
+            <summary>Try to get a option value that defines a file paths
+            </summary>
+            <param name="sectionName">Section that contains the option</param>
+            <param name="optionName">Name of the option</param>
+            <param name="value">The read and validated file path</param>
+            <param name="doCheckExists">Should the file path be validated?</param>
+            <returns>True if read successfully</returns>
+            <example>For an example see <see cref="M:Sensirion.FileIO.ConfigStore.GetDataTable(System.String,System.String,System.Boolean)"/></example>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStoreReader.TryGetFilePaths(System.String,System.String,System.String[]@,System.Boolean)">
+            <summary>Try to get a option value that defines a comma separated list of file paths
+            </summary>
+            <param name="sectionName">Section that contains the option</param>
+            <param name="optionName">Name of the option</param>
+            <param name="value">The read and validated file paths</param>
+            <param name="doCheckExists">Should the file paths be validated?</param>
+            <returns>True if read successfully</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStoreReader.TryGetSectionList(System.String,System.String,System.Collections.Generic.IList{System.String}@)">
+            <summary>Try to get a option value that defines a comma separated list of other section names
+            </summary>
+            <param name="sectionName">Section that contains the option</param>
+            <param name="optionName">Name of the option</param>
+            <param name="value">The read and validated section list</param>
+            <returns>True if read successfully</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStoreReader.TryGetSection(System.String,System.String,System.String@)">
+            <summary>Try to get a option value that refers to another section
+            </summary>
+            <param name="sectionName">Section that contains the option</param>
+            <param name="optionName">Name of the option</param>
+            <param name="value">The read and validated section</param>
+            <returns>True if read successfully</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStoreReader.TryGetValueList(System.String,System.String[]@)">
+            <summary>Get all values in the given <paramref name="sectionName"/> as strings
+            </summary>
+            <param name="sectionName">Name of the section</param>
+            <param name="values">Values of the options in this section</param>
+            <returns>True if read successfully</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStoreReader.TryGetOptionList(System.String,System.String,System.String[]@)">
+            <summary>Get all values in the given <paramref name="sectionName"/> as strings
+            </summary>
+            <param name="sectionName">Name of the section</param>
+            <param name="optionPrefix">Prefix of the options that are of interest</param>
+            <param name="values">Values of the options in this section</param>
+            <returns>True if read successfully</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStoreReader.TryGet``1(System.String,System.String,System.Func{System.String,System.String,``0},``0@)">
+            <summary>Utility function that checks sections and stores errors messages
+            </summary>
+            <typeparam name="TOut">Type of the value that is tried to be read</typeparam>
+            <param name="sectionName">Section of the value</param>
+            <param name="optionName">Name of the option that defines the value</param>
+            <param name="readFunction">Function that reads the value</param>
+            <param name="value">Value that was read</param>
+            <returns>True if the value could be read successfully</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ConfigStoreReader.AddError(System.String)">
+            <summary>Add a message to the error list
+            </summary>
+        </member>
+        <member name="T:Sensirion.FileIO.ConversionConfiguration">
+            <summary>The configuration for conversion
+            </summary>
+        </member>
+        <member name="P:Sensirion.FileIO.ConversionConfiguration.DoCheckForBom">
+            <summary>Indicates, if check for UTF-8-BOM
+            </summary>
+        </member>
+        <member name="P:Sensirion.FileIO.ConversionConfiguration.Encoder">
+            <summary>The encoder
+            </summary>
+        </member>
+        <member name="T:Sensirion.FileIO.FileData">
+            <summary>Static class for creating file data
+            </summary>
+        </member>
+        <member name="M:Sensirion.FileIO.FileData.CreateFileData(System.String,System.Boolean)">
+            <summary>Create <see cref="T:Sensirion.FileIO.IBinaryFileData"/> 
+            </summary>
+            <param name="aFileName">The file name</param>
+            <param name="aRemoveFile">If the file must be removed after reading, this flag should be <p>true</p>, otherwise <p>false</p>.</param>
+        </member>
+        <member name="M:Sensirion.FileIO.FileData.CreateFileData(System.String,System.String,System.Boolean)">
+            <summary>Create <see cref="T:Sensirion.FileIO.IBinaryFileData"/> 
+            </summary>
+            <param name="aFileName">The file name</param>
+            <param name="aContent">The content as string</param>
+            <param name="aWriteContent">If <p>true</p>, the content will also be written to file. Default is <p>false</p>.</param>
+        </member>
+        <member name="M:Sensirion.FileIO.FileData.CreateFileData(System.String,System.Byte[],System.Boolean)">
+            <summary>Create <see cref="T:Sensirion.FileIO.IBinaryFileData"/> 
+            </summary>
+            <param name="aFileName">The file name</param>
+            <param name="aContent">The content as string</param>
+            <param name="aWriteContent">If <p>true</p>, the content will also be written to file. Default is <p>false</p>.</param>
+        </member>
+        <member name="M:Sensirion.FileIO.FileData.CreateFileData(System.String,System.IO.Stream,System.Boolean)">
+            <summary>Create <see cref="T:Sensirion.FileIO.IBinaryFileData"/> 
+            </summary>
+            <param name="aFileName">The file name</param>
+            <param name="aContent">The content as string</param>
+            <param name="aWriteContent">If <p>true</p>, the content will also be written to file. Default is <p>false</p>.</param>
+        </member>
+        <member name="M:Sensirion.FileIO.FileData.CreateFileData(System.IO.Compression.ZipArchiveEntry)">
+            <summary>Create <see cref="T:Sensirion.FileIO.IBinaryFileData"/> for reading from <see cref="T:System.IO.Compression.ZipArchiveEntry"/>
+            </summary>
+            <param name="aZipArchiveEntry">The zip archive entry to read</param>
+        </member>
+        <member name="M:Sensirion.FileIO.FileData.CreateZipFileData(System.String)">
+            <summary>Create <see cref="T:Sensirion.FileIO.IStringFileData"/> for string
+            </summary>
+            <param name="aFileName">The file name</param>
+        </member>
+        <member name="M:Sensirion.FileIO.FileData.CreateZipFileData(Sensirion.FileIO.IBaseFileData)">
+            <summary>Create <see cref="T:Sensirion.FileIO.IStringFileData"/> for string
+            </summary>
+            <param name="aFileData">A file data</param>
+        </member>
+        <member name="M:Sensirion.FileIO.FileData.CreateAsciiFileData(System.String)">
+            <summary>Create <see cref="T:Sensirion.FileIO.IStringFileData"/> for ASCII format
+            </summary>
+            <param name="aFileName">The file name</param>
+        </member>
+        <member name="M:Sensirion.FileIO.FileData.CreateAsciiFileData(Sensirion.FileIO.IBinaryFileData)">
+            <summary>Create <see cref="T:Sensirion.FileIO.IStringFileData"/> for ASCII format
+            </summary>
+            <param name="aFileData">A file data</param>
+        </member>
+        <member name="M:Sensirion.FileIO.FileData.CreateStringFileData(System.String)">
+            <summary>Create <see cref="T:Sensirion.FileIO.IStringFileData"/> for string
+            </summary>
+            <param name="aFileName">The file name</param>
+        </member>
+        <member name="M:Sensirion.FileIO.FileData.CreateStringFileDataFromBomFile(System.String)">
+            <summary>Create <see cref="T:Sensirion.FileIO.IStringFileData"/> for string from a UTF-8-BOM file
+            </summary>
+            <param name="aFileName">The file name</param>
+        </member>
+        <member name="M:Sensirion.FileIO.FileData.CreateStringFileDataFromResource(System.String,System.Resources.ResourceManager)">
+            <summary>Create <see cref="T:Sensirion.FileIO.IStringFileData"/> for string from a UTF-8-BOM file
+            </summary>
+            <param name="aFileName">The file name</param>
+            <param name="resourceManager">A resource manager</param>
+        </member>
+        <member name="M:Sensirion.FileIO.FileData.CreateStringFileData(Sensirion.FileIO.IBinaryFileData,Sensirion.FileIO.ConversionConfiguration)">
+            <summary>Create <see cref="T:Sensirion.FileIO.IStringFileData"/> for string
+            </summary>
+            <param name="aFileData">A file data</param>
+            <param name="configuration">The conversion configuration, configuration is optional</param>
+        </member>
+        <member name="M:Sensirion.FileIO.FileData.Copy(System.String,System.String,System.Boolean)">
+            <summary>Copy robust a file
+            </summary>
+            <param name="sourceFileName">The source file</param>
+            <param name="targetFileName">The target file</param>
+            <param name="allowOverride">Indicates, if it is allowed, to override the target file, if exists. Default is <p>true</p>.</param>
+        </member>
+        <member name="M:Sensirion.FileIO.FileData.Write(Sensirion.FileIO.IBinaryFileData,System.String)">
+            <summary>Write file data to file
+            </summary>
+            <param name="fileData">The file data</param>
+            <param name="targetFileName">The target file name</param>
+        </member>
+        <member name="M:Sensirion.FileIO.FileData.Move(System.String,System.String,System.Boolean)">
+            <summary>Move robust a file
+            </summary>
+            <param name="sourceFileName">The source file</param>
+            <param name="targetFileName">The target file</param>
+            <param name="allowOverride">Indicates, if it is allowed, to override the target file, if exists. Default is <p>true</p>.</param>
+        </member>
+        <member name="T:Sensirion.FileIO.IBaseFileData">
+            <summary>Interface that represents the base properties of a file
+            </summary>
+        </member>
+        <member name="P:Sensirion.FileIO.IBaseFileData.ReadTimestamp">
+            <summary>The time stamp, when the content of the file was read (creation time of this object)
+            </summary>
+        </member>
+        <member name="P:Sensirion.FileIO.IBaseFileData.Name">
+            <summary>The name of the file
+            </summary>
+        </member>
+        <member name="P:Sensirion.FileIO.IBaseFileData.FullName">
+            <summary>The file path
+            </summary>
+        </member>
+        <member name="P:Sensirion.FileIO.IBaseFileData.Length">
+            <summary>The length of the content
+            </summary>
+        </member>
+        <member name="P:Sensirion.FileIO.IBaseFileData.SourceFileData">
+            <summary>Contains the source file data
+            </summary>
+        </member>
+        <member name="P:Sensirion.FileIO.IBaseFileData.Hash">
+            <summary>The hash of the file (is conform with hash calculation of the code smith objects)
+            </summary>
+        </member>
+        <member name="M:Sensirion.FileIO.IBaseFileData.Open">
+            <summary>Opens the content as stream
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Sensirion.FileIO.IBinaryFileData">
+            <summary>Interface that represents a file as string in ASCII format into the memory
+            </summary>
+        </member>
+        <member name="T:Sensirion.FileIO.IFileData`1">
+            <summary>Interface that represents a file into the memory
+            </summary>
+        </member>
+        <member name="P:Sensirion.FileIO.IFileData`1.Content">
+            <summary>The byte content of the file
+            </summary>
+        </member>
+        <member name="T:Sensirion.FileIO.AsciiFileData">
+            <summary>Represents a file as string in ASCII format into the memory
+            </summary>
+        </member>
+        <member name="P:Sensirion.FileIO.AsciiFileData.ReadTimestamp">
+            <summary>The time stamp, when the content of the file was read (creation time of this object)
+            </summary>
+        </member>
+        <member name="P:Sensirion.FileIO.AsciiFileData.Name">
+            <summary>The name of the file
+            </summary>
+        </member>
+        <member name="P:Sensirion.FileIO.AsciiFileData.FullName">
+            <summary>The file path
+            </summary>
+        </member>
+        <member name="P:Sensirion.FileIO.AsciiFileData.Content">
+            <summary>The content of the file
+            </summary>
+        </member>
+        <member name="P:Sensirion.FileIO.AsciiFileData.Length">
+            <summary>The length of the content
+            </summary>
+        </member>
+        <member name="P:Sensirion.FileIO.AsciiFileData.SourceFileData">
+            <summary>Contains the source file data
+            </summary>
+        </member>
+        <member name="P:Sensirion.FileIO.AsciiFileData.Hash">
+            <summary>The hash of the file (is conform with hash calculation of the code smith objects)
+            </summary>
+        </member>
+        <member name="M:Sensirion.FileIO.AsciiFileData.#ctor(System.String)">
+            <summary>constructor
+            </summary>
+            <param name="aFileName">The file name</param>
+        </member>
+        <member name="M:Sensirion.FileIO.AsciiFileData.#ctor(Sensirion.FileIO.IBinaryFileData)">
+            <summary>Default constructor
+            </summary>
+            <param name="aFileData">A file data</param>
+        </member>
+        <member name="M:Sensirion.FileIO.AsciiFileData.#ctor(System.String,System.Func{Sensirion.FileIO.IBinaryFileData,System.String})">
+            <summary>Default constructor
+            </summary>
+            <param name="aFileName">The file name</param>
+            <param name="aConvertMethod">A method to convert the content to a string</param>
+        </member>
+        <member name="M:Sensirion.FileIO.AsciiFileData.#ctor(Sensirion.FileIO.IBinaryFileData,System.Func{Sensirion.FileIO.IBinaryFileData,System.String})">
+            <summary>Default constructor
+            </summary>
+            <param name="aFileData">A file data</param>
+            <param name="aConvertMethod">A method to convert the content to a string</param>
+        </member>
+        <member name="M:Sensirion.FileIO.AsciiFileData.Open">
+            <summary>Opens the content as stream
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Sensirion.FileIO.BinaryFileData">
+            <summary>Represents a file into the memory
+            </summary>
+        </member>
+        <member name="P:Sensirion.FileIO.BinaryFileData.ReadTimestamp">
+            <summary>The time stamp, when the content of the file was read (creation time of this object)
+            </summary>
+        </member>
+        <member name="P:Sensirion.FileIO.BinaryFileData.Name">
+            <summary>The name of the file
+            </summary>
+        </member>
+        <member name="P:Sensirion.FileIO.BinaryFileData.FullName">
+            <summary>The file path
+            </summary>
+        </member>
+        <member name="P:Sensirion.FileIO.BinaryFileData.Content">
+            <summary>The byte content of the file
+            </summary>
+        </member>
+        <member name="P:Sensirion.FileIO.BinaryFileData.Length">
+            <summary>The length of the content
+            </summary>
+        </member>
+        <member name="P:Sensirion.FileIO.BinaryFileData.SourceFileData">
+            <summary>Contains the source file data
+            </summary>
+        </member>
+        <member name="P:Sensirion.FileIO.BinaryFileData.Hash">
+            <summary>The hash of the file (is conform with hash calculation of the code smith objects)
+            </summary>
+        </member>
+        <member name="M:Sensirion.FileIO.BinaryFileData.#ctor(System.String,System.Boolean)">
+            <summary>constructor
+            </summary>
+            <param name="aFileName">The file name</param>
+            <param name="aRemoveFile">If the file must be removed after reading, this flag should be <p>true</p>, otherwise <p>false</p>.</param>
+        </member>
+        <member name="M:Sensirion.FileIO.BinaryFileData.#ctor(System.String,System.String,System.Boolean)">
+            <summary>constructor
+            </summary>
+            <param name="aFileName">The file name</param>
+            <param name="aContent">The content as string</param>
+            <param name="aWriteContent">If <p>true</p>, the content will also be written to file. Default is <p>false</p>.</param>
+        </member>
+        <member name="M:Sensirion.FileIO.BinaryFileData.#ctor(System.String,System.Byte[],System.Boolean)">
+            <summary>constructor
+            </summary>
+            <param name="aFileName">The file name</param>
+            <param name="aContent">The content as string</param>
+            <param name="aWriteContent">If <p>true</p>, the content will also be written to file. Default is <p>false</p>.</param>
+        </member>
+        <member name="M:Sensirion.FileIO.BinaryFileData.#ctor(System.String,System.IO.Stream,System.Boolean)">
+            <summary>constructor
+            </summary>
+            <param name="aFileName">The file name</param>
+            <param name="aContent">The content as string</param>
+            <param name="aWriteContent">If <p>true</p>, the content will also be written to file. Default is <p>false</p>.</param>
+        </member>
+        <member name="M:Sensirion.FileIO.BinaryFileData.#ctor(System.IO.Compression.ZipArchiveEntry)">
+            <summary>constructor for reading from <see cref="T:System.IO.Compression.ZipArchiveEntry"/>
+            </summary>
+            <param name="aZipArchiveEntry">The zip archive entry to read</param>
+        </member>
+        <member name="M:Sensirion.FileIO.BinaryFileData.Open">
+            <summary>Opens the content as stream
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Sensirion.FileIO.BinaryFileData.TransferFile(System.String,System.String,System.Boolean,System.Boolean)">
+            <summary>Transfer file
+            </summary>
+            <param name="sourceFileName">The source file</param>
+            <param name="targetFileName">The target file</param>
+            <param name="removeSourceFile">Indicates, if the <see cref="!:sourceFileName"/> must be removed.</param>
+            <param name="allowOverride">Indicates, if it is allowed, to override the target file, if exists. Default is <p>true</p>.</param>
+        </member>
+        <member name="M:Sensirion.FileIO.BinaryFileData.op_Equality(Sensirion.FileIO.BinaryFileData,Sensirion.FileIO.BinaryFileData)">
+            <summary>equal operator
+            </summary>
+            <param name="aFileData1">First item</param>
+            <param name="aFileData2">Second item</param>
+            <returns>If the files are equal, the return value is <p>true</p>, otherwise <p>false</p>.</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.BinaryFileData.op_Inequality(Sensirion.FileIO.BinaryFileData,Sensirion.FileIO.BinaryFileData)">
+            <summary>non equal operator
+            </summary>
+            <param name="aFileData1">First item</param>
+            <param name="aFileData2">Second item</param>
+            <returns>If the files are not equal, the return value is <p>true</p>, otherwise <p>false</p>.</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.BinaryFileData.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:Sensirion.FileIO.BinaryFileData.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="T:Sensirion.FileIO.FileDataHash">
+            <summary>Static class for calculating the hash of a file
+            </summary>
+        </member>
+        <member name="T:Sensirion.FileIO.StringFileData">
+            <summary>Represents a file as string in string format into the memory
+            </summary>
+        </member>
+        <member name="M:Sensirion.FileIO.StringFileData.#ctor(System.String,Sensirion.FileIO.ConversionConfiguration)">
+            <summary>constructor
+            </summary>
+            <param name="aFileName">The file name</param>
+            <param name="configuration">The conversion configuration</param>
+        </member>
+        <member name="M:Sensirion.FileIO.StringFileData.#ctor(Sensirion.FileIO.IBinaryFileData,Sensirion.FileIO.ConversionConfiguration)">
+            <summary>Default constructor
+            </summary>
+            <param name="aFileData">A file data</param>
+            <param name="configuration">The conversion configuration</param>
+        </member>
+        <member name="M:Sensirion.FileIO.StringFileData.Open">
+            <summary>Opens the content as stream
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Sensirion.FileIO.StringFileData.ConvertToString(Sensirion.FileIO.IBinaryFileData,Sensirion.FileIO.ConversionConfiguration)">
+            <summary>Converts a byte content to a string
+            </summary>
+            <param name="aFileData">The file data</param>
+            <param name="configuration">The conversion configuration</param>
+            <returns>The converted string content</returns>
+        </member>
+        <member name="T:Sensirion.FileIO.ZipFileData">
+            <summary>Represents a zipped file into the memory
+            </summary>
+        </member>
+        <member name="P:Sensirion.FileIO.ZipFileData.ReadTimestamp">
+            <summary>The time stamp, when the content of the file was read (creation time of this object)
+            </summary>
+        </member>
+        <member name="P:Sensirion.FileIO.ZipFileData.Name">
+            <summary>The name of the file
+            </summary>
+        </member>
+        <member name="P:Sensirion.FileIO.ZipFileData.FullName">
+            <summary>The file path
+            </summary>
+        </member>
+        <member name="P:Sensirion.FileIO.ZipFileData.Content">
+            <summary>The content of the file as string in ASCII format
+            </summary>
+        </member>
+        <member name="P:Sensirion.FileIO.ZipFileData.Length">
+            <summary>The length of the content
+            </summary>
+        </member>
+        <member name="P:Sensirion.FileIO.ZipFileData.SourceFileData">
+            <summary>Contains the source file data
+            </summary>
+        </member>
+        <member name="P:Sensirion.FileIO.ZipFileData.Hash">
+            <summary>The hash of the file (is conform with hash calculation of the code smith objects)
+            </summary>
+        </member>
+        <member name="M:Sensirion.FileIO.ZipFileData.#ctor(System.String)">
+            <summary>constructor
+            </summary>
+            <param name="aFileName">The file name</param>
+        </member>
+        <member name="M:Sensirion.FileIO.ZipFileData.#ctor(Sensirion.FileIO.IBaseFileData)">
+            <summary>Default constructor
+            </summary>
+            <param name="aFileData">A file data</param>
+        </member>
+        <member name="M:Sensirion.FileIO.ZipFileData.Open">
+            <summary>Opens the content as stream
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Sensirion.FileIO.IStringFileData">
+            <summary>Interface that represents a file as string into the memory
+            </summary>
+        </member>
+        <member name="T:Sensirion.FileIO.FileEncodingHelper">
+            <summary>Helps to handle file encodings
+            </summary>
+        </member>
+        <member name="M:Sensirion.FileIO.FileEncodingHelper.GuessFileEncoding(System.String)">
+            <summary>Guesses whether the given file path is encoded in UTF-8 or Default/ANSI
+            </summary>
+            <param name="filePath">File whose encoding is guessed</param>
+            <returns>Guessed encoding</returns>
+        </member>
+        <member name="T:Sensirion.FileIO.FileHelper">
+            <summary>Helps with filenames
+            </summary>
+        </member>
+        <member name="M:Sensirion.FileIO.FileHelper.BackupExistingFile(Sensirion.FileIO.FilePath)">
+            <summary>If the file exists, the existing file will be renamed with a
+              number between filename and extension. The number starts at 1 and 
+              counts up until a free number has been found.
+              If the file can't be accessed because of protection or rights, a
+              exception will be thrown.
+            </summary>
+            <param name="aFilename">Filename to be processed.</param>
+            <exception cref="T:System.Exception">
+              Thrown if something goes wrong with the renaming of the existing file (any exception of 
+              <see cref="M:System.IO.File.Move(System.String,System.String)"/>).
+            </exception>
+        </member>
+        <member name="M:Sensirion.FileIO.FileHelper.BackupExistingFile(System.String)">
+            <summary>If the file exists, the existing file will be renamed with a
+              number between filename and extension. The number starts at 1 and 
+              counts up until a free number has been found.
+              If the file can't be accessed because of protection or rights, a
+              exception will be thrown.
+            </summary>
+            <param name="aFilename">Filename to be processed.</param>
+            <exception cref="T:System.Exception">
+              Thrown if something goes wrong with the renaming of the existing file (any exception of 
+              <see cref="M:System.IO.File.Move(System.String,System.String)"/>).
+            </exception>
+        </member>
+        <member name="M:Sensirion.FileIO.FileHelper.BackupExistingFileInReverseOrder(Sensirion.FileIO.FilePath)">
+            <summary>This method determines if a file with the same name already exists. If yes,
+            the suffix <c>(1)</c> is appended to the old file. If already a backup with suffix 
+            <c>(1)</c> exists, this and even older backups are renamed with an incemented suffix 
+            of <c>(1)</c>.
+            </summary>
+            <param name="aFilename">Filename to be processed.</param>
+            <exception cref="T:System.Exception">
+              Thrown if something goes wrong with the renaming of the existing file (any exception of 
+              <see cref="M:System.IO.File.Move(System.String,System.String)"/>).
+            </exception>
+        </member>
+        <member name="M:Sensirion.FileIO.FileHelper.BackupExistingFileInReverseOrder(System.String)">
+            <summary>This method determines if a file with the same name already exists. If yes,
+            the suffix <c>(1)</c> is appended to the old file. If already a backup with suffix 
+            <c>(1)</c> exists, this and even older backups are renamed with an incemented suffix 
+            of <c>(1)</c>.
+            </summary>
+            <param name="aFilename">Filename to be processed.</param>
+            <exception cref="T:System.Exception">
+              Thrown if something goes wrong with the renaming of the existing file (any exception of 
+              <see cref="M:System.IO.File.Move(System.String,System.String)"/>).
+            </exception>
+        </member>
+        <member name="M:Sensirion.FileIO.FileHelper.BuildFilename(System.String,System.Int32)">
+            <summary>Creates a new filename with a number. The number is in brakets. (eg. 'test(1).csv') 
+            </summary>
+            <param name="aOriginalFilename">Filename without any number</param>
+            <param name="aNumber">Number that goes into the brakets</param>
+            <returns>Full filepath with number and extension</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.FileHelper.GetNewFilenumber(System.String,System.Int32)">
+            <summary>Guarantees a filename that doesn't exists already. If a file with the given
+              name already exists, the method is called recursively until a not existing filename 
+              can be found
+            </summary>
+            <param name="aOriginalFilename">Filename that has to be checked</param>
+            <param name="aLastNumber">Last number of the file to be updated</param>
+            <returns>Number for the new filename</returns>
+        </member>
+        <member name="T:Sensirion.FileIO.FileOperationHelpers">
+            <summary>Helper methods for file I/O.
+            These methods are based on the System.IO.File methods, but improve them for some use case. </summary>
+        </member>
+        <member name="M:Sensirion.FileIO.FileOperationHelpers.RobustDelete(System.String,System.Int32)">
+            <summary>Deletes the specified file and waits for the completion of the operation in case another process accesses the file with FileShare.Delete.
+            This method addresses the problem of malware scanners and system file indexers preventing the immediate deletion of files. In that case a simple
+            File.Delete() returns without error, but the file is still visible in the file system, which may cause errors in subsequent operations that assume
+            that the file is deleted.
+            This method also calls File.Delete(), but then waits for up to <paramref name="timeoutMilliSeconds"/> for the completion of the delete operation. If the method returns
+            <c>true</c> then the file is definitely gone. Recommended values for <paramref name="timeoutMilliSeconds"/> are in the range 2000ms to 5000ms.
+            </summary>
+            <param name="path">The file that will be deleted.</param>
+            <param name="timeoutMilliSeconds">The number of milliseconds to wait for the completion of the delete operation, or Infinite (-1) to wait indefinitely.</param>
+            <returns><c>true</c> if successful, <c>false</c> if the timeout was reached.</returns>
+            <exception cref="T:System.ArgumentException">path is a zero-length string, contains only white space, or contains one or more invalid characters as defined by InvalidPathChars.</exception>
+            <exception cref="T:System.ArgumentNullException">path is null.</exception>
+            <exception cref="T:System.IO.DirectoryNotFoundException">The specified path is invalid (for example, it is on an unmapped drive). </exception>
+            <exception cref="T:System.IO.IOException">The specified file is in use. -or- There is an open handle on the file, and the operating system is Windows XP or earlier. This open handle can result from enumerating directories and files. For more information, see How to: Enumerate Directories and Files.</exception>
+            <exception cref="T:System.NotSupportedException">path is in an invalid format.</exception>
+            <exception cref="T:System.IO.PathTooLongException">The specified path, file name, or both exceed the system-defined maximum length. For example, on Windows-based platforms, paths must be less than 248 characters, and file names must be less than 260 characters.</exception>
+            <exception cref="T:System.UnauthorizedAccessException">The caller does not have the required permission.</exception>
+        </member>
+        <member name="M:Sensirion.FileIO.FileOperationHelpers.RobustRecursiveDeleteDirectory(System.String)">
+            <summary>Recursively delete a folder and all of its content. This method uses <see cref="M:Sensirion.FileIO.FileOperationHelpers.RobustDelete(System.String,System.Int32)"/>() to avoid problems with malware scanners. </summary>
+            <param name="path">The path of the folder that will be deleted. </param>
+        </member>
+        <member name="M:Sensirion.FileIO.FileOperationHelpers.RemoveReadOnlyRecursive(System.String)">
+            <summary>Removes the ReadOnly attribute from the given file or directory recursively.</summary>
+            <param name="fileOrDirectoryPath">to remove attribute from</param>
+        </member>
+        <member name="T:Sensirion.FileIO.FilePath">
+            <summary>Handles the path expansion from relative path's to absolute path's.
+            The expansion is done starting from the location of the assembly Basics.</summary>
+        </member>
+        <member name="M:Sensirion.FileIO.FilePath.GetAbsolutePath(System.String)">
+            <summary>Get the absolute path from a relative one or one with environment variables
+            in it. Does not work for paths that contain "#". Unfortunately that is a valid
+            character for paths but cannot be handled by this class.
+            </summary>
+            <param name="aPath">The relative path that shall be resolved.</param>
+            <returns>The absolute path of <paramref name="aPath"/></returns>
+        </member>
+        <member name="M:Sensirion.FileIO.FilePath.GetAssemblyPath">
+            <summary>Gets the path of the executing assembly 
+            </summary>
+            <returns>Path of the executing assembly</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.FilePath.GetAbsolutePath(System.String,System.String)">
+            <summary>Get the absolute path from a relative one or one with environment variables
+              in it. Does not work for paths that contain "#". Unfortunately that is a valid
+              character for paths but cannot be handled by this class.
+            </summary>
+            <param name="aPath">The relative path that shall be resolved.</param>
+            <param name="aRelativeToDirectory">If <paramref name="aPath"/> is a relative
+              path, just make it relative to this directory name.</param>
+            <returns>The absolute path of <paramref name="aPath"/></returns>
+        </member>
+        <member name="M:Sensirion.FileIO.FilePath.#ctor(System.String)">
+            <summary>FilePath object, which holds the rooted path of the constructor argument
+            </summary>
+            <param name="aFilePath">Filepath, relative or absolute</param>
+        </member>
+        <member name="M:Sensirion.FileIO.FilePath.ToString">
+            <summary>Converts the path object into its string representation.
+            </summary>
+            <returns>rooted path</returns>
+        </member>
+        <member name="T:Sensirion.FileIO.IntelHexFileContent">
+            <summary>Provides the content of a Intel HEX file.
+            </summary>
+        </member>
+        <member name="P:Sensirion.FileIO.IntelHexFileContent.Padding">
+            <summary>
+            The data padding (for regions without data)
+            </summary>
+        </member>
+        <member name="M:Sensirion.FileIO.IntelHexFileContent.GetDataAtAddress(System.UInt16)">
+            <summary>Get the data at the given address.
+            </summary>
+            <param name="aAddress">Address of the data.</param>
+        </member>
+        <member name="M:Sensirion.FileIO.IntelHexFileContent.ToByteArray">
+            <summary>
+            Return the binary array of the data
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Sensirion.FileIO.IntelHexFileContent.AddLine(Sensirion.FileIO.IntelHexFileContent.IntelHexLine)">
+            <summary>Add a line read from the Intel HEX file.
+            </summary>
+            <param name="aLine">Line to add.</param>
+        </member>
+        <member name="T:Sensirion.FileIO.IntelHexFileContent.IntelHexLine">
+            <summary>Contains the data of one line of the Intel HEX file.
+            </summary>
+        </member>
+        <member name="P:Sensirion.FileIO.IntelHexFileContent.IntelHexLine.BinaryData">
+            <summary>
+            Return the data in their binary form
+            </summary>
+        </member>
+        <member name="P:Sensirion.FileIO.IntelHexFileContent.IntelHexLine.DataLength">
+            <summary>Byte count of the data. 
+            </summary>
+        </member>
+        <member name="P:Sensirion.FileIO.IntelHexFileContent.IntelHexLine.Address">
+            <summary>Address of the data.
+            </summary>
+        </member>
+        <member name="P:Sensirion.FileIO.IntelHexFileContent.IntelHexLine.Data">
+            <summary>Data.
+            </summary>
+        </member>
+        <member name="P:Sensirion.FileIO.IntelHexFileContent.IntelHexLine.CheckSum">
+            <summary>Checksum.
+            </summary>
+        </member>
+        <member name="P:Sensirion.FileIO.IntelHexFileContent.IntelHexLine.RecordTypeName">
+            <summary>Record type.
+            </summary>
+        </member>
+        <member name="P:Sensirion.FileIO.IntelHexFileContent.IntelHexLine.RecordTypeNumber">
+            <summary>Record type as byte.
+            </summary>
+        </member>
+        <member name="T:Sensirion.FileIO.IntelHexFileContent.RecordType">
+            <summary>Record type.
+            </summary>
+        </member>
+        <member name="F:Sensirion.FileIO.IntelHexFileContent.RecordType.Data">
+            <summary>Data record.
+            </summary>
+        </member>
+        <member name="F:Sensirion.FileIO.IntelHexFileContent.RecordType.EndOfFile">
+            <summary>End of the file.
+            </summary>
+        </member>
+        <member name="F:Sensirion.FileIO.IntelHexFileContent.RecordType.ExtendedSegmentAddress">
+            <summary>Segment address for the following data.
+            </summary>
+        </member>
+        <member name="F:Sensirion.FileIO.IntelHexFileContent.RecordType.StartSegmentAddress">
+            <summary>Segmented start address.
+            </summary>
+        </member>
+        <member name="F:Sensirion.FileIO.IntelHexFileContent.RecordType.ExtendedLinearAddress">
+            <summary>Extended address for the following data.
+            </summary>
+        </member>
+        <member name="F:Sensirion.FileIO.IntelHexFileContent.RecordType.StartLinearAddress">
+            <summary>Linear start address.
+            </summary>
+        </member>
+        <member name="T:Sensirion.FileIO.IntelHexFileParser">
+            <summary>Parser for a Intel HEX file.
+            </summary>
+        </member>
+        <member name="M:Sensirion.FileIO.IntelHexFileParser.FromFile(System.String)">
+            <summary>Parse the given Intel HEX file.
+            </summary>
+            <param name="aFile">File to parse.</param>
+            <returns>Object that provides the content of the file.</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.IntelHexFileParser.FromStream(System.IO.TextReader)">
+            <summary>Extract the content of an Intel HEX file from the given reader.
+            </summary>
+            <param name="aReader">Reader provides the content of the Intel HEX file.</param>
+            <returns>Object that provides the content.</returns>
+        </member>
+        <member name="T:Sensirion.FileIO.LockFile">
+             A non-reentrant mutex that is implemented using
+             a lock file, and thus works across processes,
+             sessions, and machines (as long as the underlying
+             file system provides a robust r/w locking mechanism).
+            
+             usage:
+             FileLock fileLock = new FileLock(@"C:\sensirion\myfile.dat");
+             using (fileLock.Acquire(FileMode.Open, FileAccess.Read))
+             {
+                    // protected operations
+             }
+        </member>
+        <member name="M:Sensirion.FileIO.LockFile.#ctor(System.String)">
+            <summary>
+            constructor
+            </summary>
+            <param name="filepath">file to lock</param>
+        </member>
+        <member name="M:Sensirion.FileIO.LockFile.#ctor(System.String,System.Boolean)">
+            <summary>
+            constructor
+            </summary>
+            <param name="filepath">file to lock</param>
+            <param name="deleteOnExitFlag"> </param>
+        </member>
+        <member name="P:Sensirion.FileIO.LockFile.FileStream">
+            <summary>
+            get the underlying stream on the file
+            </summary>
+        </member>
+        <member name="M:Sensirion.FileIO.LockFile.IsFileLocked(System.IO.IOException)">
+            <summary>
+            check if the exception means that the file was locked
+            </summary>
+            <param name="exception">exception returned when attending to open a file</param>
+            <returns>ture if the file was locked, false otherwise</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.LockFile.Acquire(System.IO.FileMode,System.IO.FileAccess)">
+            <summary>
+            acquire an exclusive lock on the file
+            </summary>
+            <param name="fileMode">file mode</param>
+            <param name="fileAccess">file access</param>
+            <returns>object describing the lock. As long as this object will be alive, the file will be locked</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.LockFile.Release">
+            <summary>
+            release the lock on the file
+            </summary>
+        </member>
+        <member name="T:Sensirion.FileIO.LockFile.DisposeHelper">
+            <summary>
+            disposable lock on the file
+            </summary>
+        </member>
+        <member name="M:Sensirion.FileIO.LockFile.DisposeHelper.#ctor(Sensirion.FileIO.LockFile)">
+            <summary>
+            constructor
+            </summary>
+            <param name="lockFile"></param>
+        </member>
+        <member name="M:Sensirion.FileIO.LockFile.DisposeHelper.Dispose">
+            <summary>
+            release the lock on dispose
+            </summary>
+        </member>
+        <member name="T:Sensirion.FileIO.LockingProcessFinder">
+            <summary>Utility class that provide a method that gets a list off all processes that are locking a given file. </summary>
+            <remarks>Taken from https://stackoverflow.com/questions/317071/how-do-i-find-out-which-process-is-locking-a-file-using-net .</remarks>
+        </member>
+        <member name="M:Sensirion.FileIO.LockingProcessFinder.WhoIsLocking(System.String)">
+            <summary>
+            Find out what process(es) have a lock on the specified file.
+            </summary>
+            <param name="path">Path of the file.</param>
+            <returns>Processes locking the file</returns>
+            <remarks>See also:
+            http://msdn.microsoft.com/en-us/library/windows/desktop/aa373661(v=vs.85).aspx
+            http://wyupdate.googlecode.com/svn-history/r401/trunk/frmFilesInUse.cs (no copyright in code at time of viewing)
+            
+            </remarks>
+        </member>
+        <member name="T:Sensirion.FileIO.ResourceUpdater">
+            <summary>Helper class to deal with resources that need to be saved to the
+            directory of the currently executing assembly (usually dlls).</summary>
+            <remarks>This is typically used, when you stored your dll in a resource
+            and then need to write it to a directory where it will be found by the
+            executing assembly.<br />
+            Example:
+            <code>
+            Sensirion.FileIO.ResourceUpdater.UpdateResource(Resource.Ni845x, "Ni845x.dll");
+            </code>
+            </remarks>
+        </member>
+        <member name="T:Sensirion.FileIO.ResourceUpdater.StandardGovernors">
+            <summary>Standard governors to pass to UpdateResource.</summary>
+        </member>
+        <member name="F:Sensirion.FileIO.ResourceUpdater.StandardGovernors.AlwaysOverwrite">
+            <summary>Always overwrite the file.</summary>
+        </member>
+        <member name="F:Sensirion.FileIO.ResourceUpdater.StandardGovernors.CompareLenght">
+            <summary>Overwrite the file if the lengths of the existing file and the
+            resource differ.</summary>
+        </member>
+        <member name="F:Sensirion.FileIO.ResourceUpdater.StandardGovernors.CompareContent">
+            <summary>Overwrite the file if the contents of the existing file and the
+            resource differ.</summary>
+        </member>
+        <member name="T:Sensirion.FileIO.ResourceUpdater.ResourceUpdateNecessaryGovernor">
+            <summary>Delegate that decides if an existing resource should be updated
+            or not.
+            </summary>
+            <param name="newResource">the current data of the resource</param>
+            <param name="pathToPresentResource">path name to the existing resource file</param>
+            <returns>true if the resource should be updated (overwritten), false otherwise</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ResourceUpdater.UpdateResource(System.Byte[],System.String,Sensirion.FileIO.ResourceUpdater.StandardGovernors)">
+            <summary>Update the specified resource file in the directory of the 
+            currently executing assembly with the given data. This method allows
+            the use of three standard governors to specify in which condition an
+            existing file should be overwritten.</summary>
+            <param name="resourceData">the current data of the resource</param>
+            <param name="resourceFileName">file name of the resource file</param>
+            <param name="standardGovernor">the standard governor to use</param>
+        </member>
+        <member name="M:Sensirion.FileIO.ResourceUpdater.UpdateResource(System.Byte[],System.String,Sensirion.FileIO.ResourceUpdater.ResourceUpdateNecessaryGovernor)">
+            <summary>Update the specified resource file in the directory of the 
+            currently executing assembly with the given data. The file is only
+            overwritten, if the supplied governor allows it.</summary>
+            <param name="resourceData">the current data of the resource</param>
+            <param name="resourceFileName">file name of the resource file</param>
+            <param name="governor">delegate that decides if an existing resource
+            file should be updated or not. If null, the standard strategy is used
+            (length comparison).</param>
+        </member>
+        <member name="M:Sensirion.FileIO.ResourceUpdater.UpdateResource(System.Byte[],System.String,Sensirion.FileIO.ResourceUpdater.ResourceUpdateNecessaryGovernor,System.String)">
+            <summary>Update the specified resource file in the directory of the 
+            currently executing assembly with the given data. The file is only
+            overwritten, if the supplied governor allows it.</summary>
+            <param name="resourceData">the current data of the resource</param>
+            <param name="resourceFileName">file name of the resource file</param>
+            <param name="governor">delegate that decides if an existing resource
+            file should be updated or not. If null, the standard strategy is used
+            (length comparison).</param>
+            <param name="outputPath">Path to extract resource file to</param>
+        </member>
+        <member name="M:Sensirion.FileIO.ResourceUpdater.CompareContentGovernor(System.Byte[],System.String)">
+            <summary>Compares the given resource and the content of the existing file</summary>
+            <param name="newResource"></param>
+            <param name="pathToPresentResource"></param>
+            <returns>True if the files differ, false otherwise</returns>
+        </member>
+        <member name="T:Sensirion.FileIO.StreamHelper">
+            <summary>Helps to handle streams with strings or byte arrays 
+            </summary>
+        </member>
+        <member name="M:Sensirion.FileIO.StreamHelper.ConvertStringToByteArray(System.String)">
+            <summary>Converts a string in a byte array with the current culture. the conversion 
+              is an ANSII conversion (codepage of the current computer) 
+            </summary>
+            <param name="aContent">String to convert</param>
+            <returns>A new array of bytes where each byte represents one character</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.StreamHelper.GetStreamAsString(System.IO.Stream)">
+            <summary>Gets the content of the stream as string 
+            </summary>
+            <returns>Content of stream as string</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.StreamHelper.GetStreamAsString(System.IO.Stream,System.Text.Encoding,System.Boolean)">
+            <summary>Gets the content of the stream as string 
+            </summary>
+            <param name="aContent">The content to write</param>
+            <param name="aEncoding">The encoding to use</param>
+            <param name="aLeaveOpen">If true, the steam is left open</param>
+            <returns>Content of stream as string</returns>
+        </member>
+        <member name="T:Sensirion.FileIO.StringValueParser">
+            <summary>Parser which converts strings to typed values.</summary>
+        </member>
+        <member name="M:Sensirion.FileIO.StringValueParser.#ctor">
+            <summary>Constructor.</summary>
+        </member>
+        <member name="M:Sensirion.FileIO.StringValueParser.#ctor(System.IFormatProvider)">
+            <summary>Constructor.</summary>
+            <param name="format">format provider</param>
+        </member>
+        <member name="M:Sensirion.FileIO.StringValueParser.ToByte(System.String)">
+            <summary>Get string as byte.</summary>
+            <param name="strValue">string value</param>
+            <returns>byte value</returns>
+            <exception cref="T:System.FormatException">if parsing fails</exception>
+        </member>
+        <member name="M:Sensirion.FileIO.StringValueParser.ToByte(System.String,System.Byte)">
+            <summary>Get string as byte.</summary>
+            <param name="strValue">string value</param>
+            <param name="defaultValue">default used when parsing fails</param>
+            <returns>byte value</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.StringValueParser.ToUshort(System.String)">
+            <summary>Get string as unsigned 16-bit integer <see cref="T:System.UInt16"/>.</summary>
+            <param name="strValue">string value</param>
+            <returns>unsigned 16-bit integer value</returns>
+            <exception cref="T:System.FormatException">if parsing fails</exception>
+        </member>
+        <member name="M:Sensirion.FileIO.StringValueParser.ToUshort(System.String,System.UInt16)">
+            <summary>Get string as unsigned 16-bit integer <see cref="T:System.UInt16"/>.</summary>
+            <param name="strValue">string value</param>
+            <param name="defaultValue">default used when parsing fails</param>
+            <returns>unsigned 16-bit integer value</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.StringValueParser.ToInt(System.String)">
+            <summary>Get string as integer.</summary>
+            <param name="strValue">string value</param>
+            <returns>integer value</returns>
+            <exception cref="T:System.FormatException">if parsing fails</exception>
+        </member>
+        <member name="M:Sensirion.FileIO.StringValueParser.ToInt(System.String,System.Int32)">
+            <summary>Get string as integer.</summary>
+            <param name="strValue">string value</param>
+            <param name="defaultValue">default used when parsing fails</param>
+            <returns>integer value</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.StringValueParser.ToUInt(System.String)">
+            <summary>Get string as unsigned integer (<see cref="T:System.UInt32"/>).</summary>
+            <param name="strValue">string value</param>
+            <returns>unsigned integer value</returns>
+            <exception cref="T:System.FormatException">if parsing fails</exception>
+        </member>
+        <member name="M:Sensirion.FileIO.StringValueParser.ToUInt(System.String,System.UInt32)">
+            <summary>Get string as unsigned integer (<see cref="T:System.UInt32"/>).</summary>
+            <param name="strValue">string value</param>
+            <param name="defaultValue">default used when parsing fails</param>
+            <returns>unsigned integer value</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.StringValueParser.ToLong(System.String)">
+            <summary>Get string as long integer.</summary>
+            <param name="strValue">string value</param>
+            <returns>long integer value</returns>
+            <exception cref="T:System.FormatException">if parsing fails</exception>
+        </member>
+        <member name="M:Sensirion.FileIO.StringValueParser.ToLong(System.String,System.Int64)">
+            <summary>Get string as long integer.</summary>
+            <param name="strValue">string value</param>
+            <param name="defaultValue">default used when parsing fails</param>
+            <returns>long value</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.StringValueParser.ToFloat(System.String)">
+            <summary>Get string as float.</summary>
+            <param name="strValue">string value</param>
+            <returns>float value</returns>
+            <exception cref="T:System.FormatException">if parsing fails</exception>
+        </member>
+        <member name="M:Sensirion.FileIO.StringValueParser.ToFloat(System.String,System.Single)">
+            <summary>Get string as float.</summary>
+            <param name="strValue">string value</param>
+            <param name="defaultValue">default used when parsing fails</param>
+            <returns>float value</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.StringValueParser.ToDouble(System.String)">
+            <summary>Get string as double.</summary>
+            <param name="strValue">string value</param>
+            <returns>double value</returns>
+            <exception cref="T:System.FormatException">if parsing fails</exception>
+        </member>
+        <member name="M:Sensirion.FileIO.StringValueParser.ToDouble(System.String,System.Double)">
+            <summary>Get string as double.</summary>
+            <param name="strValue">string value</param>
+            <param name="defaultValue">default used when parsing fails</param>
+            <returns>double value</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.StringValueParser.ToTimeSpan(System.String)">
+            <summary>Get a string as time span</summary>
+            <param name="strValue">string value</param>
+            <returns>time span value</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.StringValueParser.ToTimeSpan(System.String,System.TimeSpan)">
+            <summary>Get a string as time span</summary>
+            <param name="strValue">string value</param>
+            <param name="defaultValue">default used when parsing fails</param>
+            <returns>time span value</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.StringValueParser.ToBool(System.String)">
+            <summary>Get string as boolean.</summary>
+            <param name="strValue">string value</param>
+            <returns>value as bool</returns>
+            <exception cref="T:System.FormatException">if parsing fails</exception>
+        </member>
+        <member name="M:Sensirion.FileIO.StringValueParser.ToBool(System.String,System.Boolean)">
+            <summary>Get string as boolean.</summary>
+            <param name="strValue">string value</param>
+            <param name="defaultValue">default value</param>
+            <returns>option as bool, defaultValue if not available or
+            not convertible</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.StringValueParser.ToGuessedType(System.String)">
+            <summary>Get string as a typed value guessed from the string.
+            </summary>
+            <param name="strValue">string value</param>
+            <returns>value in appropriate type, string value if no suitable
+            type found</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.StringValueParser.TryParse(System.String,System.Type,System.Object@)">
+            <summary>Try to parse string as a given type.</summary>
+            <param name="strValue">string value</param>
+            <param name="type">type for result</param>
+            <param name="value">the converted value is returned here</param>
+            <returns>true if ok</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.StringValueParser.ToObjectTable(System.String[][],System.Type[])">
+            <summary>Convert table of strings to table of objects with given type.
+            </summary>
+            <param name="strTable">string table</param>
+            <param name="types">column types, if types is null or its first element
+            is null, the types are guessed</param>
+            <returns>table of objects</returns>
+            <exception cref="T:System.FormatException">if parsing failed</exception>
+        </member>
+        <member name="M:Sensirion.FileIO.StringValueParser.FromObject(System.Object)">
+            <summary>Get string from object which is parsable with the various
+            To... methods.</summary>
+            <param name="obj">object to get string representation from</param>
+            <returns>string representation</returns>
+        </member>
+        <member name="T:Sensirion.FileIO.ZipClass">
+            <summary>Compresses Files or Directories to zip-files.
+            </summary>
+        </member>
+        <member name="M:Sensirion.FileIO.ZipClass.ZipFile(System.String,System.String)">
+            <summary>The input file is zipped and stored into the specified output file
+            </summary>
+            <param name="aInputFile">The filename of the file that should be zipped</param>
+            <param name="aTargetFile">The filename of the output file (recommended extension: .zip)</param>
+        </member>
+        <member name="M:Sensirion.FileIO.ZipClass.ZipDirectory(System.String,System.String)">
+            <summary>The input directory is zipped and stored into the specified output file
+            </summary>
+            <param name="aInputDir">The path of the directory that should be zipped</param>
+            <param name="aTargetFile">The filename of the output file (recommended extension: .zip)</param>
+        </member>
+        <member name="M:Sensirion.FileIO.ZipClass.ZipFiles(System.String[],System.String)">
+            <summary>The input files are zipped and stored into the specified output file
+            </summary>
+            <param name="aFilenames">The filenames of the files that should be zipped</param>
+            <param name="aTargetFile">The filename of the output file (recommended extension: .zip</param>
+        </member>
+        <member name="M:Sensirion.FileIO.ZipClass.ZipDirectoryRecursive(System.String,System.String)">
+            <summary>The input directory is recursively zipped and stored into the specified output file
+            </summary>
+            <param name="aInputDir">The path of the directory that should be zipped</param>
+            <param name="aTargetFile">The filename of the output file (recommended extension: .zip</param>
+        </member>
+        <member name="M:Sensirion.FileIO.ZipClass.AddDirectoryRecursiveToArchive(System.IO.Compression.ZipArchive,System.String,System.String)">
+            <summary>The input directory is recursively zipped and stored into the specified output file
+            </summary>
+            <param name="aInputDir">The path of the directory that should be zipped</param>
+            <param name="aTargetFile">The filename of the output file (recommended extension: .zip)</param>
+            <param name="aArchive">Zip archive where the content is added.</param>
+        </member>
+        <member name="M:Sensirion.FileIO.ZipClass.UnzipFile(System.String,System.String)">
+            <summary>The zip-file is unzipped and the containing files are stored in the given
+            output directory.
+            </summary>
+            <param name="aZipFile">The zip-file that is going to be unzipped</param>
+            <param name="aOutputDirectory">The directory where the zipped files are stored</param>
+            <returns>The filenames of the unzipped files</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ZipClass.ZipFileToStream(System.String,System.IO.Stream)">
+            <summary>Creates a new InMemory ZipFile 
+            </summary>
+            <param name="aInputFile">The path of the file, that must be zipped.</param>
+            <param name="aStream">Stream where the compressed data should be written in. This could
+              either be a file or a memory stream, or another derived class.
+              ATTENTION: The stream is not closed, but left open.</param>
+            <returns>The stream to write into</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ZipClass.CreateZipArchive(System.IO.Stream)">
+            <summary>Creates a new zip archive. 
+            </summary>
+            <param name="aStream">Stream where the compressed data should be written in. This could
+              either be a file or a memory stream, or another derived class</param>
+            <returns>The archive to write into</returns>
+        </member>
+        <member name="M:Sensirion.FileIO.ZipClass.AddContentToArchive(System.IO.Compression.ZipArchive,System.IO.Stream,System.String)">
+            <summary>Adds a new entry to the opened zip archive.
+            </summary>
+            <param name="aArchive">Zip archive where the content is added.</param>
+            <param name="aContent">Content of the file to add</param>
+            <param name="aFilename">Original name of the file and name of the new entry.</param>
+        </member>
+        <member name="M:Sensirion.FileIO.ZipClass.CloseArchive(System.IO.Compression.ZipArchive)">
+            <summary>Closes the zip archive and disposes it.
+            </summary>
+            <param name="aArchive">Archive to close</param>
+        </member>
+        <member name="T:System.Runtime.CompilerServices.IsExternalInit">
+            <summary>
+            Reserved to be used by the compiler for tracking metadata.
+            This class should not be used by developers in source code.
+            </summary>
+        </member>
+        <member name="T:System.Runtime.CompilerServices.SkipLocalsInitAttribute">
+            <summary>
+            Used to indicate to the compiler that the <c>.locals init</c> flag should not be set in method headers.
+            </summary>
+            <remarks>Internal copy of the .NET 5 attribute.</remarks>
+        </member>
+    </members>
+</doc>

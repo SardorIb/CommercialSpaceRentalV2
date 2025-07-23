@@ -1,0 +1,462 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Hummer.Interfaces</name>
+    </assembly>
+    <members>
+        <member name="T:Sensirion.Hummer.Interfaces.BackgroundWorkers.IApplicationFactory">
+            <summary>
+            The application factory.
+            </summary>
+        </member>
+        <member name="M:Sensirion.Hummer.Interfaces.BackgroundWorkers.IApplicationFactory.CreateQueueManager(Microsoft.Extensions.Logging.ILogger)">
+            <summary>
+            Create a queue manager that allows to schedule and run jobs.
+            </summary>
+            <param name="logger">A logger to use</param>
+            <returns>The queue manager</returns>
+        </member>
+        <member name="M:Sensirion.Hummer.Interfaces.BackgroundWorkers.IApplicationFactory.CreateReporter">
+            <summary>
+            Instantiate an error reporter.
+            </summary>
+            <returns>The interface to the report service</returns>
+        </member>
+        <member name="M:Sensirion.Hummer.Interfaces.BackgroundWorkers.IApplicationFactory.CreateNotifier(Microsoft.Extensions.Logging.ILogger)">
+            <summary>
+            Instantiate Hummer job notifier.
+            </summary>
+            <param name="logger">The error logger</param>
+            <returns>The notifier.</returns>
+        </member>
+        <member name="T:Sensirion.Hummer.Interfaces.BackgroundWorkers.IHummerNotifier">
+            <summary> Provides notification support for the Hummer applications
+            </summary>
+        </member>
+        <member name="M:Sensirion.Hummer.Interfaces.BackgroundWorkers.IHummerNotifier.NotifySuccess(System.Guid)">
+            <summary>
+            Send a notification once the upload request is completed successfully
+            </summary>
+            <param name="requestGuid">The request identifier</param>
+        </member>
+        <member name="T:Sensirion.Hummer.Interfaces.BackgroundWorkers.IHummerReporter">
+            <summary> Provides reporting support for the Hummer applications. 
+            </summary>
+        </member>
+        <member name="P:Sensirion.Hummer.Interfaces.BackgroundWorkers.IHummerReporter.GlobalProjectId">
+            <summary>
+            The projectId used to report global Hummer errors.
+            </summary>
+        </member>
+        <member name="M:Sensirion.Hummer.Interfaces.BackgroundWorkers.IHummerReporter.SendCumulativeReportsIfNeeded">
+            <summary> Conditionally send a cumulative summary of the reports added with <see cref="M:Sensirion.Hummer.Interfaces.BackgroundWorkers.IHummerReporter.AddCumulativeReport(System.String,Sensirion.Hummer.Interfaces.BackgroundWorkers.ReportLevel,System.String,System.Exception)"/> since the last cumulative report was sent.
+            </summary>
+            <returns>True if a report was sent, false otherwise</returns>
+        </member>
+        <member name="M:Sensirion.Hummer.Interfaces.BackgroundWorkers.IHummerReporter.AddCumulativeReport(System.String,Sensirion.Hummer.Interfaces.BackgroundWorkers.ReportLevel,System.String,System.Exception)">
+            <summary> Add a report for a report summary.
+            </summary>
+            <param name="projectId"></param>
+            <param name="level">The report level.</param>
+            <param name="message">The report content.</param>
+            <param name="ex">Exception to report (optional).</param>
+        </member>
+        <member name="M:Sensirion.Hummer.Interfaces.BackgroundWorkers.IHummerReporter.SendReport(System.String,Sensirion.Hummer.Interfaces.BackgroundWorkers.ReportLevel,System.String,System.Exception)">
+            <summary> Send a single report directly.
+            </summary>
+            <param name="projectId">The projectId used by the reporting service.</param>
+            <param name="level">The report level.</param>
+            <param name="message">The report content.</param>
+            <param name="ex">Exception to report (optional).</param>
+        </member>
+        <member name="T:Sensirion.Hummer.Interfaces.BackgroundWorkers.IPushNotification">
+            <summary>Define a push notification from the dispatcher to the Hummer web service.
+            </summary>
+        </member>
+        <member name="P:Sensirion.Hummer.Interfaces.BackgroundWorkers.IPushNotification.NotificationDataMeaning">
+            <summary>
+            The label used for the notification.
+            </summary>
+        </member>
+        <member name="M:Sensirion.Hummer.Interfaces.BackgroundWorkers.IPushNotification.Format(Sensirion.Hummer.Interfaces.DataObject.IJob,System.Guid)">
+            <summary>Format the notification replacing placeholders.
+            </summary>
+            <param name="job">Contains the information that should be notified</param>
+            <param name="requestGuid">The request identifier</param>
+            <returns>The string representation of the notification</returns>
+        </member>
+        <member name="T:Sensirion.Hummer.Interfaces.BackgroundWorkers.IQueueElement">
+            <summary>An element for a job queue 
+            </summary>
+        </member>
+        <member name="P:Sensirion.Hummer.Interfaces.BackgroundWorkers.IQueueElement.ReportingProjectId">
+            <summary>The ProjectId used by the reporting service.
+            </summary>
+        </member>
+        <member name="P:Sensirion.Hummer.Interfaces.BackgroundWorkers.IQueueElement.RequestGuid">
+            <summary>The request identifier.
+            </summary>
+        </member>
+        <member name="P:Sensirion.Hummer.Interfaces.BackgroundWorkers.IQueueElement.Job">
+            <summary>The job data with its sink.
+            </summary>
+        </member>
+        <member name="P:Sensirion.Hummer.Interfaces.BackgroundWorkers.IQueueElement.Exception">
+            <summary>An exception encountered while processing the job.
+            </summary>
+        </member>
+        <member name="P:Sensirion.Hummer.Interfaces.BackgroundWorkers.IQueueElement.DataNotFoundFlag">
+            <summary> Flag denoting that the data was not found.
+            </summary>
+        </member>
+        <member name="T:Sensirion.Hummer.Interfaces.BackgroundWorkers.IQueueManager">
+            <summary> Provide basic functionality for a job queueing system.
+            </summary>
+        </member>
+        <member name="M:Sensirion.Hummer.Interfaces.BackgroundWorkers.IQueueManager.UpdateQueue">
+            <summary>
+            Search for new jobs to enqueue.
+            </summary>
+        </member>
+        <member name="M:Sensirion.Hummer.Interfaces.BackgroundWorkers.IQueueManager.Next">
+            <summary>
+            Dequeues the next job, if there is one available or return null otherwise.
+            </summary>
+            <returns>The job</returns>
+        </member>
+        <member name="M:Sensirion.Hummer.Interfaces.BackgroundWorkers.IQueueManager.RetryFailed(Sensirion.Hummer.Interfaces.BackgroundWorkers.IQueueElement)">
+            <summary>
+            Retry a failed job.
+            </summary>
+            <param name="failedQueueElement"></param>
+        </member>
+        <member name="M:Sensirion.Hummer.Interfaces.BackgroundWorkers.IQueueManager.Success(Sensirion.Hummer.Interfaces.BackgroundWorkers.IQueueElement)">
+            <summary>
+            An action executed upon a job success.
+            </summary>
+            <param name="succeededElement"></param>
+            <returns><c>true</c> if succeeded element was the last of its request, <c>false</c> otherwise.</returns>
+        </member>
+        <member name="M:Sensirion.Hummer.Interfaces.BackgroundWorkers.IQueueManager.NotFound(Sensirion.Hummer.Interfaces.BackgroundWorkers.IQueueElement)">
+            <summary>
+            An action executed when the data was not found
+            </summary>
+            <param name="failedQueueElement"></param>
+        </member>
+        <member name="M:Sensirion.Hummer.Interfaces.BackgroundWorkers.IQueueManager.RejectJob(Sensirion.Hummer.Interfaces.BackgroundWorkers.IQueueElement)">
+            <summary>
+            An action executed when a job is rejected without executing.
+            </summary>
+            <param name="queueElement"></param>
+        </member>
+        <member name="T:Sensirion.Hummer.Interfaces.DataAction.IDateTimeProvider">
+            <summary>Interface providing access to the current date and time.
+            </summary>
+        </member>
+        <member name="T:Sensirion.Hummer.Interfaces.DataAction.IExecuteQueryFactory">
+            <summary>Factory to create <see cref="T:Sensirion.Data.DB.IExecuteQuery"/> objects
+            </summary>
+        </member>
+        <member name="M:Sensirion.Hummer.Interfaces.DataAction.IExecuteQueryFactory.Create">
+            <summary>
+            Create a query helper with no connection open.
+            </summary>
+            <returns> A <see cref="T:Sensirion.Data.DB.IExecuteQuery"/> object</returns>
+        </member>
+        <member name="T:Sensirion.Hummer.Interfaces.DataAction.IMessageStreamingRepository">
+            <summary>
+            Data repository for the message streaming use case of Hummer.
+            </summary>
+        </member>
+        <member name="M:Sensirion.Hummer.Interfaces.DataAction.IMessageStreamingRepository.GetConfiguredSinks(System.String,System.String)">
+            <summary>
+            Get the configured sinks for the given application from DB.
+            </summary>
+            <param name="appKey">The application identifier</param>
+            <param name="dataMeaning">A label representing the meaning of the data</param>
+            <returns>The sinks where to send the data</returns>
+        </member>
+        <member name="M:Sensirion.Hummer.Interfaces.DataAction.IMessageStreamingRepository.GetNotificationOnSuccessIfConfigured(System.Guid)">
+            <summary>
+            Get the content and sink information for a notification to be sent on success of a request.
+            </summary>
+            <param name="guid">The request identifier</param>
+            <returns>The notification data if exists or null otherwise</returns>
+        </member>
+        <member name="T:Sensirion.Hummer.Interfaces.DataAction.IWipCreationRepository">
+            <summary>Provides actions related to the creation of new jobs in the Hummer work-in-progress as well as inspect the current queue.
+            </summary>
+        </member>
+        <member name="M:Sensirion.Hummer.Interfaces.DataAction.IWipCreationRepository.GetFileShareInfo(System.String)">
+            <summary>
+            Get the app configuration for the file share used to export data.
+            </summary>
+            <param name="appKey">The application identifier</param>
+            <returns>The file share information, or null if the configuration was not found</returns>
+        </member>
+        <member name="M:Sensirion.Hummer.Interfaces.DataAction.IWipCreationRepository.GetRequestJobDetails(System.Guid)">
+            <summary>
+            Get the list of jobs corresponding to a request with their details.
+            </summary>
+            <param name="guid">The identifier of the request</param>
+            <returns>The list of file information</returns>
+        </member>
+        <member name="M:Sensirion.Hummer.Interfaces.DataAction.IWipCreationRepository.InsertNewRequestToQueue(System.String,System.Guid)">
+            <summary>
+            Add a new request to the work in progress.
+            </summary>
+            <param name="appKey">The application initiating the request</param>
+            <param name="guid">The request identifier</param>
+        </member>
+        <member name="M:Sensirion.Hummer.Interfaces.DataAction.IWipCreationRepository.InsertNewFileToQueue(Sensirion.Hummer.Interfaces.IFileInformation)">
+            <summary>
+            Add jobs to the work in progress.
+            </summary>
+            <param name="fileInformation">The file information</param>
+        </member>
+        <member name="M:Sensirion.Hummer.Interfaces.DataAction.IWipCreationRepository.SetRequestAndJobsStatusAsPending(System.Guid)">
+            <summary>
+            Mark a request identified by guid as "saved to file share".
+            </summary>
+            <param name="guid">The request identifier</param>
+        </member>
+        <member name="M:Sensirion.Hummer.Interfaces.DataAction.IWipCreationRepository.AddNotificationToQueue(Sensirion.Hummer.Interfaces.INotificationInformation)">
+            <summary>
+            Add a notification to the queue.
+            </summary>
+            <param name="notificationInformation">Contains the information to retrieve the sink and the content of the notification</param>
+        </member>
+        <member name="T:Sensirion.Hummer.Interfaces.DataAction.IWipDumpRepository">
+            <summary>Provides actions related to the Hummer file dump, in order to update the Hummer work-in-progress queue.
+            </summary>
+        </member>
+        <member name="M:Sensirion.Hummer.Interfaces.DataAction.IWipDumpRepository.SearchDeletableJobBatch(System.Action{System.Collections.Generic.IReadOnlyList{Sensirion.Hummer.Interfaces.DataObject.IJob},System.Guid,System.String})">
+            <summary>
+            Search for one job batch (aka request) ready to be dumped and invoke <see cref="!:jobsFoundAction"/> on the list of jobs.
+            </summary>
+            <param name="jobsFoundAction">The action to execute when deletable files are found in the WIP queue</param>
+            <returns>The request guid, or null if no pending job is found.</returns>
+        </member>
+        <member name="M:Sensirion.Hummer.Interfaces.DataAction.IWipDumpRepository.SetJobDeleting(Sensirion.Hummer.Interfaces.DataObject.IJob)">
+            <summary>
+            Mark a job status as "deleting".
+            </summary>
+            <param name="job">The job information</param>
+        </member>
+        <member name="M:Sensirion.Hummer.Interfaces.DataAction.IWipDumpRepository.SetRequestAndJobDeletionFailed(System.Guid,Sensirion.Hummer.Interfaces.DataObject.IJob)">
+            <summary>
+            Mark the request and the job statuses as failed 
+            </summary>
+            <param name="guid">The request id</param>
+            <param name="job">The job</param>
+        </member>
+        <member name="M:Sensirion.Hummer.Interfaces.DataAction.IWipDumpRepository.SetRequestDeletionSuccess(System.Guid)">
+            <summary>
+            Mark the request status as successfully deleted from file share.
+            </summary>
+            <param name="guid">The request id</param>
+        </member>
+        <member name="M:Sensirion.Hummer.Interfaces.DataAction.IWipDumpRepository.SetJobDeletionSuccess(Sensirion.Hummer.Interfaces.DataObject.IJob)">
+            <summary>
+            Mark the job status as successfully deleted from file share.
+            </summary>
+            <param name="job">The job</param>
+        </member>
+        <member name="T:Sensirion.Hummer.Interfaces.DataAction.IWipExecutionRepository">
+            <summary>Provides actions related to the Hummer file upload execution, in order to update the Hummer work-in-progress queue.
+            </summary>
+        </member>
+        <member name="M:Sensirion.Hummer.Interfaces.DataAction.IWipExecutionRepository.SearchPendingJobBatch(System.Action{System.Collections.Generic.IReadOnlyList{Sensirion.Hummer.Interfaces.DataObject.IJob},System.Guid,System.String})">
+            <summary>
+            Search for one job batch (aka request) ready to be dispatched and invoke <see cref="!:jobsFoundAction"/> on the list of jobs.
+            </summary>
+            <param name="jobsFoundAction">The action to execute when pending jobs are found in the WIP queue</param>
+            <returns>The request guid, or null if no pending job is found.</returns>
+        </member>
+        <member name="M:Sensirion.Hummer.Interfaces.DataAction.IWipExecutionRepository.SetRequestAndJobUploadFailed(System.Guid,Sensirion.Hummer.Interfaces.DataObject.IJob)">
+            <summary>
+            Mark the request and the job statuses as failed 
+            </summary>
+            <param name="requestId">The request id</param>
+            <param name="job">The job</param>
+        </member>
+        <member name="M:Sensirion.Hummer.Interfaces.DataAction.IWipExecutionRepository.SetJobUploadSuccess(Sensirion.Hummer.Interfaces.DataObject.IJob)">
+            <summary>
+            Mark the job as successfully uploaded
+            </summary>
+            <param name="job">The job</param>
+        </member>
+        <member name="M:Sensirion.Hummer.Interfaces.DataAction.IWipExecutionRepository.SetRequestUploadSuccess(System.Guid,System.Boolean)">
+            <summary>
+            Mark the request status as successfully uploaded, if all the jobs of a request are marked as successful. 
+            </summary>
+            <param name="guid">The request id</param>
+            <param name="enableRequestDump">If true enable the dumpster, that is, mark the request files as deletable from file share.</param>
+            <returns><c>true</c> if all the jobs of the request were successful, <c>false</c> otherwise.</returns>
+        </member>
+        <member name="M:Sensirion.Hummer.Interfaces.DataAction.IWipExecutionRepository.SetJobInProgress(Sensirion.Hummer.Interfaces.DataObject.IJob)">
+            <summary>
+            Mark a job status as in progress.
+            </summary>
+            <param name="job">The job information</param>
+        </member>
+        <member name="M:Sensirion.Hummer.Interfaces.DataAction.IWipExecutionRepository.SetJobNotFound(Sensirion.Hummer.Interfaces.DataObject.IJob)">
+            <summary>
+            Set the job status as not found
+            </summary>
+            <param name="job">The job information</param>
+        </member>
+        <member name="M:Sensirion.Hummer.Interfaces.DataAction.IWipExecutionRepository.SetupJobForRetry(Sensirion.Hummer.Interfaces.DataObject.IJob)">
+            <summary>Reset job status to "pending" and increase by 1 its attempt retry number.
+            </summary>
+            <param name="failedJob">The job information</param>
+        </member>
+        <member name="T:Sensirion.Hummer.Interfaces.DataObject.IFileShareConfiguration">
+            <summary> Model interface for the file share configuration
+            </summary>
+        </member>
+        <member name="T:Sensirion.Hummer.Interfaces.DataObject.IJob">
+            <summary> Model interface for a job.
+            </summary>
+        </member>
+        <member name="T:Sensirion.Hummer.Interfaces.DataObject.IMetadata">
+            <summary>Message metadata
+            </summary>
+        </member>
+        <member name="P:Sensirion.Hummer.Interfaces.DataObject.IMetadata.StaticMetadata">
+            <summary>
+            Metadata to be sent with all messages.
+            </summary>
+        </member>
+        <member name="T:Sensirion.Hummer.Interfaces.DataObject.INotification">
+            <summary>Data interface for a notification sent by Hummer.
+            </summary>
+        </member>
+        <member name="T:Sensirion.Hummer.Interfaces.DataObject.ISink">
+            <summary> Model interface for a sink.
+            </summary>
+        </member>
+        <member name="P:Sensirion.Hummer.Interfaces.DataObject.ISink.HostCategory">
+            <summary> The host category name
+            </summary>
+        </member>
+        <member name="P:Sensirion.Hummer.Interfaces.DataObject.ISink.BaseUrl">
+            <summary>Base url to connect to the host
+            </summary>
+        </member>
+        <member name="P:Sensirion.Hummer.Interfaces.DataObject.ISink.Name">
+            <summary> The name of the sink, used to identify a container or topic within a host
+            </summary>
+        </member>
+        <member name="P:Sensirion.Hummer.Interfaces.DataObject.ISink.Username">
+            <summary>
+            The optional user name for this sink
+            </summary>
+        </member>
+        <member name="P:Sensirion.Hummer.Interfaces.DataObject.ISink.Password">
+            <summary>
+            The optional password or auth token for this sink
+            </summary>
+        </member>
+        <member name="T:Sensirion.Hummer.Interfaces.DataObject.ISinkWithMetadata">
+            <summary>Message metadata
+            </summary>
+        </member>
+        <member name="T:Sensirion.Hummer.Interfaces.DataObject.JobStatus">
+            <summary>Represents a job status.
+            </summary>
+        </member>
+        <member name="F:Sensirion.Hummer.Interfaces.DataObject.JobStatus.Unknown">
+            <summary> Unknown status
+            </summary>
+        </member>
+        <member name="F:Sensirion.Hummer.Interfaces.DataObject.JobStatus.None">
+            <summary>Default
+            </summary>
+        </member>
+        <member name="F:Sensirion.Hummer.Interfaces.DataObject.JobStatus.WritingToDisk">
+            <summary> The data is being written to the file share
+            </summary>
+        </member>
+        <member name="F:Sensirion.Hummer.Interfaces.DataObject.JobStatus.DataNotFound">
+            <summary> The data could not be found it the file share
+            </summary>
+        </member>
+        <member name="F:Sensirion.Hummer.Interfaces.DataObject.JobStatus.UploadPending">
+            <summary> The data is ready to be uploaded
+            </summary>
+        </member>
+        <member name="F:Sensirion.Hummer.Interfaces.DataObject.JobStatus.UploadInProgress">
+            <summary> Data upload is in progress
+            </summary>
+        </member>
+        <member name="F:Sensirion.Hummer.Interfaces.DataObject.JobStatus.UploadCompleted">
+            <summary> The data was successfully uploaded
+            </summary>
+        </member>
+        <member name="F:Sensirion.Hummer.Interfaces.DataObject.JobStatus.UploadFailed">
+            <summary> The upload exceeded the maximum allowed retry count
+            </summary>
+        </member>
+        <member name="F:Sensirion.Hummer.Interfaces.DataObject.JobStatus.Success_DeletingTempFile">
+            <summary> The data is being deleted from the file share after successful upload
+            </summary>
+        </member>
+        <member name="F:Sensirion.Hummer.Interfaces.DataObject.JobStatus.Success_TempFileDeleted">
+            <summary> The file share data has been deleted
+            </summary>
+        </member>
+        <member name="F:Sensirion.Hummer.Interfaces.DataObject.JobStatus.DeletionFailed">
+            <summary>The temp file could not be deleted from the file share
+            </summary>
+        </member>
+        <member name="T:Sensirion.Hummer.Interfaces.DataObject.RequestStatus">
+            <summary>Represents a request status.
+            </summary>
+        </member>
+        <member name="F:Sensirion.Hummer.Interfaces.DataObject.RequestStatus.Unknown">
+            <summary> Unknown status
+            </summary>
+        </member>
+        <member name="F:Sensirion.Hummer.Interfaces.DataObject.RequestStatus.Created">
+            <summary> A new file export request has been received
+            </summary>
+        </member>
+        <member name="F:Sensirion.Hummer.Interfaces.DataObject.RequestStatus.UploadPending">
+            <summary> The data is ready to be uploaded
+            </summary>
+        </member>
+        <member name="F:Sensirion.Hummer.Interfaces.DataObject.RequestStatus.UploadInProgress">
+            <summary> Data upload is in progress
+            </summary>
+        </member>
+        <member name="F:Sensirion.Hummer.Interfaces.DataObject.RequestStatus.UploadCompleted">
+            <summary> The data was successfully uploaded
+            </summary>
+        </member>
+        <member name="F:Sensirion.Hummer.Interfaces.DataObject.RequestStatus.UploadFailed">
+            <summary> The upload exceeded the maximum allowed retry count
+            </summary>
+        </member>
+        <member name="F:Sensirion.Hummer.Interfaces.DataObject.RequestStatus.Success_DeletingTempFile">
+            <summary> The data is being deleted from the file share after successful upload
+            </summary>
+        </member>
+        <member name="F:Sensirion.Hummer.Interfaces.DataObject.RequestStatus.Success_TempFileDeleted">
+            <summary> The file share data has been deleted
+            </summary>
+        </member>
+        <member name="F:Sensirion.Hummer.Interfaces.DataObject.RequestStatus.DeletionFailed">
+            <summary>The temp file could not be deleted from the file share
+            </summary>
+        </member>
+        <member name="T:Sensirion.Hummer.Interfaces.IFileInformation">
+            <summary>Model interface for a file written by Hummer.
+            </summary>
+        </member>
+        <member name="T:Sensirion.Hummer.Interfaces.INotificationInformation">
+            <summary>Model interface for a notification sent by Hummer after file upload success.
+            </summary>
+        </member>
+    </members>
+</doc>
